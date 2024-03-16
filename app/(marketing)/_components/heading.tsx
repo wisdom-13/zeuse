@@ -15,7 +15,9 @@ export const Heading = () => {
   const authModal = useAuthModal();
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
-  const { user } = useUser();
+  const { user, userDetails } = useUser();
+
+  console.log(userDetails)
 
   const headleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
