@@ -1,7 +1,10 @@
-import SupabaseProvider from '@/providers/SupabaseProvider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+
+import { Toaster } from '@/components/ui/sonner'
+
+import SupabaseProvider from '@/providers/SupabaseProvider'
 import ModalProvider from '@/providers/ModalProvider'
 import UserProvider from '@/providers/UserProvider'
 
@@ -36,6 +39,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <SupabaseProvider>
           <UserProvider>
+            <Toaster position="bottom-right" />
             <ModalProvider />
             {children}
           </UserProvider>

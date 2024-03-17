@@ -3,10 +3,10 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/spinner';
+import { Spinner } from '@/components/Spinner';
 import { cn } from '@/lib/utils'
+import { Logo } from './Logo';
 
-import { Logo } from './logo';
 
 export const Navbar = () => {
   return (
