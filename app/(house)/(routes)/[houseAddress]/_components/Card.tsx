@@ -4,21 +4,25 @@ export interface CardProps {
   id?: any
   text?: string
   index?: number
-  grid?: Array<number>
-  moveCard?: (dragIndex: number, hoverIndex: number) => void
+  grid?: {
+    col: number,
+    row: number
+  }
 }
 
 const Card = ({
   id,
   text,
   index,
-  grid
+  grid: { col, row } = { col: 2, row: 3 }
 }: CardProps) => {
   return (
     <div
-      className={cn('border border-dashed border-gray-400 p-2 bg-white',
-        grid && `col-[auto_/_span_${grid[0]}] row-[auto_/_span_${grid[1]}]`
-      )}
+      style={{
+        gridColumn: `auto / span ${col}`,
+        gridRow: `auto / span ${row}`
+      }}
+      className='border border-black rounded-2xl p-2 bg-white'
     >
       {text}
     </div>

@@ -8,38 +8,38 @@ const HouseMain = () => {
     {
       id: 1,
       text: '슬라이드',
-      grid: [4, 12],
+      grid: { col: 4, row: 12 },
     },
     {
       id: 2,
       text: '프로필',
-      grid: [4, 4],
+      grid: { col: 4, row: 4 },
     },
     {
       id: 3,
       text: '게시판',
-      grid: [4, 8],
+      grid: { col: 4, row: 8 },
     },
     {
       id: 4,
       text: '디데이',
-      grid: [4, 3],
+      grid: { col: 4, row: 3 },
     },
 
     {
       id: 5,
       text: '1x1',
-      grid: [1, 1],
+      grid: { col: 1, row: 1 },
     },
     {
       id: 6,
       text: '1x2',
-      grid: [1, 2],
+      grid: { col: 1, row: 2 },
     },
     {
       id: 7,
       text: '2x3',
-      grid: [2, 3],
+      grid: { col: 2, row: 3 },
     },
 
   ])
@@ -47,7 +47,7 @@ const HouseMain = () => {
 
   return (
     <main
-      className='w-[900px] h-[600px] m-auto grid grid-cols-12 grid-rows-12 grid-flow-col gap-3'
+      className='w-[900px] h-[600px] m-auto grid grid-cols-12 grid-rows-12 grid-flow-col gap-4'
     >
       {cards.map((card, i) => (
         <Card
