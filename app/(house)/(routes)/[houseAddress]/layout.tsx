@@ -1,31 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-import { Toaster } from '@/components/ui/sonner'
-
-import SupabaseProvider from '@/providers/SupabaseProvider'
-import ModalProvider from '@/providers/ModalProvider'
-import UserProvider from '@/providers/UserProvider'
 import getHouseByAddress from '@/action/getHouseByAddress'
 
-// export const metadata: Metadata = {
-//   title: 'ZEUSE',
-//   description: '온라인 내 집 마련',
-//   icons: {
-//     icon: [
-//       {
-//         media: "(prefers-color-scheme: light)",
-//         url: "/logo.svg",
-//         href: "/logo.svg",
-//       },
-//       {
-//         media: "(prefers-color-scheme: dark)",
-//         url: "/logo-dark.svg",
-//         href: "/logo-dark.svg",
-//       }
-//     ]
-//   }
-// }
 
 interface HouseLayoutProps {
   params: {
@@ -49,4 +24,22 @@ export default async function HouseLayout({
       </main>
     </div>
   )
+}
+
+export async function generateMetadata({
+  params: { houseAddress },
+}: HouseLayoutProps): Promise<Metadata> {
+  const house = await getHouseByAddress(houseAddress);
+  return {
+    title: `${house?.title} | zeuse`,
+    description: `${house?.description}`,
+    icons: {
+      icon: [
+        {
+          url: "/logo-dark.svg",
+          href: "/logo-dark.svg",
+        }
+      ]
+    }
+  }
 }
