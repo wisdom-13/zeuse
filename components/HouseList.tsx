@@ -35,11 +35,13 @@ export const HouseList = ({ houses }: HouseListPorps) => {
       <DropdownMenuTrigger asChild>
         <div role='button' className='flex items-center justify-center text-sm p-3 w-full hover:bg-primary/5'>
           <div className='gap-x-2 flex items-center'>
-            <Avatar className='h-5 w-5'>
-              <AvatarImage src={userDetails?.avatar_url} />
-            </Avatar>
+            {userDetails?.avatar_url && (
+              <Avatar className='h-5 w-5'>
+                <AvatarImage src={userDetails?.avatar_url} />
+              </Avatar>
+            )}
             <span className='font-medium line-clamp-1'>
-              {userDetails?.name}의 하우스
+              {userDetails?.name ? userDetails?.name : user?.email?.split('@')[0]}의 하우스
             </span>
           </div>
           <ChevronsLeftRight className='rotate-90 ml-2 text-muted-foreground h-4 w-4' />
@@ -65,6 +67,11 @@ export const HouseList = ({ houses }: HouseListPorps) => {
             </Link>
           </DropdownMenuItem>
         ))}
+        {houses.length === 0 && (
+          <div className='text-sm font-semibold cursor-pointer text-muted-foreground p-2'>
+            생성된 하우스가 없습니다.
+          </div>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className='cursor-pointer text-muted-foreground p-2'

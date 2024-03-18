@@ -1,8 +1,8 @@
-import { Houses } from '@/types';
+import { House } from '@/types';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-const getHousesByUserId = async (): Promise<Houses[]> => {
+const getHousesByUserId = async (): Promise<House[]> => {
   const supabase = createServerComponentClient({
     cookies: cookies
   });
