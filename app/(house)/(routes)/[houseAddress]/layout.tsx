@@ -19,7 +19,6 @@ export default async function HouseLayout({
 }: HouseLayoutProps) {
   const house = await getHouseBuildByAddress(houseAddress);
 
-
   return (
     <div className='h-full flex bg-rose-400'>
       <Navigation menus={house?.board} />
