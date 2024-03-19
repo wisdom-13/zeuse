@@ -36,7 +36,7 @@ const getHousesByUserId = async (): Promise<House[]> => {
     console.log(housesError.message);
   }
 
-  return (housesData as Houses[]) || [];
+  return (housesData as House[]) || [];
 }
 
 export default getHousesByUserId;

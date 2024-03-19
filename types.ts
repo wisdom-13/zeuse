@@ -10,10 +10,59 @@ export interface House {
   description?: string;
   address?: string;
   type: string;
-  is_published: boolean
+  is_published: boolean;
+  created_at: string;
 }
 
-export interface Famity {
+export interface HouseBuild extends House {
+  family: Family[];
+  board: Board[];
+  style: Style;
+}
+
+export interface Board {
+  id: string;
+  house_id: string;
+  title: string;
+  name: string;
+  type: string;
+  role: number;
+  sort: number;
+}
+
+export interface BoardList extends Board {
+  posts: PostFamily[];
+}
+
+export interface Post {
+  id: string;
+  house_id: string;
+  family_id: string;
+  title: string;
+  content: string;
+  tag: string;
+  thumbnail_path: string;
+  role: number;
+  password: string;
+  created_at: Date;
+}
+
+export interface PostFamily extends Post {
+  family: Family;
+}
+
+
+export interface Style {
+  house_id: string;
+  menu_position: string;
+  bg_iamge: string;
+  logo_image: string;
+  color: string;
+  radius: string;
+  mode: string;
+}
+
+export interface Family {
   user_id: string;
   house_id: string;
   nick_name?: string;

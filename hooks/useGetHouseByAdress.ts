@@ -1,11 +1,11 @@
-import { Houses } from '@/types';
+import { House } from '@/types';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
 const useGetHouseByAdress = (address?: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [house, setHouse] = useState<Houses | undefined>(undefined);
+  const [house, setHouse] = useState<House | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const useGetHouseByAdress = (address?: string) => {
         return toast.error(error.message);
       }
 
-      setHouse(data as Houses);
+      setHouse(data as House);
       setIsLoading(false);
     }
 

@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import getHouseByAddress from '@/action/getHouseByAddress'
-
+import Navigation from './_components/Navigation'
+import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
+import HouseIdProvider from '@/providers/HouseIdProvider'
+// import useHouseAddressId from '@/hooks/useHouseAddressId'
+// import { useEffect } from 'react'
 
 interface HouseLayoutProps {
   params: {
@@ -13,14 +17,16 @@ export default async function HouseLayout({
   params: { houseAddress },
   children,
 }: HouseLayoutProps) {
-  const house = await getHouseByAddress(houseAddress);
+  const house = await getHouseBuildByAddress(houseAddress);
 
-  console.log(house)
 
   return (
-    <div className='h-full flex'>
-      <main className='flex-1 h-full overflow-y-auto'>
-        {children}
+    <div className='h-full flex bg-rose-400'>
+      <Navigation menus={house?.board} />
+      <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>
+        <HouseIdProvider houseAddress={houseAddress}>
+          {children}
+        </HouseIdProvider>
       </main>
     </div>
   )

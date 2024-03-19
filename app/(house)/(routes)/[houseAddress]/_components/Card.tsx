@@ -22,7 +22,7 @@ const Card = ({
         gridColumn: `auto / span ${col}`,
         gridRow: `auto / span ${row}`
       }}
-      className='border border-black rounded-2xl p-2 bg-white'
+      className='border border-black rounded-md p-2 bg-white'
     >
       {text}
     </div>

@@ -41,13 +41,11 @@ const HouseMain = () => {
       text: '2x3',
       grid: { col: 2, row: 3 },
     },
-
   ])
-
 
   return (
     <main
-      className='w-[900px] h-[600px] m-auto grid grid-cols-12 grid-rows-12 grid-flow-col gap-4'
+      className='w-[900px] h-[600px] grid grid-cols-12 grid-rows-12 grid-flow-col gap-4'
     >
       {cards.map((card, i) => (
         <Card
