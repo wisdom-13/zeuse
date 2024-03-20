@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { WidgetBrawer } from '@/components/modal/WidgetBrawer';
 import { AuthModal } from '@/components/modal/AuthModal';
 import CreateHouseModal from '@/components/modal/CreatHouseModal';
-import { useEffect, useState } from 'react';
+import { SettingModal } from '@/components/modal/SettingModal';
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,6 +21,8 @@ const ModalProvider = () => {
     <>
       <AuthModal />
       <CreateHouseModal />
+      <SettingModal />
+      <WidgetBrawer />
     </>
   );
 }

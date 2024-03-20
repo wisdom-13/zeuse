@@ -2,7 +2,6 @@
 
 import { ElementRef, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
 import { useMediaQuery } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
@@ -14,6 +13,7 @@ import useAuthModal from '@/hooks/useAuthModal';
 import MenuItem from './MenuItem';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import useSettingModal from '@/hooks/useSettingModal';
 
 interface HouseMenuProps {
   house: HouseBuild;
@@ -27,6 +27,7 @@ const Navigation = ({
   const param = useParams();
   const { user } = useUser();
   const authModal = useAuthModal();
+  const settingModal = useSettingModal();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
@@ -37,6 +38,8 @@ const Navigation = ({
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
   const owner = house.family.find((item) => item.is_owner)
+
+  console.log(settingModal)
 
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -85,7 +88,7 @@ const Navigation = ({
     <>
       <aside
         ref={sidebarRef}
-        className={cn('group/sidebar h-full bg-white border-y border-r border-black overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
+        className={cn('group/sidebar h-screen bg-white border-y border-r border-black overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}
@@ -122,7 +125,7 @@ const Navigation = ({
                 label='설정'
                 icon={Settings}
                 isLink={false}
-                onClick={authModal.onOpen}
+                onClick={settingModal.onOpen}
               />
             )}
 
