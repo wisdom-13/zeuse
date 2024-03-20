@@ -3,8 +3,9 @@ import getHouseByAddress from '@/action/getHouseByAddress'
 import Navigation from './_components/Navigation'
 import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
 import HouseIdProvider from '@/providers/HouseIdProvider'
-// import useHouseAddressId from '@/hooks/useHouseAddressId'
-// import { useEffect } from 'react'
+import getHousesByUserId from '@/action/getHousesByUserId'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 interface HouseLayoutProps {
   params: {
@@ -17,11 +18,21 @@ export default async function HouseLayout({
   params: { houseAddress },
   children,
 }: HouseLayoutProps) {
+  const supabase = createServerComponentClient({
+    cookies: cookies
+  });
+
+  const { data: { session } } = await supabase.auth.getSession();
+  const houses = await getHousesByUserId();
   const house = await getHouseBuildByAddress(houseAddress);
 
+  if (!house) {
+    return false;
+  }
+
   return (
-    <div className='h-full flex bg-rose-400'>
-      <Navigation menus={house?.board} />
+    <div className='h-full flex bg-blue-800'>
+      <Navigation houses={houses} house={house} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>
         <HouseIdProvider houseAddress={houseAddress}>
           {children}

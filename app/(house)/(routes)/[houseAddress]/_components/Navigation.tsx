@@ -1,29 +1,42 @@
 'use client';
 
 import { ElementRef, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronsLeft, MenuIcon } from 'lucide-react';
+import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
 import { useMediaQuery } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
-import { Board } from '@/types';
+import { House, HouseBuild } from '@/types';
 
 import { HouseList } from '@/components/HouseList';
+import { useUser } from '@/hooks/useUser';
+import useAuthModal from '@/hooks/useAuthModal';
+import MenuItem from './MenuItem';
+import { toast } from 'sonner';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 interface HouseMenuProps {
-  menus?: Board[];
+  house: HouseBuild;
+  houses?: House[];
 }
 
 const Navigation = ({
-  menus
+  house,
+  houses
 }: HouseMenuProps) => {
   const param = useParams();
+  const { user } = useUser();
+  const authModal = useAuthModal();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const router = useRouter();
+  const supabaseClient = useSupabaseClient();
 
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsRestting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  const owner = house.family.find((item) => item.is_owner)
 
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -56,34 +69,84 @@ const Navigation = ({
     }
   }
 
+  const headleLogout = async () => {
+    const { error } = await supabaseClient.auth.signOut();
+
+    router.refresh();
+
+    if (error) {
+      toast.error(error?.message)
+    } else {
+      toast.success('Logged out!')
+    }
+  }
+
   return (
     <>
       <aside
         ref={sidebarRef}
-        className={cn('group/sidebar h-full bg-white overflow-y-auto relative flex w-60 flex-col z-[9999]',
+        className={cn('group/sidebar h-full bg-white border-y border-r border-black overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}
       >
-        <div className='w-60'>
+        <div className='w-60 h-full flex flex-col justify-start'>
           <div
             onClick={collapse}
             role='button'
-            className='h-6 w-6 text-muted-foreground rounded-sm
-          hover:bg-neutral-100 absolute
-          top-2 right-3 opacity-0 group-hover/sidebar:opacity-100'
+            className='h-6 w-6 text-block rounded-sm hover:bg-primary/5 absolute top-2 right-3 opacity-0 group-hover/sidebar:opacity-100'
           >
             <ChevronsLeft className='h-6 w-6' />
           </div>
 
-          <div className='flex flex-col mt-4'>
-            {menus && menus.map((item) => (
-              <Link key={item.id} href={`/${param.houseAddress}/${item.name}`}>
-                {item.title}
-              </Link>
+          <div className='flex flex-col justify-center gap-y-2 p-2 h-24 mt-4'>
+            <h1 className='text-3xl text-center font-bold'>
+              {house.title}
+            </h1>
+          </div>
+
+          <div className='flex flex-col gap-y-2 p-2'>
+            {house.board && house.board.map((item) => (
+              <MenuItem
+                key={item.id}
+                label={item.title}
+                icon={Heart}
+                href={`/${param.houseAddress}/${item.name}`}
+              />
             ))}
           </div>
-          {/* <HouseList /> */}
+
+          <div className='flex flex-col gap-y-2 p-2 mt-auto'>
+            {owner?.user_id === user?.id && (
+              <MenuItem
+                label='설정'
+                icon={Settings}
+                isLink={false}
+                onClick={authModal.onOpen}
+              />
+            )}
+
+            {!user ? (
+              <MenuItem
+                label='로그인'
+                icon={LogIn}
+                isLink={false}
+                onClick={authModal.onOpen}
+              />
+            ) : (
+              <MenuItem
+                label='로그아웃'
+                icon={LogOut}
+                isLink={false}
+                onClick={headleLogout}
+              />
+            )}
+
+            {user && houses && (
+              <HouseList position='start' houses={houses} />
+            )}
+          </div>
+
         </div>
       </aside>
       <div
@@ -95,7 +158,6 @@ const Navigation = ({
         <nav className='bg-transparent px-3 py-2 w-full'>
           {isCollapsed && <MenuIcon onClick={resetWidth} role='button' className='h-6 w-6 text-white' />}
         </nav>
-
       </div>
     </>
   );

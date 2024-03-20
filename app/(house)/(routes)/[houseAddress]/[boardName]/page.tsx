@@ -20,19 +20,8 @@ const BoardPage = async ({
   const board = await getBoardByName(house.id, boardName);
   if (!board) { return false; }
 
-  const posts = board.posts;
-
-  // const filteredData = board.posts.slice().filter((job: Post) => {
-  //   return job.title.includes(searchKeyword) || job.keywords.some(keyword => keyword.toLowerCase().includes(searchKeyword));
-  // });
-
-  // const result = board.posts.sort((a: Post, b: Post) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-
   return (
-    <div
-      className='h-full flex flex-col gap-y-4 bg-white w-full md:max-w-[768px] rounded-md overflow-hidden'
-    >
+    <div className='flex flex-col h-full gap-y-4 p-6'>
       <BoardList board={board} />
     </div>
   );

@@ -7,11 +7,10 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
-import useHouseId from '@/hooks/useHouseId';
 import PostItem from './PostItem';
 import { useParams } from 'next/navigation';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface BoardListProps {
   board: BoardList
@@ -32,7 +31,7 @@ const BoardList = ({
 
   return (
     <>
-      <div className='flex flex-wrap items-center justify-between px-6 mt-8'>
+      <div className='flex flex-wrap items-center justify-between mt-8'>
         <h1 className='text-3xl font-semibold'>
           {board.title}
         </h1>
@@ -42,23 +41,21 @@ const BoardList = ({
           onChange={(e) => setValue(e.target.value)}
           className='w-full mt-4' placeholder='제목 또는 내용으로 검색' />
       </div>
-
-      <ScrollArea className='w-full h-full pl-6 pr-2'>
+      <ScrollArea className='w-full h-full flex flex-col gap-y-4'>
         <div className='flex flex-col gap-y-4'>
           {posts.length === 0 && (
             <div className='mt-4 text-muted-foreground'>
               작성된 포스트가 없습니다.
             </div>
           )}
-          {posts.map((item) => (
-            <>
-              <Link key={item.id} href={`/${param.houseAddress}/${board.name}/${item.id}`}>
-                <PostItem post={item} />
-              </Link>
-            </>
+          {posts && posts.map((item) => (
+            <Link key={item.id} href={`/${param.houseAddress}/${board.name}/${item.id}`}>
+              <PostItem post={item} />
+            </Link>
           ))}
         </div>
       </ScrollArea>
+
     </>
   );
 }
