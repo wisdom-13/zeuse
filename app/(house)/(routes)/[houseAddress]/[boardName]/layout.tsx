@@ -7,13 +7,13 @@ interface BoardLayoutProps {
   children: React.ReactNode
 }
 
-export default async function BoardLayout({
+export default function BoardLayout({
   children,
 }: BoardLayoutProps) {
 
   return (
     <div
-      className='h-full w-full bg-white md:max-w-[768px] rounded-md overflow-hidden'
+      className='h-full w-full bg-card text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
     >
       {children}
     </div>

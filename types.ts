@@ -14,10 +14,16 @@ export interface House {
   created_at: string;
 }
 
+export interface HouseNav extends House {
+  family: Family[];
+  board: Board[];
+}
+
 export interface HouseBuild extends House {
   family: Family[];
   board: Board[];
   style: Style;
+  widget: Widget[];
 }
 
 export interface Board {
@@ -55,11 +61,23 @@ export interface PostFamily extends Post {
 export interface Style {
   house_id: string;
   menu_position: string;
-  bg_iamge: string;
+  bg_image: string;
   logo_image: string;
   color: string;
   radius: string;
   mode: string;
+}
+
+export interface Widget {
+  id: string;
+  house_id: string;
+  type: string;
+  size: string;
+  order: number;
+  image_array: string;
+  board_id: string;
+  date: string;
+  option: string;
 }
 
 export interface Family {

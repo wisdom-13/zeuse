@@ -1,6 +1,4 @@
-import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
 import HouseMain from './_components/HouseMain';
-import HouseMenu from './_components/Navigation';
 
 interface houseAddress {
   params: {
@@ -9,8 +7,6 @@ interface houseAddress {
 }
 
 const HousePage = async ({ params: { houseAddress } }: houseAddress) => {
-
-
   return (
     <div
       className='flex h-full items-center justify-center gap-x-4'

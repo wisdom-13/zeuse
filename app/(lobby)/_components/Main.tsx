@@ -17,7 +17,7 @@ export const Main = () => {
       <h1 className='text-6xl font-bold'>
         <span className='underline'>ZEUSE</span>
       </h1>
-      <div className='bg-white px-6 py-2'>
+      <div className='bg-card text-card-foreground px-6 py-2'>
         <>
           {isLoading &&
             <div className='w-fit m-auto'>

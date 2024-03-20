@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import useAuthModal from '@/hooks/useAuthModal';
 import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Auth } from '@supabase/auth-ui-react';

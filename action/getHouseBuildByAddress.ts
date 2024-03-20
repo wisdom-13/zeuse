@@ -1,8 +1,8 @@
-import { HouseBuild } from '@/types';
+import { HouseBuild, HouseNav } from '@/types';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | null> => {
+const getHouseNavByAddress = async (address: string): Promise<HouseBuild | null> => {
   const supabase = createServerComponentClient({
     cookies: cookies
   });
@@ -11,8 +11,8 @@ const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | nul
     .from('houses')
     .select(`
         *, 
-        style:style!inner(*),
         board:board!inner(*),
+        style:style!inner(*),
         family:family!inner(*)
     `)
     .eq('address', address)
@@ -25,4 +25,4 @@ const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | nul
   return (data as HouseBuild) || null;
 }
 
-export default getHouseBuildByAddress;
+export default getHouseNavByAddress;

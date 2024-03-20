@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import getHouseByAddress from '@/action/getHouseByAddress'
 import Navigation from './_components/Navigation'
-import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
 import HouseIdProvider from '@/providers/HouseIdProvider'
 import getHousesByUserId from '@/action/getHousesByUserId'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
+import { cn } from '@/lib/utils'
 
 interface HouseLayoutProps {
   params: {
@@ -26,12 +27,21 @@ export default async function HouseLayout({
   const houses = await getHousesByUserId();
   const house = await getHouseBuildByAddress(houseAddress);
 
+
   if (!house) {
     return false;
   }
 
   return (
-    <div className='h-full flex bg-blue-800'>
+    <div
+      className={cn(
+        'h-screen flex',
+        house.style.mode == 'dark' && 'dark',
+        house.style.color && `theme-${house.style.color}`,
+        house.style.radius && `radius-${house.style.radius}`
+      )}
+      style={{ background: `url(${house.style.bg_image})` }}
+    >
       <Navigation houses={houses} house={house} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>
         <HouseIdProvider houseAddress={houseAddress}>

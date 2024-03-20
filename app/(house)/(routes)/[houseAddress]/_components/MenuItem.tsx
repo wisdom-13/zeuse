@@ -28,7 +28,7 @@ const MenuItem = ({
         <Link
           href={href}
           className={cn(
-            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer text-black transition hover:bg-primary/5 rounded-md`,
+            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer text-card-foreground transition hover:bg-primary/5 rounded-md`,
             active && 'text-primary'
           )}
         >
@@ -39,7 +39,7 @@ const MenuItem = ({
       {!isLink && (
         <button
           className={cn(
-            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer text-black transition hover:bg-primary/5 rounded-md`,
+            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer text-card-foreground transition hover:bg-primary/5 rounded-md`,
             active && 'text-primary'
           )}
           onClick={onClick}

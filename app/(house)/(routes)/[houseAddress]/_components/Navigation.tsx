@@ -1,6 +1,6 @@
 'use client';
 
-import { ElementRef, useRef, useState } from 'react';
+import { ElementRef, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
 import { useMediaQuery } from 'usehooks-ts';
@@ -14,6 +14,7 @@ import MenuItem from './MenuItem';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSettingModal from '@/hooks/useSettingModal';
+import Image from 'next/image';
 
 interface HouseMenuProps {
   house: HouseBuild;
@@ -37,9 +38,15 @@ const Navigation = ({
   const [isResetting, setIsRestting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  const owner = house.family.find((item) => item.is_owner)
+  const owner = house.family.find((item) => item.is_owner);
 
-  console.log(settingModal)
+  useEffect(() => {
+    if (house.style.mode == 'dark') {
+      document.body.classList.add('dark');
+    }
+    document.body.classList.add(`theme-${house.style.color}`);
+    document.body.classList.add(`radius-${house.style.radius}`);
+  }, [house.style]);
 
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -88,7 +95,7 @@ const Navigation = ({
     <>
       <aside
         ref={sidebarRef}
-        className={cn('group/sidebar h-screen bg-white border-y border-r border-black overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
+        className={cn('group/sidebar h-screen bg-card text-card-foreground border-y border-r border-black overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}
@@ -102,10 +109,21 @@ const Navigation = ({
             <ChevronsLeft className='h-6 w-6' />
           </div>
 
-          <div className='flex flex-col justify-center gap-y-2 p-2 h-24 mt-4'>
-            <h1 className='text-3xl text-center font-bold'>
-              {house.title}
-            </h1>
+          <div className='flex flex-col justify-center gap-y-2 p-2 min-h-24 mt-6'>
+            {true ? (
+              <Image
+                src={house.style.logo_image}
+                alt='logo'
+                // fill
+                width={240}
+                height={240}
+                className='object-cover relative'
+              />
+            ) : (
+              <h1 className='text-3xl text-center font-bold'>
+                {house.title}
+              </h1>
+            )}
           </div>
 
           <div className='flex flex-col gap-y-2 p-2'>
@@ -151,7 +169,7 @@ const Navigation = ({
           </div>
 
         </div>
-      </aside>
+      </aside >
       <div
         ref={navbarRef}
         className={cn('absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]',
