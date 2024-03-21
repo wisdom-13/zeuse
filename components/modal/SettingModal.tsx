@@ -14,6 +14,8 @@ import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
 import SettingItem from '../SettingItem';
 import ThemeContent from './settingContent/ThemeContent';
 import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
+import HouseContent from './settingContent/HouseContent';
+import WidgetContent from './settingContent/WidgetContent';
 
 export const SettingModal = () => {
   const supabaseClient = useSupabaseClient();
@@ -87,7 +89,9 @@ export const SettingModal = () => {
           </div>
         </div>
 
+        {activeMenu == 'house' && <HouseContent house={house} updateHouse={updateHouse} />}
         {activeMenu == 'theme' && <ThemeContent house={house} updateHouse={updateHouse} />}
+        {activeMenu == 'widget' && <WidgetContent house={house} updateHouse={updateHouse} />}
 
       </DialogContent>
     </Dialog>

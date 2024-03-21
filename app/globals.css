@@ -8,6 +8,8 @@ body,
   height: 100%;
 }
 
+
+
 :root,
 .zinc {
   --background: 0 0% 100%;
@@ -294,6 +296,23 @@ body,
   --radius: 0rem;
 }
 
+@keyframes shake {
+  0% {
+    transform: rotate(-0.3deg);
+  }
+
+  50% {
+    transform: rotate(0.3deg);
+  }
+
+  100% {
+    transform: rotate(-0.3deg);
+  }
+}
+
+.aniamte-shake {
+  animation: shake 0.25s infinite;
+}
 
 
 @layer base {
