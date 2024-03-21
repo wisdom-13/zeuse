@@ -8,7 +8,8 @@ body,
   height: 100%;
 }
 
-:root {
+:root,
+.zinc {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -30,7 +31,8 @@ body,
   --ring: 240 5.9% 10%;
 }
 
-.dark {
+.dark,
+.zinc.dark {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
   --card: 240 10% 3.9%;
@@ -52,7 +54,7 @@ body,
   --ring: 240 4.9% 83.9%;
 }
 
-.theme-slate {
+.color-slate {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
@@ -74,7 +76,7 @@ body,
   --ring: 222.2 84% 4.9%;
 }
 
-.theme-slate.dark {
+.color-slate.dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
   --card: 222.2 84% 4.9%;
@@ -96,7 +98,7 @@ body,
   --ring: 212.7 26.8% 83.9;
 }
 
-.theme-rose {
+.color-rose {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -118,7 +120,7 @@ body,
   --ring: 346.8 77.2% 49.8%;
 }
 
-.theme-red.dark {
+.color-rose.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 0 0% 95%;
   --card: 24 9.8% 10%;
@@ -140,7 +142,7 @@ body,
   --ring: 346.8 77.2% 49.8%;
 }
 
-.theme-blue {
+.color-blue {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
@@ -162,7 +164,7 @@ body,
   --ring: 221.2 83.2% 53.3%;
 }
 
-.theme-blue.dark {
+.color-blue.dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
   --card: 222.2 84% 4.9%;
@@ -184,7 +186,7 @@ body,
   --ring: 224.3 76.3% 48%;
 }
 
-.theme-green {
+.color-green {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -206,7 +208,7 @@ body,
   --ring: 142.1 76.2% 36.3%;
 }
 
-.theme-green.dark {
+.color-green.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 0 0% 95%;
   --card: 24 9.8% 10%;
@@ -228,7 +230,7 @@ body,
   --ring: 142.4 71.8% 29.2%;
 }
 
-.theme-orange {
+.color-orange {
   --background: 0 0% 100%;
   --foreground: 20 14.3% 4.1%;
   --card: 0 0% 100%;
@@ -250,7 +252,7 @@ body,
   --ring: 24.6 95% 53.1%;
 }
 
-.theme-orange.dark {
+.color-orange.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 60 9.1% 97.8%;
   --card: 20 14.3% 4.1%;

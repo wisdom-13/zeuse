@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSettingModal from '@/hooks/useSettingModal';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface HouseMenuProps {
   house: HouseBuild;
@@ -44,9 +45,10 @@ const Navigation = ({
     if (house.style.mode == 'dark') {
       document.body.classList.add('dark');
     }
-    document.body.classList.add(`theme-${house.style.color}`);
+    document.body.classList.add(`color-${house.style.color}`);
     document.body.classList.add(`radius-${house.style.radius}`);
-  }, [house.style]);
+  }, []);
+
 
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -110,20 +112,22 @@ const Navigation = ({
           </div>
 
           <div className='flex flex-col justify-center gap-y-2 p-2 min-h-24 mt-6'>
-            {true ? (
-              <Image
-                src={house.style.logo_image}
-                alt='logo'
-                // fill
-                width={240}
-                height={240}
-                className='object-cover relative'
-              />
-            ) : (
-              <h1 className='text-3xl text-center font-bold'>
-                {house.title}
-              </h1>
-            )}
+            <Link href={`/${house.address}`}>
+              {true ? (
+                <Image
+                  src={house.style.logo_image}
+                  alt='logo'
+                  // fill
+                  width={240}
+                  height={240}
+                  className='object-cover relative'
+                />
+              ) : (
+                <h1 className='text-3xl text-center font-bold'>
+                  {house.title}
+                </h1>
+              )}
+            </Link>
           </div>
 
           <div className='flex flex-col gap-y-2 p-2'>

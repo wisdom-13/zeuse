@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
 import {
   Dialog,
@@ -12,13 +12,22 @@ import {
 import useSettingModal from '@/hooks/useSettingModal';
 import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
 import SettingItem from '../SettingItem';
+import ThemeContent from './settingContent/ThemeContent';
+import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
 
 export const SettingModal = () => {
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
+  const param = useParams();
   const { session } = useSessionContext();
   const { onClose, isOpen } = useSettingModal();
+  const [activeMenu, setActiveMenu] = useState('theme');
 
+  const { house, updateHouse } = useGetHouseBuildByAddress(param.houseAddress);
+
+  if (!house) {
+    return false;
+  }
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -36,11 +45,14 @@ export const SettingModal = () => {
             <SettingItem
               icon={User}
               label='프로필'
-              active
+              active={activeMenu === 'profile'}
+              onClick={() => setActiveMenu('profile')}
             />
             <SettingItem
               icon={Users}
               label='패밀리'
+              active={activeMenu === 'family'}
+              onClick={() => setActiveMenu('family')}
             />
           </div>
           <div className='text-sm font-semibold text-muted-foreground p-2 cursor-default'>하우스</div>
@@ -48,10 +60,14 @@ export const SettingModal = () => {
             <SettingItem
               icon={Home}
               label='하우스'
+              active={activeMenu === 'house'}
+              onClick={() => setActiveMenu('house')}
             />
             <SettingItem
               icon={Notebook}
               label='게시판'
+              active={activeMenu === 'board'}
+              onClick={() => setActiveMenu('board')}
             />
           </div>
           <div className='text-sm font-semibold text-muted-foreground p-2 cursor-default'>스타일</div>
@@ -59,26 +75,20 @@ export const SettingModal = () => {
             <SettingItem
               icon={PencilRuler}
               label='테마'
+              active={activeMenu === 'theme'}
+              onClick={() => setActiveMenu('theme')}
             />
             <SettingItem
               icon={Box}
               label='위젯'
+              active={activeMenu === 'widget'}
+              onClick={() => setActiveMenu('widget')}
             />
           </div>
         </div>
 
-        <div className=' w-[800px] rounded-md'>
-          흠냐 메뉴... 왤케 드리니..
-        </div>
+        {activeMenu == 'theme' && <ThemeContent house={house} updateHouse={updateHouse} />}
 
-        {/* <DialogHeader className='pb-2'>
-          <h2 className='text-lg font-medium text-center'>
-            Setting
-          </h2>
-          <p className='text-sm text-center'>
-            Login to your accout
-          </p>
-        </DialogHeader> */}
       </DialogContent>
     </Dialog>
   )

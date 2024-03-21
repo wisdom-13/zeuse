@@ -27,20 +27,20 @@ export default async function HouseLayout({
   const houses = await getHousesByUserId();
   const house = await getHouseBuildByAddress(houseAddress);
 
-
   if (!house) {
     return false;
   }
 
   return (
     <div
+      id='theme-wrap'
       className={cn(
         'h-screen flex',
         house.style.mode == 'dark' && 'dark',
-        house.style.color && `theme-${house.style.color}`,
+        house.style.color && `color-${house.style.color}`,
         house.style.radius && `radius-${house.style.radius}`
       )}
-      style={{ background: `url(${house.style.bg_image})` }}
+      style={{ background: house.style.bg_image ? `url(${house.style.bg_image})` : `${house.style.bg_color}` }}
     >
       <Navigation houses={houses} house={house} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>

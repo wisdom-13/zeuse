@@ -61,6 +61,7 @@ export interface PostFamily extends Post {
 export interface Style {
   house_id: string;
   menu_position: string;
+  bg_color: string;
   bg_image: string;
   logo_image: string;
   color: string;
