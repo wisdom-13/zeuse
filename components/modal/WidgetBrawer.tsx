@@ -1,24 +1,29 @@
+'use client';
 
-
-import * as React from "react"
-import { Minus, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer"
 import useWidgetEdit from '@/hooks/useWidgetEdit';
-
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { useParams, useRouter } from 'next/navigation';
+import useHouseBuild from '@/hooks/useHouseBuild';
 
 export function WidgetBrawer() {
+  const { houseId, houseBuild, setHouseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
+  const param = useParams();
+  const router = useRouter();
+  const superbaseClient = useSupabaseClient();
+  const [isLoading, setIsLoading] = useState(false);
+
+  if (!houseBuild) {
+    return false;
+  }
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -26,26 +31,51 @@ export function WidgetBrawer() {
     }
   }
 
+  const handelAddWidget = async (type: string, grid: { col: number, row: number }) => {
+    setIsLoading(true);
+
+    const {
+      data: newWidget,
+      error
+    } = await superbaseClient
+      .from('widget')
+      .insert({
+        house_id: houseId,
+        type: type,
+        grid: grid
+      })
+      .select()
+      .single();
+
+    if (error) {
+      setIsLoading(false);
+      console.error(error.message)
+      return toast.error(`error (${error.message})`);
+    }
+
+    const updatedHouse = {
+      ...houseBuild,
+      widget: [...houseBuild.widget, newWidget]
+    };
+
+    setHouseBuild(updatedHouse)
+  }
+
+
   return (
     <Drawer open={widgetEdit.isBrawerOpen} onOpenChange={onChange}>
       {/* <DrawerTrigger asChild>
         <Button variant="outline">Open Drawer</Button>
       </DrawerTrigger> */}
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            <DrawerTitle>Move Goal</DrawerTitle>
-            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-
+        <div className="mx-auto w-full">
+          <div className="p-4">
+            <Button
+              onClick={() => handelAddWidget('image', { col: 1, row: 1 })}
+            >
+              이미지형 추가 (2x2)
+            </Button>
           </div>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

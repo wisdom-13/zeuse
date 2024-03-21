@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 
 import { useDrag, useDrop } from 'react-dnd';
 
-export interface CardProps {
+export interface EditWidgetProps {
   id?: any
   text?: string
   index: number
@@ -25,14 +25,14 @@ interface DragItem {
   type: string
 }
 
-const Card = ({
+export const EditWidget = ({
   id,
   text,
   index,
   grid: { col, row } = { col: 2, row: 3 },
   editing = false,
   moveCard,
-}: CardProps) => {
+}: EditWidgetProps) => {
 
   // TODO : 드래그 개선
 
@@ -98,4 +98,3 @@ const Card = ({
   );
 }
 
-export default Card;

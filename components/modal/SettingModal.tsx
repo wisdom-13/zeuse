@@ -13,9 +13,9 @@ import useSettingModal from '@/hooks/useSettingModal';
 import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
 import SettingItem from '../SettingItem';
 import ThemeContent from './settingContent/ThemeContent';
-import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
 import HouseContent from './settingContent/HouseContent';
 import WidgetContent from './settingContent/WidgetContent';
+import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
 
 export const SettingModal = () => {
   const supabaseClient = useSupabaseClient();

@@ -1,4 +1,4 @@
-export interface UserDetail {
+export interface UserDetails {
   id: string;
   name?: string;
   avatar_url?: string;
@@ -14,10 +14,6 @@ export interface House {
   created_at: string;
 }
 
-export interface HouseNav extends House {
-  family: Family[];
-  board: Board[];
-}
 
 export interface HouseBuild extends House {
   family: Family[];
@@ -73,7 +69,7 @@ export interface Widget {
   id: string;
   house_id: string;
   type: string;
-  size: string;
+  grid: { col: number, row: number };
   order: number;
   image_array: string;
   board_id: string;

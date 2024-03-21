@@ -1,42 +1,42 @@
-import { HouseBuild } from '@/types';
+import { Widget } from '@/types';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
-const useGetHouseWidgetByAddress = (address: any) => {
+const useGetWidgetByHouseId = (houseId: string | undefined) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [house, setHouse] = useState<HouseBuild | undefined>(undefined);
+  const [widgets, setWidgets] = useState<Widget[] | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
     setIsLoading(true);
 
+    if (!houseId) {
+      return undefined;
+    }
+
     const fetchHouse = async () => {
       const { data, error } = await supabaseClient
-        .from('houses')
-        .select(`
-          *,
-          widget:widget!left(*)
-        `)
-        .eq('address', address)
-        .single();
+        .from('widget')
+        .select(`*`)
+        .eq('house_id', houseId);
 
       if (error) {
         setIsLoading(false);
         return toast.error(error.message);
       }
 
-      setHouse(data as HouseBuild);
+      setWidgets(data as Widget[]);
       setIsLoading(false);
     }
 
     fetchHouse();
-  }, [address, supabaseClient]);
+  }, [houseId, supabaseClient]);
 
   return useMemo(() => ({
     isLoading,
-    house
-  }), [isLoading, house]);
+    widgets,
+  }), [isLoading, widgets]);
 }
 
-export default useGetHouseWidgetByAddress;
+export default useGetWidgetByHouseId;

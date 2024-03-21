@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { House, HouseBuild } from '@/types';
 
 import { HouseList } from '@/components/HouseList';
-import { useUser } from '@/hooks/useUser';
 import useAuthModal from '@/hooks/useAuthModal';
 import MenuItem from './MenuItem';
 import { toast } from 'sonner';
@@ -16,6 +15,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSettingModal from '@/hooks/useSettingModal';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useUser } from '@/hooks/useUser';
 
 interface HouseMenuProps {
   house: HouseBuild;
@@ -181,7 +181,7 @@ const Navigation = ({
           isMobile && 'left-0 w-full')}
       >
         <nav className='bg-transparent px-3 py-2 w-full'>
-          {isCollapsed && <MenuIcon onClick={resetWidth} role='button' className='h-6 w-6 text-white' />}
+          {isCollapsed && <MenuIcon onClick={resetWidth} role='button' className='h-6 w-6' />}
         </nav>
       </div>
     </>

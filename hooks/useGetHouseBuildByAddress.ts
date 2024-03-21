@@ -16,6 +16,7 @@ const useGetHouseBuildByAddress = (address: any) => {
         .from('houses')
         .select(`
             *, 
+            widget:widget!inner(*),
             board:board!inner(*),
             style:style!inner(*),
             family:family!inner(*)

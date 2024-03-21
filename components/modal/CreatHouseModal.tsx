@@ -112,8 +112,6 @@ const CreateHouseModal = () => {
       return toast.error(`집을 생성하는 도중 오류가 발생하였습니다.1 (${houseInsertError.message})`);
     }
 
-    console.log(houseData);
-
     // 2. family 데이터 추가
     const {
       error: familyInsertError

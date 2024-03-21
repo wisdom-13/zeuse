@@ -1,17 +1,21 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import Card from './Card';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
-import useGetHouseWidgetByAddress from '@/hooks/useGetHouseWidgetByAddress';
-import useSettingModal from '@/hooks/useSettingModal';
 import useWidgetEdit from '@/hooks/useWidgetEdit';
 import update from 'immutability-helper'
-
+import { Widget } from './Widget';
+import { EditWidget } from './EditWidget';
+import { Button } from '@/components/ui/button';
+import { PlusSquare, Save } from 'lucide-react';
+import useGetWidgetByHouseId from '@/hooks/useGetWidgetByHouseId';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import useHouseBuild from '@/hooks/useHouseBuild';
 
 export interface Item {
-  id: number
-  text: string
+  id: number;
+  order: number;
   grid?: {
     col: number,
     row: number
@@ -19,54 +23,39 @@ export interface Item {
 }
 
 const HouseMain = () => {
+  const { houseId, houseBuild } = useHouseBuild();
   const param = useParams();
   const widgetEdit = useWidgetEdit();
-  const { house } = useGetHouseWidgetByAddress(param.houseAddress);
+
+  const Card = widgetEdit.isEditing ? EditWidget : Widget;
+
+  const { widgets, isLoading } = useGetWidgetByHouseId(houseId);
+
 
   const [cards, setCards] = useState([
     {
       id: '1',
-      index: '1',
-      text: '위젯이 없어용 1',
-      grid: { col: 4, row: 12 },
-    },
-    {
-      id: '2',
-      index: '2',
-      text: '위젯이 없어용 2',
-      grid: { col: 4, row: 3 },
-    },
-    {
-      id: '3',
-      index: '3',
-      text: '위젯이 없어용 3',
-      grid: { col: 4, row: 3 },
-    },
-    {
-      id: '4',
-      index: '4',
-      text: '위젯이 없어용 4',
-      grid: { col: 4, row: 6 },
-    },
-    {
-      id: '5',
-      index: '5',
-      text: '위젯이 없어용 5',
-      grid: { col: 4, row: 3 },
-    },
-    {
-      id: '6',
-      index: '6',
-      text: '위젯이 없어용 6',
-      grid: { col: 2, row: 3 },
-    },
-    {
-      id: '7',
-      index: '7',
-      text: '위젯이 없어용 7',
-      grid: { col: 2, row: 3 },
+      order: 1,
+      grid: { col: 3, row: 2 },
     }
-  ])
+  ]);
+
+  const widget = useMemo(() => {
+    if (houseBuild?.widget) {
+      return houseBuild.widget.map((item) => ({
+        id: item.id,
+        order: item.order,
+        grid: item.grid,
+        widgetData: item
+      }));
+    } else {
+      return [];
+    }
+  }, [houseBuild?.widget]);
+
+  useEffect(() => {
+    setCards(widget);
+  }, [widget]);
 
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     setCards((prevCards: any[]) =>
@@ -79,22 +68,52 @@ const HouseMain = () => {
     )
   }, [])
 
+  if (houseBuild === undefined) {
+    return (
+      <div className='w-[900px] h-[600px] grid grid-cols-6 grid-rows-4 grid-flow-dense gap-6'>
+        <Widget.Skeleton />
+      </div>
+    )
+  }
+
   return (
-    <main
-      className='w-[900px] h-[600px] grid grid-cols-12 grid-rows-12 grid-flow-dense gap-6'
-    >
-      {cards.map((widget, i) => (
-        <Card
-          key={widget.id}
-          index={i}
-          id={widget.id}
-          text={widget.text}
-          grid={widget.grid}
-          editing={widgetEdit.isEditing}
-          moveCard={moveCard}
-        />
-      ))}
-    </main>
+    <DndProvider backend={HTML5Backend}>
+      {widgetEdit.isEditing && (
+        <div className='absolute top-6 left-1/2 transform -translate-x-1/2 bg-background p-2 rounded-md flex gap-x-2'>
+          <Button
+            className='flex gap-x-2'
+            variant='ghost'
+            onClick={widgetEdit.onBrawerOpen}
+          >
+            <PlusSquare size={18} />
+            위젯추가
+          </Button>
+          <Button
+            className='flex gap-x-2'
+            variant='ghost'
+            onClick={widgetEdit.onEditingEnd}
+          >
+            <Save size={18} />
+            편집완료
+          </Button>
+        </div>
+      )}
+
+      <main
+        className='w-[900px] h-[600px] grid grid-cols-6 grid-rows-4 grid-flow-dense gap-6'
+      >
+        {cards.map((widget, i) => (
+          <Card
+            key={widget.id}
+            index={i}
+            id={widget.id}
+            grid={widget.grid}
+            editing={widgetEdit.isEditing}
+            moveCard={moveCard}
+          />
+        ))}
+      </main>
+    </DndProvider>
   );
 }
 

@@ -1,8 +1,8 @@
-import { HouseBuild, HouseNav } from '@/types';
+import { HouseBuild } from '@/types';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-const getHouseNavByAddress = async (address: string): Promise<HouseBuild | null> => {
+const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | null> => {
   const supabase = createServerComponentClient({
     cookies: cookies
   });
@@ -12,6 +12,7 @@ const getHouseNavByAddress = async (address: string): Promise<HouseBuild | null>
     .select(`
         *, 
         board:board!inner(*),
+        widget:widget!inner(*),
         style:style!inner(*),
         family:family!inner(*)
     `)
@@ -25,4 +26,4 @@ const getHouseNavByAddress = async (address: string): Promise<HouseBuild | null>
   return (data as HouseBuild) || null;
 }
 
-export default getHouseNavByAddress;
+export default getHouseBuildByAddress;
