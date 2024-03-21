@@ -1,17 +1,18 @@
+'use client';
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import HouseMain from './_components/HouseMain';
 
-interface houseAddress {
-  params: {
-    houseAddress: string;
-  }
-}
-
-const HousePage = async ({ params: { houseAddress } }: houseAddress) => {
+const HousePage = () => {
   return (
     <div
       className='flex h-full items-center justify-center gap-x-4'
     >
-      <HouseMain />
+      <DndProvider backend={HTML5Backend}>
+        <HouseMain />
+      </DndProvider>
     </div>
   );
 }
