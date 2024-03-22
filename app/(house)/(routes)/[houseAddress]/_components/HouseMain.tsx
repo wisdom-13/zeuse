@@ -1,44 +1,36 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
 import useWidgetEdit from '@/hooks/useWidgetEdit';
-import update from 'immutability-helper'
 import { Widget } from './Widget';
 import { EditWidget } from './EditWidget';
 import { Button } from '@/components/ui/button';
-import { PlusSquare, Save } from 'lucide-react';
-import useGetWidgetByHouseId from '@/hooks/useGetWidgetByHouseId';
+import { PlusSquare, Save, SquareCheck, SquareX, X } from 'lucide-react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useHouseBuild from '@/hooks/useHouseBuild';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { toast } from 'sonner';
+import { Widget as WidgetType } from '@/types';
 
 export interface Item {
-  id: number;
+  id: string;
   order: number;
   grid?: {
     col: number,
     row: number
   }
+  widgetData?: WidgetType | undefined;
 }
 
 const HouseMain = () => {
-  const { houseId, houseBuild } = useHouseBuild();
-  const param = useParams();
+  const { houseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
+  const superbaseClient = useSupabaseClient();
 
   const Card = widgetEdit.isEditing ? EditWidget : Widget;
 
-  const { widgets, isLoading } = useGetWidgetByHouseId(houseId);
-
-
-  const [cards, setCards] = useState([
-    {
-      id: '1',
-      order: 1,
-      grid: { col: 3, row: 2 },
-    }
-  ]);
+  const [cards, setCards] = useState<Item[]>([]);
 
   const widget = useMemo(() => {
     if (houseBuild?.widget) {
@@ -47,7 +39,7 @@ const HouseMain = () => {
         order: item.order,
         grid: item.grid,
         widgetData: item
-      }));
+      })).sort((a, b) => a.order - b.order);
     } else {
       return [];
     }
@@ -58,15 +50,28 @@ const HouseMain = () => {
   }, [widget]);
 
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-    setCards((prevCards: any[]) =>
-      update(prevCards, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevCards[dragIndex] as Item],
-        ],
-      }),
-    )
-  }, [])
+    const newCards = [...cards];
+    const draggedCard = newCards[dragIndex];
+    newCards.splice(dragIndex, 1);
+    newCards.splice(hoverIndex, 0, draggedCard);
+    setCards(newCards);
+  }, [cards]);
+
+  const updateWidget = async () => {
+    try {
+      cards.map(async (data, i) => {
+        await superbaseClient
+          .from('widget')
+          .update({ order: i })
+          .eq('id', data.id);
+      })
+
+      widgetEdit.onEditingEnd();
+      toast.success('위젯 편집 내용을 저장했습니다.')
+    } catch (error) {
+      toast.success(`위젯 편집 내용을 저장하는 중 오류가 발생하였습니다. : ${error}`)
+    }
+  }
 
   if (houseBuild === undefined) {
     return (
@@ -91,9 +96,9 @@ const HouseMain = () => {
           <Button
             className='flex gap-x-2'
             variant='ghost'
-            onClick={widgetEdit.onEditingEnd}
+            onClick={updateWidget}
           >
-            <Save size={18} />
+            <SquareCheck size={18} />
             편집완료
           </Button>
         </div>
@@ -108,8 +113,9 @@ const HouseMain = () => {
             index={i}
             id={widget.id}
             grid={widget.grid}
-            editing={widgetEdit.isEditing}
+            isEditing={widgetEdit.isEditing}
             moveCard={moveCard}
+            widgetData={widget.widgetData}
           />
         ))}
       </main>
