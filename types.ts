@@ -71,7 +71,7 @@ export interface Widget {
   type: string;
   grid: { col: number, row: number };
   order: number;
-  image_array: string;
+  image_array: Array<string>;
   board_id: string;
   date: string;
   option: string;

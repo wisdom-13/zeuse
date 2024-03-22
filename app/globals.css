@@ -314,6 +314,9 @@ body,
   animation: shake 0.25s infinite;
 }
 
+.slick-dots {
+  bottom: 10px;
+}
 
 @layer base {
   * {

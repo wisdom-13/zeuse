@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
 import { useDrag, useDrop } from 'react-dnd';
+import useWidgetEdit from '@/hooks/useWidgetEdit';
+import { Widget as WidgetType } from '@/types';
 
 export interface EditWidgetProps {
   id?: any
@@ -15,8 +17,9 @@ export interface EditWidgetProps {
     col: number,
     row: number
   }
-  editing?: boolean;
-  moveCard: (dragIndex: number, hoverIndex: number) => void
+  isEditing?: boolean;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  widgetData?: WidgetType;
 }
 
 interface DragItem {
@@ -30,10 +33,11 @@ export const EditWidget = ({
   text,
   index,
   grid: { col, row } = { col: 2, row: 3 },
-  editing = false,
+  isEditing = false,
   moveCard,
+  widgetData
 }: EditWidgetProps) => {
-
+  const widgetEdit = useWidgetEdit();
   // TODO : 드래그 개선
 
   const ref = useRef<HTMLDivElement>(null)
@@ -67,9 +71,7 @@ export const EditWidget = ({
 
   const [{ isDragging }, drag] = useDrag({
     type: 'widget',
-    item: () => {
-      return { id, index }
-    },
+    item: { id, index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -80,17 +82,18 @@ export const EditWidget = ({
   return (
     <>
       <div
-        ref={ref}
+        ref={isEditing ? ref : ''}
         data-handler-id={handlerId}
         style={{
           gridColumn: `auto / span ${col}`,
           gridRow: `auto / span ${row}`
         }}
         className={cn(
-          editing && 'aniamte-shake',
+          isEditing && 'aniamte-shake',
           isDragging ? 'opacity-0' : 'opacity-100',
-          'border border-black rounded-md p-2 bg-card text-card-foreground'
+          'border border-black rounded-md bg-card text-card-foreground overflow-hidden'
         )}
+        onClick={widgetEdit.onModalOpen}
       >
         [{id}] {text}
       </div>

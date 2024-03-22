@@ -9,7 +9,7 @@ import { House, HouseBuild } from '@/types';
 
 import { HouseList } from '@/components/HouseList';
 import useAuthModal from '@/hooks/useAuthModal';
-import { MenuItem } from './MenuItem';
+import MenuItem from './MenuItem';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSettingModal from '@/hooks/useSettingModal';
