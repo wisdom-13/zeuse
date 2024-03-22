@@ -9,7 +9,7 @@ import { House, HouseBuild } from '@/types';
 
 import { HouseList } from '@/components/HouseList';
 import useAuthModal from '@/hooks/useAuthModal';
-import MenuItem from './MenuItem';
+import { MenuItem } from './MenuItem';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSettingModal from '@/hooks/useSettingModal';
@@ -27,7 +27,7 @@ const Navigation = ({
   houses
 }: HouseMenuProps) => {
   const param = useParams();
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const authModal = useAuthModal();
   const settingModal = useSettingModal();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -142,7 +142,7 @@ const Navigation = ({
           </div>
 
           <div className='flex flex-col gap-y-2 p-2 mt-auto'>
-            {owner?.user_id === user?.id && (
+            {!isLoading && owner?.user_id === user?.id && (
               <MenuItem
                 label='설정'
                 icon={Settings}
@@ -151,14 +151,16 @@ const Navigation = ({
               />
             )}
 
-            {!user ? (
+            {!isLoading && !user && (
               <MenuItem
                 label='로그인'
                 icon={LogIn}
                 isLink={false}
                 onClick={authModal.onOpen}
               />
-            ) : (
+            )}
+
+            {!isLoading && user && (
               <MenuItem
                 label='로그아웃'
                 icon={LogOut}
@@ -167,7 +169,7 @@ const Navigation = ({
               />
             )}
 
-            {user && houses && (
+            {!isLoading && user && houses && (
               <HouseList position='start' houses={houses} />
             )}
           </div>
