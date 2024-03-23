@@ -11,6 +11,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import { getPublicUrl } from '@/util/getPublicUrl';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ImageIcon } from 'lucide-react';
 
 
 
@@ -23,8 +24,9 @@ const WidgetImage = ({
 }: WidgetImageProps) => {
 
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
 
   useEffect(() => {
     if (!api) {
@@ -35,24 +37,21 @@ const WidgetImage = ({
     setCurrent(api.selectedScrollSnap() + 1)
     console.log(count)
 
-    api.on("select", () => {
+    api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1)
     })
   }, [api])
 
 
-
-
   if (!widget.image_array || widget.image_array.length === 0) {
     return (
-      <div>image</div>
+      <div className='w-full h-full flex flex items-center justify-center bg-gray-100'>
+        <ImageIcon className='text-gray-500' />
+      </div>
     );
   }
 
-
   const slides = widget.image_array.map((image) => (getPublicUrl(`widget/${image}`)))
-
-
 
   return (
     <>
@@ -83,7 +82,7 @@ const WidgetImage = ({
 
         </CarouselContent>
         <div className='absolute bottom-2 left-1/2 -translate-x-1/2'>
-          {
+          {count > 1 &&
             Array.from(Array(count).keys()).map((i) => (
               <Button
                 key={i}

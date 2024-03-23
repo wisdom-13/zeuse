@@ -30,21 +30,18 @@ const WidgetBoard = ({
 
   return (
     <div className='p-6'>
-      <h3 className='text-3xl font-semibold mb-4'>{board?.title}</h3>
+      <h3 className='text-3xl font-semibold mb-5'>{board?.title}</h3>
       <ul>
         {board.posts.sort((a: PostFamily, b: PostFamily) => +new Date(b.created_at) - +new Date(a.created_at)).map((item) => (
-          <>
-            <li key={item.id} className='h-10'>
-              <Link
-                href={`/${param.houseAddress}/${board.name}/${item.id}`}
-                className='flex justify-between items-center'
-              >
-                <span className='w-2/3 truncate'>{item.title}{item.title}</span>
-                <span className='text-sm text-muted-foreground'>{format(item.created_at, 'ko')}</span>
-              </Link>
-            </li>
-          </>
-
+          <li key={item.id} className='h-10'>
+            <Link
+              href={`/${param.houseAddress}/${board.name}/${item.id}`}
+              className='flex justify-between items-center'
+            >
+              <span className='w-2/3 truncate'>{item.title}</span>
+              <span className='text-sm text-muted-foreground'>{format(item.created_at, 'ko')}</span>
+            </Link>
+          </li>
         ))}
       </ul>
     </div>

@@ -7,7 +7,7 @@ import {
   DialogHeader
 } from '@/components/ui/dialog';
 import useWidgetEdit from '@/hooks/useWidgetEdit';
-import { Plus, X } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -111,7 +111,7 @@ const WidgetModal = () => {
                   onClick={() => removeFile(index)}
                   disabled={isLoading}
                 >
-                  <X size={16} />
+                  <Minus size={16} />
                 </button>
                 <Image
                   src={file.preview}

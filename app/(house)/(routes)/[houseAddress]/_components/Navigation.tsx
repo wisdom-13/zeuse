@@ -111,7 +111,7 @@ const Navigation = ({
             <ChevronsLeft className='h-6 w-6' />
           </div>
 
-          <div className='flex flex-col justify-center gap-y-2 p-2 min-h-24 mt-6'>
+          <div className='flex flex-col justify-center gap-y-2 p-8 min-h-44 mt-6'>
             <Link href={`/${house.address}`}>
               {true ? (
                 <Image

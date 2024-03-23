@@ -71,9 +71,24 @@ export function WidgetBrawer() {
         <div className="mx-auto w-full">
           <div className="p-4">
             <Button
+              onClick={() => handelAddWidget('image', { col: 2, row: 4 })}
+            >
+              이미지형 (2x4)
+            </Button>
+            <Button
               onClick={() => handelAddWidget('image', { col: 1, row: 1 })}
             >
-              이미지형 추가 (2x2)
+              이미지형 (1x1)
+            </Button>
+            <Button
+              onClick={() => handelAddWidget('board', { col: 2, row: 2 })}
+            >
+              게시판 (2x2)
+            </Button>
+            <Button
+              onClick={() => handelAddWidget('profile', { col: 2, row: 1 })}
+            >
+              프로필 (2x1)
             </Button>
           </div>
         </div>

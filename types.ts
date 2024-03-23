@@ -81,6 +81,7 @@ export interface Family {
   user_id: string;
   house_id: string;
   nick_name?: string;
+  description?: string;
   avatar_url?: string;
   role: string;
   is_owner: boolean;

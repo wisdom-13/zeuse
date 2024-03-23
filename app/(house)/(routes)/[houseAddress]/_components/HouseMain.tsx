@@ -24,7 +24,7 @@ export interface Item {
 }
 
 const HouseMain = () => {
-  const { houseBuild } = useHouseBuild();
+  const { houseBuild, setHouseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
   const superbaseClient = useSupabaseClient();
 
@@ -49,6 +49,7 @@ const HouseMain = () => {
     setCards(widget);
   }, [widget]);
 
+
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     const newCards = [...cards];
     const draggedCard = newCards[dragIndex];
@@ -56,6 +57,21 @@ const HouseMain = () => {
     newCards.splice(hoverIndex, 0, draggedCard);
     setCards(newCards);
   }, [cards]);
+
+  const removeCard = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    event.stopPropagation();
+
+    if (!houseBuild) {
+      return false;
+    }
+
+    const updatedHouse = {
+      ...houseBuild,
+      widget: houseBuild?.widget.filter((item) => item.id != id)
+    };
+
+    setHouseBuild(updatedHouse)
+  }
 
   const updateWidget = async () => {
     try {
@@ -65,11 +81,8 @@ const HouseMain = () => {
           .update({ order: i })
           .eq('id', data.id);
       })
-
-      widgetEdit.onEditingEnd();
-      toast.success('위젯 편집 내용을 저장했습니다.')
     } catch (error) {
-      toast.success(`위젯 편집 내용을 저장하는 중 오류가 발생하였습니다. : ${error}`)
+      toast.error('위젯 정보를 업데이트 하는 도중 오류가 발생했습니다.');
     }
   }
 
@@ -96,7 +109,7 @@ const HouseMain = () => {
           <Button
             className='flex gap-x-2'
             variant='ghost'
-            onClick={updateWidget}
+            onClick={widgetEdit.onEditingEnd}
           >
             <SquareCheck size={18} />
             편집완료
@@ -113,8 +126,9 @@ const HouseMain = () => {
             index={i}
             id={widget.id}
             grid={widget.grid}
-            isEditing={widgetEdit.isEditing}
             moveCard={moveCard}
+            removeCard={removeCard}
+            updateWidget={updateWidget}
             widgetData={widget.widgetData}
           />
         ))}

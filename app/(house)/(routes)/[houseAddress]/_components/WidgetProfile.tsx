@@ -32,11 +32,11 @@ const WidgetProfile = ({
         <AvatarFallback className='text-xs'>{owner?.nick_name?.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className='flex flex-col'>
-        <h2 className='text-xl font-semibold'>{owner?.nick_name}</h2>
+        <h2 className='text-xl font-semibold mb-1'>{owner?.nick_name}</h2>
         <p className={cn(
-          'text-sm',
-          horizontal ? 'line-clamp-2' : 'line-clamp-3'
-        )}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem maiores iste fugit hic nesciunt! Alias rem doloremque, est sit voluptatem consequatur accusamus ab repudiandae nostrum exercitationem? Ipsa magnam quia culpa.</p>
+          'text-sm text-left whitespace-pre-line',
+          horizontal ? 'line-clamp-2' : 'line-clamp-4'
+        )}>{owner?.description}</p>
       </div>
     </div>
   );
