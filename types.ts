@@ -28,8 +28,9 @@ export interface Board {
   title: string;
   name: string;
   type: string;
+  link: string;
   role: number;
-  sort: number;
+  sort_order: number;
 }
 
 export interface BoardList extends Board {

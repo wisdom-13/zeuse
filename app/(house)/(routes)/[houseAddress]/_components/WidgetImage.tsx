@@ -12,6 +12,7 @@ import { getPublicUrl } from '@/util/getPublicUrl';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 
 
 
@@ -45,13 +46,27 @@ const WidgetImage = ({
 
   if (!widget.image_array || widget.image_array.length === 0) {
     return (
-      <div className='w-full h-full flex flex items-center justify-center bg-gray-100'>
+      <div className='w-full h-full flex items-center justify-center bg-gray-100'>
         <ImageIcon className='text-gray-500' />
       </div>
     );
   }
 
   const slides = widget.image_array.map((image) => (getPublicUrl(`widget/${image}`)))
+
+  if (slides.length === 1) {
+    return (
+      <div className='w-full h-full flex items-center justify-center bg-gray-100 relative'>
+        <Image
+          src={slides[0]}
+          alt='widget'
+          fill
+        />
+      </div>
+    );
+  }
+
+
 
   return (
     <>
