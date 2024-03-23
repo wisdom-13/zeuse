@@ -6,7 +6,7 @@ import useAuthModal from '@/hooks/useAuthModal';
 import { useUser } from '@/hooks/useUser';
 
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/Spinner';
+// import { Spinner } from '@/components/Spinner';
 
 export const Main = () => {
   const { user, isLoading } = useUser();
@@ -19,11 +19,11 @@ export const Main = () => {
       </h1>
       <div className='bg-card text-card-foreground px-6 py-2'>
         <>
-          {isLoading &&
+          {/* {isLoading &&
             <div className='w-fit m-auto'>
               <Spinner size='lg' />
             </div>
-          }
+          } */}
           {!isLoading && !user && (
             <Button
               onClick={authModal.onOpen}
