@@ -5,6 +5,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Widget as WidgetType } from '@/types';
 import WidgetImage from './WidgetImage';
+import WidgetProfile from './WidgetProfile';
+import WidgetBoard from './WidgetBoard';
 
 export interface WidgetProps {
   id?: any
@@ -40,6 +42,8 @@ export const Widget = ({
         )}
       >
         {widgetData?.type == 'image' && <WidgetImage widget={widgetData} />}
+        {widgetData?.type == 'profile' && <WidgetProfile widget={widgetData} />}
+        {widgetData?.type == 'board' && <WidgetBoard widget={widgetData} />}
       </div>
     </>
   );

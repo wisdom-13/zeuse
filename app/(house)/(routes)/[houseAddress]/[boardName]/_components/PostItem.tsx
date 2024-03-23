@@ -1,7 +1,6 @@
 import { PostFamily } from '@/types';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MessageSquare } from 'lucide-react';
 
 import { format, register } from 'timeago.js';
 import koLocale from 'timeago.js/lib/lang/ko';
