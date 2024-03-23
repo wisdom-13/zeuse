@@ -12,6 +12,7 @@ import WidgetImage from './WidgetImage';
 import WidgetProfile from './WidgetProfile';
 import WidgetBoard from './WidgetBoard';
 import { Minus } from 'lucide-react';
+import WidgetTimer from './WidgetTimer';
 
 export interface EditWidgetProps {
   id?: any
@@ -104,6 +105,7 @@ export const EditWidget = ({
         {widgetData?.type == 'image' && <WidgetImage widget={widgetData} />}
         {widgetData?.type == 'profile' && <WidgetProfile widget={widgetData} />}
         {widgetData?.type == 'board' && <WidgetBoard widget={widgetData} />}
+        {widgetData?.type == 'timer' && <WidgetTimer widget={widgetData} />}
 
         <button
           className='absolute z-[999999] top-1 right-1 bg-muted rounded-full p-1'

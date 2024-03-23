@@ -90,6 +90,11 @@ export function WidgetBrawer() {
             >
               프로필 (2x1)
             </Button>
+            <Button
+              onClick={() => handelAddWidget('timer', { col: 2, row: 1 })}
+            >
+              타이머 (2x1)
+            </Button>
           </div>
         </div>
       </DrawerContent>
