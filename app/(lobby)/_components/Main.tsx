@@ -6,7 +6,6 @@ import useAuthModal from '@/hooks/useAuthModal';
 import { useUser } from '@/hooks/useUser';
 
 import { Button } from '@/components/ui/button';
-// import { Spinner } from '@/components/Spinner';
 
 export const Main = () => {
   const { user, isLoading } = useUser();
@@ -19,18 +18,14 @@ export const Main = () => {
       </h1>
       <div className='bg-card text-card-foreground px-6 py-2'>
         <>
-          {/* {isLoading &&
-            <div className='w-fit m-auto'>
-              <Spinner size='lg' />
-            </div>
-          } */}
           {!isLoading && !user && (
-            <Button
-              onClick={authModal.onOpen}
-            >
-              ZEUSE 시작하기
-              <ArrowRight className='h-4 w-4 ml-2' />
-            </Button>
+            // <Button
+            //   onClick={authModal.onOpen}
+            // >
+            //   ZEUSE 시작하기
+            //   <ArrowRight className='h-4 w-4 ml-2' />
+            // </Button>
+            <p>! 지금은 회원가입이 불가능합니다.</p>
           )}
         </>
       </div>
