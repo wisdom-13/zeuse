@@ -87,3 +87,7 @@ export interface Family {
   role: string;
   is_owner: boolean;
 }
+
+export interface FileWithPreview extends File {
+  preview?: string;
+}

@@ -15,12 +15,13 @@ import { Button } from '../ui/button';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { v4 as uuid } from 'uuid';
 import { toast } from 'sonner';
+import { FileWithPreview } from '@/types';
 
 
 
 const WidgetModal = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
 
   const widgetEdit = useWidgetEdit();
   const superbaseClient = useSupabaseClient();
@@ -31,7 +32,7 @@ const WidgetModal = () => {
     }
   }
 
-  const onDrop = (acceptedFiles: File[]) => {
+  const onDrop = (acceptedFiles: FileWithPreview[]) => {
     const newFiles = acceptedFiles.map(file => Object.assign(file, {
       preview: URL.createObjectURL(file)
     }));
@@ -113,12 +114,14 @@ const WidgetModal = () => {
                 >
                   <Minus size={16} />
                 </button>
-                <Image
-                  src={file.preview}
-                  alt="Preview"
-                  fill
-                  className='object-cover'
-                />
+                {file.preview && (
+                  <Image
+                    src={file.preview}
+                    alt="Preview"
+                    fill
+                    className='object-cover'
+                  />
+                )}
               </div>
             ))}
             {files.length < 3 && (
