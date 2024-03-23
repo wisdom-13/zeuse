@@ -130,13 +130,14 @@ const Navigation = ({
             </Link>
           </div>
 
-          <div className='flex flex-col gap-y-2 p-2'>
-            {house.board && house.board.map((item) => (
+          <div className='flex flex-col gap-y-2 py-2 px-8'>
+            {house.board && house.board.sort((a, b) => a.sort_order - b.sort_order).map((item) => (
               <MenuItem
                 key={item.id}
                 label={item.title}
+                type={item.type}
                 icon={Heart}
-                href={`/${param.houseAddress}/${item.name}`}
+                href={(item.type == 'link' ? item.link : `/${param.houseAddress}/${item.name}`)}
               />
             ))}
           </div>
@@ -146,7 +147,7 @@ const Navigation = ({
               <MenuItem
                 label='설정'
                 icon={Settings}
-                isLink={false}
+                isButton={true}
                 onClick={settingModal.onOpen}
               />
             )}
@@ -155,7 +156,7 @@ const Navigation = ({
               <MenuItem
                 label='로그인'
                 icon={LogIn}
-                isLink={false}
+                isButton={true}
                 onClick={authModal.onOpen}
               />
             )}
@@ -164,7 +165,7 @@ const Navigation = ({
               <MenuItem
                 label='로그아웃'
                 icon={LogOut}
-                isLink={false}
+                isButton={true}
                 onClick={headleLogout}
               />
             )}
