@@ -1,11 +1,11 @@
-import { BoardList } from '@/types';
+import { BoardList as BoardListType } from '@/types';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
 const useGetBoardByName = (board_id?: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [board, setBoard] = useState<BoardList | undefined>(undefined);
+  const [board, setBoard] = useState<BoardListType | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const useGetBoardByName = (board_id?: string) => {
         return toast.error(error.message);
       }
 
-      setBoard(data as BoardList);
+      setBoard(data as BoardListType);
       setIsLoading(false);
     }
 

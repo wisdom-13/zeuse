@@ -1,6 +1,6 @@
 'use client';
 
-import { BoardList, Post, PostFamily } from '@/types';
+import { BoardList as BoardListType, PostFamily } from '@/types';
 
 import Link from 'next/link';
 import { useState } from 'react';
@@ -13,7 +13,7 @@ import { useParams } from 'next/navigation';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface BoardListProps {
-  board: BoardList
+  board: BoardListType
 }
 
 const BoardList = ({

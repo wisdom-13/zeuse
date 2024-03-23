@@ -1,8 +1,8 @@
-import { BoardList } from '@/types';
+import { BoardList as BoardListType } from '@/types';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-const getBoardByName = async (house_id: string, board_name: string): Promise<BoardList | null> => {
+const getBoardByName = async (house_id: string, board_name: string): Promise<BoardListType | null> => {
   const supabase = createServerComponentClient({
     cookies: cookies
   });
@@ -21,7 +21,7 @@ const getBoardByName = async (house_id: string, board_name: string): Promise<Boa
     console.log(error.message);
   }
 
-  return (data as BoardList) || null;
+  return (data as BoardListType) || null;
 }
 
 export default getBoardByName;
