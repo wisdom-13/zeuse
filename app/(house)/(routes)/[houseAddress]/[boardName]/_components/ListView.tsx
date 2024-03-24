@@ -1,37 +1,25 @@
 'use client';
 
-import { BoardList as BoardListType, PostFamily } from '@/types';
-
-import Link from 'next/link';
-import { useState } from 'react';
-
+import { PostFamily } from '@/types';
 import { useParams } from 'next/navigation';
-import CardItem from './CardItem';
-import PostItem from './PostItem';
+import Link from 'next/link';
+import ListItem from './ListItem';
 
 interface ListViewProps {
-  board: BoardListType
+  posts: PostFamily[];
 }
 
 const ListView = ({
-  board
+  posts
 }: ListViewProps) => {
   const param = useParams();
-  const data = board.posts;
-
-  const [value, setValue] = useState('');
-
-  const filteredData = data.slice().filter((post: PostFamily) => {
-    return post.title.includes(value) || post.content.includes(value);
-  });
-  const posts = filteredData.sort((a: PostFamily, b: PostFamily) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return (
     <>
       <div className='flex flex-col gap-2'>
         {posts && posts.map((item) => (
-          <Link key={item.id} href={`/${param.houseAddress}/${board.name}/${item.id}`}>
-            <PostItem post={item} />
+          <Link key={item.id} href={`/${param.houseAddress}/${param.boardName}/${item.id}`}>
+            <ListItem post={item} />
           </Link>
         ))}
       </div>

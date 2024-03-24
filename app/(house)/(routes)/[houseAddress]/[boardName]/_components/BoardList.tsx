@@ -4,11 +4,9 @@ import { BoardList as BoardListType, PostFamily } from '@/types';
 
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-import { useParams } from 'next/navigation';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
 import CardView from './CardView';
 import ListView from './ListView';
 
@@ -19,15 +17,16 @@ interface BoardListProps {
 const BoardList = ({
   board
 }: BoardListProps) => {
-  const param = useParams();
   const data = board.posts;
+  const [value, setValue] = useState('z');
 
-  const [value, setValue] = useState('');
-
-  const filteredData = data.slice().filter((post: PostFamily) => {
-    return post.title.includes(value) || post.content.includes(value);
-  });
-  const posts = filteredData.sort((a: PostFamily, b: PostFamily) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const posts = data
+    .filter((post: PostFamily) => {
+      return post.title.toLowerCase().includes(value) || post.content.toLowerCase().includes(value);
+    })
+    .sort((a: PostFamily, b: PostFamily) => (
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    ));
 
   return (
     <>
@@ -35,7 +34,7 @@ const BoardList = ({
         <h1 className='text-3xl font-semibold'>
           {board.title}
         </h1>
-        <Button>새 글 작성</Button>
+        {/* <Button>새 글 작성</Button> */}
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -52,8 +51,8 @@ const BoardList = ({
           </div>
         ) : (
           <>
-            {board.type == 'card' && <CardView board={board} />}
-            {board.type == 'list' && <ListView board={board} />}
+            {board.type == 'card' && <CardView posts={posts} />}
+            {board.type == 'list' && <ListView posts={posts} />}
           </>
         )}
       </ScrollArea>

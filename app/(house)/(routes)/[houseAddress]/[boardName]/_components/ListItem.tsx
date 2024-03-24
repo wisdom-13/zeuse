@@ -1,17 +1,13 @@
 import { PostFamily } from '@/types';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import moment from 'moment';
 
-
-
-interface PostItemProps {
+interface ListItemProps {
   post: PostFamily;
 }
 
-const PostItem = ({
+const ListItem = ({
   post
-}: PostItemProps) => {
+}: ListItemProps) => {
   // TODO: 덧글수
 
   return (
@@ -25,4 +21,4 @@ const PostItem = ({
   );
 }
 
-export default PostItem;
+export default ListItem;
