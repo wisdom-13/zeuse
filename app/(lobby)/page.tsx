@@ -8,9 +8,8 @@ import { Main } from './_components/Main';
 import { Footer } from './_components/Footer';
 
 const MarketingPage = async () => {
-  const supabase = createServerComponentClient({
-    cookies: cookies
-  });
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   const { data: { session } } = await supabase.auth.getSession();
   const houses = await getHousesByUserId();

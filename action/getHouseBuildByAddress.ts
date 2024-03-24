@@ -3,9 +3,8 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
 const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | null> => {
-  const supabase = createServerComponentClient({
-    cookies: cookies
-  });
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   const { data: data, error: error } = await supabase
     .from('houses')
