@@ -318,6 +318,10 @@ body,
   bottom: 10px;
 }
 
+.ProseMirror {
+  padding: 0 1.5rem !important;
+}
+
 @layer base {
   * {
     @apply border-border;
