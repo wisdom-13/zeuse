@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Editor from '../_components/Editor';
+import { isJSONString } from '@/util/isJSONString';
 
 interface BoardPageProps {
   params: {
@@ -49,10 +50,19 @@ const PostPage = async ({
           </div>
         </div>
         <div className='flex flex-col'>
-          <Editor
-            editable={false}
-            initialContent={post.content}
-          />
+          {isJSONString(post.content) ? (
+            <Editor
+              editable={false}
+              initialContent={post.content}
+            />
+          ) : (
+            <div>
+              <p className='px-6 py-2 whitespace-pre-line'>
+                {post.content}
+              </p>
+            </div>
+          )}
+
         </div>
       </div>
     </ScrollArea>
