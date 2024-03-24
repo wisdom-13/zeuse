@@ -42,7 +42,10 @@ export const AuthModal = () => {
             Login to your accout
           </p>
         </DialogHeader>
-        <Auth
+        <div className='text-center h-44 mt-24'>
+          ! 지금은 회원가입 및 로그인이 불가능합니다.
+        </div>
+        {/* <Auth
           theme='light'
           providers={['github']}
           supabaseClient={supabaseClient}
@@ -57,7 +60,7 @@ export const AuthModal = () => {
               }
             },
           }}
-        />
+        /> */}
       </DialogContent>
     </Dialog>
   )

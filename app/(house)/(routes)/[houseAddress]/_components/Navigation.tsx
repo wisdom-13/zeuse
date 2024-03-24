@@ -152,15 +152,6 @@ const Navigation = ({
               />
             )}
 
-            {!isLoading && !user && (
-              <MenuItem
-                label='로그인'
-                icon={LogIn}
-                isButton={true}
-                onClick={authModal.onOpen}
-              />
-            )}
-
             {!isLoading && user && (
               <MenuItem
                 label='로그아웃'

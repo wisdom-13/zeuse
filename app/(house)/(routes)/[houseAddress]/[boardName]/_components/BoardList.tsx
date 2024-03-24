@@ -18,7 +18,7 @@ const BoardList = ({
   board
 }: BoardListProps) => {
   const data = board.posts;
-  const [value, setValue] = useState('z');
+  const [value, setValue] = useState('');
 
   const posts = data
     .filter((post: PostFamily) => {
