@@ -1,6 +1,5 @@
 'use client';
 
-import { useTheme } from 'next-themes';
 import {
   BlockNoteEditor,
   PartialBlock

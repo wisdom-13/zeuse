@@ -3,6 +3,7 @@ import getPostById from '@/action/getPostById';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Editor from '../_components/Editor';
 
 interface BoardPageProps {
   params: {
@@ -23,8 +24,8 @@ const PostPage = async ({
 
   return (
     <ScrollArea className='w-full h-full p-6'>
-      <div className='flex flex-col gap-y-4'>
-        <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 mt-4'>
+      <div className='flex flex-col gap-y-2'>
+        <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pb-2 mt-4'>
           <div className='flex items-center gap-x-4'>
             <h1 className='text-3xl font-semibold'>
               {post.title}
@@ -41,19 +42,17 @@ const PostPage = async ({
                 {moment(post.created_at).format('YYYY.MM.DD hh:mm')}
               </span>
             </div>
-            <div className='flex gap-x-3'>
+            {/* <div className='flex gap-x-3'>
               <button>수정</button>
               <button>삭제</button>
-            </div>
+            </div> */}
           </div>
         </div>
-        <div className='flex flex-col gap-y-4 px-6'>
-          {post.content}
-          {post.content}
-          {post.content}
-          {post.content}
-          {post.content}
-          {post.content}
+        <div className='flex flex-col'>
+          <Editor
+            editable={false}
+            initialContent={post.content}
+          />
         </div>
       </div>
     </ScrollArea>
