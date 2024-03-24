@@ -151,7 +151,6 @@ const Navigation = ({
                 onClick={settingModal.onOpen}
               />
             )}
-
             {!isLoading && user && (
               <MenuItem
                 label='로그아웃'
