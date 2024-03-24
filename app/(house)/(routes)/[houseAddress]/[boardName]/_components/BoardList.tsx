@@ -2,15 +2,15 @@
 
 import { BoardList as BoardListType, PostFamily } from '@/types';
 
-import Link from 'next/link';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import PostItem from './PostItem';
 import { useParams } from 'next/navigation';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import CardView from './CardView';
+import ListView from './ListView';
 
 interface BoardListProps {
   board: BoardListType
@@ -42,18 +42,20 @@ const BoardList = ({
           className='w-full mt-4' placeholder='제목 또는 내용으로 검색' />
       </div>
       <ScrollArea className='w-full h-full flex flex-col gap-y-4'>
-        <div className='flex flex-col gap-y-4'>
-          {posts.length === 0 && (
-            <div className='mt-4 text-muted-foreground'>
-              작성된 포스트가 없습니다.
-            </div>
-          )}
-          {posts && posts.map((item) => (
-            <Link key={item.id} href={`/${param.houseAddress}/${board.name}/${item.id}`}>
-              <PostItem post={item} />
-            </Link>
-          ))}
-        </div>
+        {posts.length === 0 ? (
+          <div className='flex flex-col gap-y-4'>
+            {posts.length === 0 && (
+              <div className='mt-4 text-muted-foreground'>
+                작성된 포스트가 없습니다.
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {board.type == 'card' && <CardView board={board} />}
+            {board.type == 'list' && <ListView board={board} />}
+          </>
+        )}
       </ScrollArea>
 
     </>

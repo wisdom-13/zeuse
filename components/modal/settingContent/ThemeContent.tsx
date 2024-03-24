@@ -136,7 +136,7 @@ const ThemeContent = ({
                 <SelectGroup>
                   {radius.map((item) => (
                     <SelectItem key={item} value={String(item * 100)}>
-                      {item} / {String(item * 100)}
+                      {String(item * 100)}
                     </SelectItem>
                   ))}
                 </SelectGroup>
