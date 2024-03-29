@@ -2,6 +2,7 @@ import getBoardByName from '@/action/getBoardByName';
 import getHouseByAddress from '@/action/getHouseByAddress';
 
 import BoardList from './_components/BoardList';
+import GuestList from './_components/GuestList';
 
 interface BoardPageProps {
   params: {
@@ -22,7 +23,8 @@ const BoardPage = async ({
 
   return (
     <div className='flex flex-col h-full gap-y-4 p-6'>
-      <BoardList board={board} />
+      {board.type == 'board' && <BoardList board={board} />}
+      {board.type == 'guest' && <GuestList board={board} />}
     </div>
   );
 }

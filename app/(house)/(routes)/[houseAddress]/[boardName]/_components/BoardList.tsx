@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 import CardView from './CardView';
 import ListView from './ListView';
+import SearchBar from './SearchBar';
 
 interface BoardListProps {
   board: BoardListType
@@ -35,10 +36,7 @@ const BoardList = ({
           {board.title}
         </h1>
         {/* <Button>새 글 작성</Button> */}
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className='w-full mt-4' placeholder='제목 또는 내용으로 검색' />
+        <SearchBar value={value} handleChange={setValue} />
       </div>
       <ScrollArea className='w-full h-full flex flex-col gap-y-4'>
         {posts.length === 0 ? (
@@ -51,8 +49,8 @@ const BoardList = ({
           </div>
         ) : (
           <>
-            {board.type == 'card' && <CardView posts={posts} />}
-            {board.type == 'list' && <ListView posts={posts} />}
+            {board.view == 'card' && <CardView posts={posts} />}
+            {board.view == 'list' && <ListView posts={posts} />}
           </>
         )}
       </ScrollArea>

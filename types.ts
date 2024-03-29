@@ -28,6 +28,7 @@ export interface Board {
   title: string;
   name: string;
   type: string;
+  view: string;
   link: string;
   role: number;
   sort_order: number;
