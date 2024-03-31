@@ -5,7 +5,7 @@ import useWidgetEdit from '@/hooks/useWidgetEdit';
 import { Widget } from './Widget';
 import { EditWidget } from './EditWidget';
 import { Button } from '@/components/ui/button';
-import { PlusSquare, Save, SquareCheck, SquareX, X } from 'lucide-react';
+import { PlusSquare, SquareCheck } from 'lucide-react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useHouseBuild from '@/hooks/useHouseBuild';

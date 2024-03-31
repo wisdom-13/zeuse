@@ -1,4 +1,4 @@
-import useGetBoardByName from '@/hooks/useGetBoardByName';
+import useGetBoardById from '@/hooks/useGetBoardById';
 import useHouseBuild from '@/hooks/useHouseBuild';
 import { PostFamily, Widget } from '@/types';
 import { ArrowRight, List, MoveRight } from 'lucide-react';
@@ -16,7 +16,7 @@ interface WidgetBoardProps {
 const WidgetBoard = ({
   widget
 }: WidgetBoardProps) => {
-  const { board } = useGetBoardByName(widget.board_id);
+  const { board } = useGetBoardById(widget.board_id);
   const param = useParams();
 
 

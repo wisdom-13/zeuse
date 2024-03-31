@@ -15,12 +15,12 @@ const SearchBar = ({
       <Input
         value={value}
         onChange={(e) => handleChange(e.target.value)}
-        className=' mt-4 pl-9 '
+        className='pl-9'
         placeholder='제목 또는 내용으로 검색'
       />
       <Search
         size={16}
-        className='absolute top-1/2 left-3'
+        className='absolute top-1/2 left-3 -translate-y-1/2'
       />
     </div>
   );

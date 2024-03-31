@@ -9,8 +9,7 @@ const getBoardByName = async (house_id: string, board_name: string): Promise<Boa
   const { data: data, error: error } = await supabase
     .from('board')
     .select(`
-      *,
-      posts:posts!left(*, family:family_id (*))
+      *
     `)
     .eq('house_id', house_id)
     .eq('name', board_name)
