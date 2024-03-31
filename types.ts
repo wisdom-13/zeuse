@@ -40,7 +40,7 @@ export interface BoardList extends Board {
 
 export interface Post {
   id: string;
-  house_id: string;
+  board_id: string;
   family_id: string;
   title: string;
   content: string;
@@ -54,6 +54,20 @@ export interface Post {
 export interface PostFamily extends Post {
   family: Family;
 }
+
+export interface Memo {
+  id: string;
+  board_id: string;
+  title: string;
+  content: string;
+  name: string;
+  parent_id: string;
+  family_id: string;
+  is_secret: boolean;
+  password: string;
+  created_at: Date;
+}
+
 
 
 export interface Style {
