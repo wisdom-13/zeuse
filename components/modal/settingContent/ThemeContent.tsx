@@ -1,3 +1,5 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { FileWithPreview, HouseBuild } from '@/types';
 import {
   Select,
   SelectContent,
@@ -8,10 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from '@/components/ui/separator';
-import { HouseBuild } from '@/types';
+
 import { useSessionContext } from '@supabase/auth-helpers-react';
-import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import ColorPickerButton from '@/components/ColorPickerButton';
+import { Plus } from 'lucide-react';
+import { useDropzone } from 'react-dropzone';
+import { useState } from 'react';
+import Image from 'next/image';
 
 const themeArr = [
   {
@@ -54,6 +61,10 @@ const ThemeContent = ({
   const { supabaseClient } = useSessionContext();
   const { style } = house;
 
+  const [logoImage, setLogoImage] = useState<FileWithPreview>();
+  const [bgImage, setBgImage] = useState<FileWithPreview>();
+
+
   const handleTheme = async (type: string, value: string) => {
     const { error } = await supabaseClient
       .from('style')
@@ -90,16 +101,84 @@ const ThemeContent = ({
     }
   }
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.id || !event.target.files) return
+    const id = event.target.id;
+    const image = event.target.files[0];
+    const setImage = id == 'logoImage' ? setLogoImage : setBgImage;
+    setImage(Object.assign(image, {
+      preview: URL.createObjectURL(image)
+    }));
+  }
+
   return (
-    <div className='py-4 px-2 w-full'>
+    <ScrollArea className='h-full'>
       <h2 className='text-xl font-medium'>
-        테마
+        외관
       </h2>
       <Separator className="my-4" />
       <div className='flex flex-col gap-y-4'>
         <div className='flex items-center justify-between'>
           <div>
-            <h3>메인 색상</h3>
+            <h3 className='text-base'>로고</h3>
+            <p className='text-sm text-muted-foreground'>하우스를 대표하는 이미지를 등록하세요.</p>
+          </div>
+          <label htmlFor='logoImage' className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'>
+            <input id='logoImage' accept='image/*,.jpeg,.jpg,.png' type='file' onChange={handleImageUpload} className='hidden' />
+            {style.logo_image || logoImage?.preview ? (
+              <Image
+                src={style.logo_image ?? logoImage?.preview}
+                alt="Preview"
+                fill
+                className='object-contain'
+              />
+            ) : (
+              <p className='flex gap-x-2 justify-center items-center text-sm'>
+                <Plus size={16} />
+                업로드
+              </p>
+            )}
+          </label>
+        </div>
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>배경 이미지</h3>
+            <p className='text-sm text-muted-foreground'>하우스 배경 이미지를 등록하세요.</p>
+          </div>
+          <div className='relative text-right'>
+            <label htmlFor='bgImage' className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'>
+              <input id='bgImage' accept='image/*,.jpeg,.jpg,.png' type='file' onChange={handleImageUpload} className='hidden' />
+              {style.bg_image || bgImage?.preview ? (
+                <Image
+                  src={style.bg_image ?? bgImage?.preview}
+                  alt="Preview"
+                  fill
+                  className='object-cover'
+                />
+              ) : (
+                <p className='flex gap-x-2 justify-center items-center text-sm'>
+                  <Plus size={16} />
+                  업로드
+                </p>
+              )}
+            </label>
+          </div>
+        </div>
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>배경색</h3>
+            <p className='text-sm text-muted-foreground'>배경 이미지를 등록하지 않을 경우 선택할 수 있습니다.</p>
+          </div>
+          <div className='relative text-right'>
+            <ColorPickerButton color={style.bg_color} />
+          </div>
+        </div>
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>메인 색상</h3>
             <p className='text-sm text-muted-foreground'>하우스의 메인 색상을 변경해보세요.</p>
           </div>
           <div>
@@ -124,7 +203,7 @@ const ThemeContent = ({
         </div>
         <div className='flex items-center justify-between'>
           <div>
-            <h3>테두리 둥글게</h3>
+            <h3 className='text-base'>테두리 둥글게</h3>
             <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요.</p>
           </div>
           <div>
@@ -147,7 +226,7 @@ const ThemeContent = ({
 
         <div className='flex items-center justify-between'>
           <div>
-            <h3>모드</h3>
+            <h3 className='text-base'>모드</h3>
             <p className='text-sm text-muted-foreground'>하우스 모드를 변경해보세요.</p>
           </div>
           <div>
@@ -164,8 +243,9 @@ const ThemeContent = ({
             </Select>
           </div>
         </div>
+
       </div>
-    </div>
+    </ScrollArea>
   );
 }
 
