@@ -1,53 +1,25 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileWithPreview, HouseBuild } from '@/types';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { useSessionContext } from '@supabase/auth-helpers-react';
+
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-import { useSessionContext } from '@supabase/auth-helpers-react';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import ColorPickerButton from '@/components/ColorPickerButton';
 import { Plus } from 'lucide-react';
-import { useDropzone } from 'react-dropzone';
-import { useState } from 'react';
-import Image from 'next/image';
+import { toast } from 'sonner';
 
-const themeArr = [
-  {
-    name: 'zinc',
-    color: '#18181B'
-  },
-  {
-    name: 'slate',
-    color: '#677489'
-  },
-  {
-    name: 'rose',
-    color: '#CF364C'
-  },
-  {
-    name: 'blue',
-    color: '#3662E3'
-  },
-  {
-    name: 'green',
-    color: '#4CA154'
-  },
-  {
-    name: 'orange',
-    color: '#E87B35'
-  },
-];
-
-const radius = [0, 0.3, 0.5, 0.75, 1.0];
+import ColorPickerButton from '@/components/ColorPickerButton';
+import { colorArr, radiusArr } from '@/data/theme';
 
 interface ThemeContentProps {
   house: HouseBuild;
@@ -63,7 +35,6 @@ const ThemeContent = ({
 
   const [logoImage, setLogoImage] = useState<FileWithPreview>();
   const [bgImage, setBgImage] = useState<FileWithPreview>();
-
 
   const handleTheme = async (type: string, value: string) => {
     const { error } = await supabaseClient
@@ -103,9 +74,11 @@ const ThemeContent = ({
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.id || !event.target.files) return
+
     const id = event.target.id;
     const image = event.target.files[0];
     const setImage = id == 'logoImage' ? setLogoImage : setBgImage;
+
     setImage(Object.assign(image, {
       preview: URL.createObjectURL(image)
     }));
@@ -123,8 +96,17 @@ const ThemeContent = ({
             <h3 className='text-base'>로고</h3>
             <p className='text-sm text-muted-foreground'>하우스를 대표하는 이미지를 등록하세요.</p>
           </div>
-          <label htmlFor='logoImage' className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'>
-            <input id='logoImage' accept='image/*,.jpeg,.jpg,.png' type='file' onChange={handleImageUpload} className='hidden' />
+          <label
+            htmlFor='logoImage'
+            className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
+          >
+            <input
+              id='logoImage'
+              accept='image/*,.jpeg,.jpg,.png'
+              type='file'
+              onChange={handleImageUpload}
+              className='hidden'
+            />
             {style.logo_image || logoImage?.preview ? (
               <Image
                 src={style.logo_image ?? logoImage?.preview}
@@ -147,8 +129,17 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>하우스 배경 이미지를 등록하세요.</p>
           </div>
           <div className='relative text-right'>
-            <label htmlFor='bgImage' className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'>
-              <input id='bgImage' accept='image/*,.jpeg,.jpg,.png' type='file' onChange={handleImageUpload} className='hidden' />
+            <label
+              htmlFor='bgImage'
+              className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
+            >
+              <input
+                id='bgImage'
+                accept='image/*,.jpeg,.jpg,.png'
+                type='file'
+                onChange={handleImageUpload}
+                className='hidden'
+              />
               {style.bg_image || bgImage?.preview ? (
                 <Image
                   src={style.bg_image ?? bgImage?.preview}
@@ -169,7 +160,7 @@ const ThemeContent = ({
         <div className='flex items-center justify-between'>
           <div>
             <h3 className='text-base'>배경색</h3>
-            <p className='text-sm text-muted-foreground'>배경 이미지를 등록하지 않을 경우 선택할 수 있습니다.</p>
+            <p className='text-sm text-muted-foreground'>배경 이미지가 등록되어 있을 경우 적용되지 않습니다.</p>
           </div>
           <div className='relative text-right'>
             <ColorPickerButton color={style.bg_color} />
@@ -188,7 +179,7 @@ const ThemeContent = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {themeArr.map((item) => (
+                  {colorArr.map((item) => (
                     <SelectItem key={item.name} value={item.name}>
                       <div className='flex items-center'>
                         <span className='inline-block mr-2 h-5 w-5 shrink-0 rounded-full' style={{ background: item.color }}></span>
@@ -213,7 +204,7 @@ const ThemeContent = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {radius.map((item) => (
+                  {radiusArr.map((item) => (
                     <SelectItem key={item} value={String(item * 100)}>
                       {String(item * 100)}
                     </SelectItem>
