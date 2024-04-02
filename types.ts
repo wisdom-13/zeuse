@@ -94,6 +94,7 @@ export interface Widget {
 }
 
 export interface Family {
+  id: string;
   user_id: string;
   house_id: string;
   nick_name?: string;

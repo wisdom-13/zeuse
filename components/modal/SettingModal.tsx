@@ -1,29 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogClose
+  DialogContent
 } from '@/components/ui/dialog';
 import useSettingModal from '@/hooks/useSettingModal';
 import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
-import SettingItem from '../SettingItem';
-import ThemeContent from './settingContent/ThemeContent';
-import HouseContent from './settingContent/HouseContent';
-import WidgetContent from './settingContent/WidgetContent';
 import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
 
+import SettingItem from '../SettingItem';
+import ProfileContent from './settingContent/ProfileContent';
+import FamilyContent from './settingContent/FamilyContent';
+import HouseContent from './settingContent/HouseContent';
+import BoardContent from './settingContent/BoardContent';
+import ThemeContent from './settingContent/ThemeContent';
+import WidgetContent from './settingContent/WidgetContent';
+
 export const SettingModal = () => {
-  const supabaseClient = useSupabaseClient();
-  const router = useRouter();
   const param = useParams();
-  const { session } = useSessionContext();
   const { onClose, isOpen } = useSettingModal();
-  const [activeMenu, setActiveMenu] = useState('theme');
+  const [activeMenu, setActiveMenu] = useState('house');
 
   const { house, updateHouse } = useGetHouseBuildByAddress(param.houseAddress);
 
@@ -76,7 +75,7 @@ export const SettingModal = () => {
           <div className='flex flex-col gap-y-2'>
             <SettingItem
               icon={PencilRuler}
-              label='테마'
+              label='외관'
               active={activeMenu === 'theme'}
               onClick={() => setActiveMenu('theme')}
             />
@@ -89,9 +88,16 @@ export const SettingModal = () => {
           </div>
         </div>
 
-        {activeMenu == 'house' && <HouseContent house={house} updateHouse={updateHouse} />}
-        {activeMenu == 'theme' && <ThemeContent house={house} updateHouse={updateHouse} />}
-        {activeMenu == 'widget' && <WidgetContent house={house} updateHouse={updateHouse} />}
+        <div className='flex flex-col justify-between w-full pt-4 px-2'>
+          {activeMenu == 'profile' && <ProfileContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'family' && <FamilyContent house={house} updateHouse={updateHouse} />}
+
+          {activeMenu == 'house' && <HouseContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'board' && <BoardContent house={house} updateHouse={updateHouse} />}
+
+          {activeMenu == 'theme' && <ThemeContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'widget' && <WidgetContent house={house} updateHouse={updateHouse} />}
+        </div>
 
       </DialogContent>
     </Dialog>
