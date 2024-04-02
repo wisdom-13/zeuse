@@ -24,7 +24,7 @@ const WidgetModal = () => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
 
   const widgetEdit = useWidgetEdit();
-  const superbaseClient = useSupabaseClient();
+  const supabaseClient = useSupabaseClient();
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -51,7 +51,7 @@ const WidgetModal = () => {
 
     for (const data of files) {
       try {
-        const { data: imageData } = await superbaseClient
+        const { data: imageData } = await supabaseClient
           .storage
           .from('widget')
           .upload(`image-address-${uuid()}`, data, {
@@ -67,7 +67,7 @@ const WidgetModal = () => {
     }
 
     try {
-      const { data: widgetData } = await superbaseClient
+      const { data: widgetData } = await supabaseClient
         .from('widget')
         .update({ image_array: pathArr })
         .eq('id', '725286f6-b878-4698-9239-0177a88503aa')

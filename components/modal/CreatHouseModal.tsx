@@ -55,7 +55,7 @@ const CreateHouseModal = () => {
   const creatHouseModal = useCreateHouseModal();
   const { user, userDetails } = useUser();
   // const { house } = useGetHouseByAdress(player.activeId);
-  const superbaseClient = useSupabaseClient();
+  const supabaseClient = useSupabaseClient();
   const router = useRouter();
 
   const onChange = (open: boolean) => {
@@ -95,7 +95,7 @@ const CreateHouseModal = () => {
     const {
       data: houseData,
       error: houseInsertError
-    } = await superbaseClient
+    } = await supabaseClient
       .from('houses')
       .insert({
         title: values.title,
@@ -115,7 +115,7 @@ const CreateHouseModal = () => {
     // 2. family 데이터 추가
     const {
       error: familyInsertError
-    } = await superbaseClient
+    } = await supabaseClient
       .from('family')
       .insert({
         user_id: user.id,

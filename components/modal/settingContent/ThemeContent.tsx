@@ -2,7 +2,7 @@ import { FileWithPreview, HouseBuild } from '@/types';
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useSessionContext } from '@supabase/auth-helpers-react';
+import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import {
   Select,
@@ -72,7 +72,7 @@ const ThemeContent = ({
     }
   }
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.id || !event.target.files) return
 
     const id = event.target.id;
@@ -82,6 +82,7 @@ const ThemeContent = ({
     setImage(Object.assign(image, {
       preview: URL.createObjectURL(image)
     }));
+
   }
 
   return (

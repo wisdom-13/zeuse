@@ -18,7 +18,7 @@ export function WidgetBrawer() {
   const widgetEdit = useWidgetEdit();
   const param = useParams();
   const router = useRouter();
-  const superbaseClient = useSupabaseClient();
+  const supabaseClient = useSupabaseClient();
   const [isLoading, setIsLoading] = useState(false);
 
   if (!houseBuild) {
@@ -37,7 +37,7 @@ export function WidgetBrawer() {
     const {
       data: newWidget,
       error
-    } = await superbaseClient
+    } = await supabaseClient
       .from('widget')
       .insert({
         house_id: houseId,

@@ -26,7 +26,7 @@ export interface Item {
 const HouseMain = () => {
   const { houseBuild, setHouseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
-  const superbaseClient = useSupabaseClient();
+  const supabaseClient = useSupabaseClient();
 
   const Card = widgetEdit.isEditing ? EditWidget : Widget;
 
@@ -76,7 +76,7 @@ const HouseMain = () => {
   const updateWidget = async () => {
     try {
       cards.map(async (data, i) => {
-        await superbaseClient
+        await supabaseClient
           .from('widget')
           .update({ order: i })
           .eq('id', data.id);
