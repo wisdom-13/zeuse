@@ -2,7 +2,6 @@ import { FileWithPreview, HouseBuild } from '@/types';
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import {
   Select,
@@ -17,9 +16,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { v4 as uuid } from 'uuid';
 
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import ColorPickerButton from '@/components/ColorPickerButton';
 import { colorArr, radiusArr } from '@/data/theme';
+import { getPublicUrl } from '@/util/getPublicUrl';
 
 interface ThemeContentProps {
   house: HouseBuild;
@@ -30,7 +32,7 @@ const ThemeContent = ({
   house,
   updateHouse
 }: ThemeContentProps) => {
-  const { supabaseClient } = useSessionContext();
+  const supabaseClient = useSupabaseClient();
   const { style } = house;
 
   const [logoImage, setLogoImage] = useState<FileWithPreview>();
@@ -77,11 +79,24 @@ const ThemeContent = ({
 
     const id = event.target.id;
     const image = event.target.files[0];
-    const setImage = id == 'logoImage' ? setLogoImage : setBgImage;
+    const setImage = id == 'logo_image' ? setLogoImage : setBgImage;
+    setImage(image);
 
-    setImage(Object.assign(image, {
-      preview: URL.createObjectURL(image)
-    }));
+    const { data, error } = await supabaseClient
+      .storage
+      .from(`style/${id == 'logo_image' ? 'logo' : 'background'}`)
+      .upload(`${id}-${uuid()}`, image, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      toast.error('이미지를 업로드하는 중 오류가 발생했습니다.');
+    }
+
+    if (data) {
+      handleTheme(id, data.path);
+    }
 
   }
 
@@ -98,20 +113,20 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>하우스를 대표하는 이미지를 등록하세요.</p>
           </div>
           <label
-            htmlFor='logoImage'
+            htmlFor='logo_image'
             className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
           >
             <input
-              id='logoImage'
+              id='logo_image'
               accept='image/*,.jpeg,.jpg,.png'
               type='file'
               onChange={handleImageUpload}
               className='hidden'
             />
-            {style.logo_image || logoImage?.preview ? (
+            {style.logo_image ? (
               <Image
-                src={style.logo_image ?? logoImage?.preview}
-                alt="Preview"
+                src={getPublicUrl(`style/logo/${style.logo_image}`)}
+                alt="logo_image"
                 fill
                 className='object-contain'
               />
@@ -131,20 +146,20 @@ const ThemeContent = ({
           </div>
           <div className='relative text-right'>
             <label
-              htmlFor='bgImage'
+              htmlFor='bg_image'
               className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
             >
               <input
-                id='bgImage'
+                id='bg_image'
                 accept='image/*,.jpeg,.jpg,.png'
                 type='file'
                 onChange={handleImageUpload}
                 className='hidden'
               />
-              {style.bg_image || bgImage?.preview ? (
+              {style.bg_image ? (
                 <Image
-                  src={style.bg_image ?? bgImage?.preview}
-                  alt="Preview"
+                  src={getPublicUrl(`style/background/${style.bg_image}`)}
+                  alt="bg_image"
                   fill
                   className='object-cover'
                 />

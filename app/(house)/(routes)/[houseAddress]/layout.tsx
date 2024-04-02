@@ -7,6 +7,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
 import { cn } from '@/lib/utils'
+import { getPublicUrl } from '@/util/getPublicUrl'
 
 interface HouseLayoutProps {
   params: {
@@ -39,7 +40,7 @@ export default async function HouseLayout({
         house.style.color && `color-${house.style.color}`,
         house.style.radius && `radius-${house.style.radius}`
       )}
-      style={{ background: house.style.bg_image ? `url(${house.style.bg_image})` : `${house.style.bg_color}` }}
+      style={{ background: house.style.bg_image ? `url(${getPublicUrl(`style/background/${house.style.bg_image}`)})` : `${house.style.bg_color}` }}
     >
       <Navigation houses={houses} house={house} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>

@@ -16,6 +16,7 @@ import useSettingModal from '@/hooks/useSettingModal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useUser } from '@/hooks/useUser';
+import { getPublicUrl } from '@/util/getPublicUrl';
 
 interface HouseMenuProps {
   house: HouseBuild;
@@ -115,7 +116,7 @@ const Navigation = ({
             <Link href={`/${house.address}`}>
               {true ? (
                 <Image
-                  src={house.style.logo_image}
+                  src={getPublicUrl(`style/logo/${house.style.logo_image}`)}
                   alt='logo'
                   // fill
                   width={240}
