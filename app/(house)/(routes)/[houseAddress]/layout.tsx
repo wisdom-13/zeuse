@@ -31,6 +31,12 @@ export default async function HouseLayout({
     return false;
   }
 
+  const style = {
+    background: house.style.bg_image ? `url(${getPublicUrl(`style/background/${house.style.bg_image}`)})` : `${house.style.bg_color}`,
+    '--radius': `${house.style.box_style.border_radius}rem`,
+    '--boxOpacity': `${house.style.box_style.opacity}`
+  } as const;
+
   return (
     <div
       id='theme-wrap'
@@ -38,9 +44,9 @@ export default async function HouseLayout({
         'h-screen flex',
         house.style.mode == 'dark' && 'dark',
         house.style.color && `color-${house.style.color}`,
-        house.style.radius && `radius-${house.style.radius}`
+        !house.style.box_style.border && `no-border`
       )}
-      style={{ background: house.style.bg_image ? `url(${getPublicUrl(`style/background/${house.style.bg_image}`)})` : `${house.style.bg_color}` }}
+      style={style}
     >
       <Navigation houses={houses} house={house} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>

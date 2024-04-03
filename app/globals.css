@@ -14,7 +14,7 @@ body,
 .zinc {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
@@ -31,13 +31,14 @@ body,
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
   --ring: 240 5.9% 10%;
+  --boardCustom: #000;
 }
 
 .dark,
 .zinc.dark {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
+  --card: 240, 10%, 3.9%;
   --card-foreground: 0 0% 98%;
   --popover: 240 10% 3.9%;
   --popover-foreground: 0 0% 98%;
@@ -59,7 +60,7 @@ body,
 .color-slate {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
@@ -81,7 +82,7 @@ body,
 .color-slate.dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
+  --card: 222.2, 84%, 4.9%;
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
@@ -103,7 +104,7 @@ body,
 .color-rose {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
@@ -125,7 +126,7 @@ body,
 .color-rose.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 0 0% 95%;
-  --card: 24 9.8% 10%;
+  --card: 24, 9.8%, 10%;
   --card-foreground: 0 0% 95%;
   --popover: 0 0% 9%;
   --popover-foreground: 0 0% 95%;
@@ -147,7 +148,7 @@ body,
 .color-blue {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
@@ -169,7 +170,7 @@ body,
 .color-blue.dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
+  --card: 222.2, 84%, 4.9%;
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
@@ -191,7 +192,7 @@ body,
 .color-green {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
@@ -213,7 +214,7 @@ body,
 .color-green.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 0 0% 95%;
-  --card: 24 9.8% 10%;
+  --card: 24, 9.8%, 10%;
   --card-foreground: 0 0% 95%;
   --popover: 0 0% 9%;
   --popover-foreground: 0 0% 95%;
@@ -235,7 +236,7 @@ body,
 .color-orange {
   --background: 0 0% 100%;
   --foreground: 20 14.3% 4.1%;
-  --card: 0 0% 100%;
+  --card: 0, 0%, 100%;
   --card-foreground: 20 14.3% 4.1%;
   --popover: 0 0% 100%;
   --popover-foreground: 20 14.3% 4.1%;
@@ -257,7 +258,7 @@ body,
 .color-orange.dark {
   --background: 20 14.3% 4.1%;
   --foreground: 60 9.1% 97.8%;
-  --card: 20 14.3% 4.1%;
+  --card: 20, 14.3%, 4.1%;
   --card-foreground: 60 9.1% 97.8%;
   --popover: 20 14.3% 4.1%;
   --popover-foreground: 60 9.1% 97.8%;
@@ -276,24 +277,12 @@ body,
   --ring: 20.5 90.2% 48.2%;
 }
 
-.radius-100 {
-  --radius: 1rem;
+.no-border .border-primary {
+  border-color: transparent;
 }
 
-.radius-75 {
-  --radius: 0.75rem;
-}
-
-.radius-50 {
-  --radius: 0.5rem;
-}
-
-.radius-30 {
-  --radius: 0.3rem;
-}
-
-.radius-0 {
-  --radius: 0rem;
+.bg-card {
+  background-color: hsla(var(--card), var(--boxOpacity));
 }
 
 @keyframes shake {

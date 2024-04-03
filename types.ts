@@ -79,6 +79,11 @@ export interface Style {
   color: string;
   radius: string;
   mode: string;
+  box_style: {
+    opacity: string,
+    border: boolean,
+    border_radius: string
+  }
 }
 
 export interface Widget {
