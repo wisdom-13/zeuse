@@ -20,7 +20,7 @@ import { v4 as uuid } from 'uuid';
 
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import ColorPickerButton from '@/components/ColorPickerButton';
-import { colorArr, radiusArr } from '@/data/theme';
+import { colorArr, opacityArr, radiusArr } from '@/data/theme';
 import { getPublicUrl } from '@/util/getPublicUrl';
 
 interface ThemeContentProps {
@@ -38,7 +38,7 @@ const ThemeContent = ({
   const [logoImage, setLogoImage] = useState<FileWithPreview>();
   const [bgImage, setBgImage] = useState<FileWithPreview>();
 
-  const handleTheme = async (type: string, value: string) => {
+  const handleUpdateStyle = async (type: string, value: string) => {
     const { error } = await supabaseClient
       .from('style')
       .update({ [type]: value })
@@ -46,31 +46,73 @@ const ThemeContent = ({
 
     if (error) {
       toast.error(error.message);
-    } else {
-      if (type == 'mode') {
-        if (value == 'light') {
-          document.body.classList.remove('dark');
-          document.getElementById('theme-wrap')?.classList.remove('dark');
-        } else if (value == 'dark') {
-          document.body.classList.add('dark');
-          document.getElementById('theme-wrap')?.classList.add('dark');
-        }
-      } else if (type == 'color') {
-        document.body.classList.replace(`color-${style.color}`, `color-${value}`);
-        document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
+      return;
+    }
 
-      } else if (type == 'radius') {
-        document.body.classList.replace(`radius-${style.radius}`, `radius-${value}`);
-        document.getElementById('theme-wrap')?.classList.replace(`radius-${style.radius}`, `radius-${value}`);
+    changeStyle(type, value);
+    updateHouse({
+      ...house,
+      style: {
+        ...house.style,
+        [type]: value
       }
+    });
+  }
 
-      updateHouse({
-        ...house,
-        style: {
-          ...house.style,
+  const handleUpdateBoxStyle = async (type: string, value: string) => {
+    const { error } = await supabaseClient
+      .from('style')
+      .update({
+        box_style: {
+          ...style.box_style,
           [type]: value
         }
-      });
+      })
+      .eq('house_id', house.id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    changeStyle(type, value);
+    updateHouse({
+      ...house,
+      style: {
+        ...house.style,
+        box_style: {
+          ...style.box_style,
+          [type]: value
+        }
+      }
+    });
+  }
+
+  const changeStyle = (type: string, value: string) => {
+    if (type == 'mode') {
+      if (value == 'light') {
+        document.body.classList.remove('dark');
+        document.getElementById('theme-wrap')?.classList.remove('dark');
+      } else if (value == 'dark') {
+        document.body.classList.add('dark');
+        document.getElementById('theme-wrap')?.classList.add('dark');
+      }
+    } else if (type == 'color') {
+      document.body.classList.replace(`color-${style.color}`, `color-${value}`);
+      document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
+    } else if (type === 'border') {
+      if (value == '0') {
+        document.body.classList.add('no-border');
+        document.getElementById('theme-wrap')?.classList.add('no-border');
+      } else if (value == '1') {
+        document.body.classList.remove('no-border');
+        document.getElementById('theme-wrap')?.classList.remove('no-border');
+      }
+    } else if (type == 'opacity') {
+      document.body.style.setProperty('--boxOpacity', value);
+      document.getElementById('theme-wrap')?.style.setProperty('--boxOpacity', value);
+    } else if (type == 'border_radius') {
+      document.body.style.setProperty('--radius', value);
+      document.getElementById('theme-wrap')?.style.setProperty('--radius', value);
     }
   }
 
@@ -95,9 +137,8 @@ const ThemeContent = ({
     }
 
     if (data) {
-      handleTheme(id, data.path);
+      handleUpdateStyle(id, data.path);
     }
-
   }
 
   return (
@@ -138,7 +179,6 @@ const ThemeContent = ({
             )}
           </label>
         </div>
-        <Separator className="my-2" />
         <div className='flex items-center justify-between'>
           <div>
             <h3 className='text-base'>배경 이미지</h3>
@@ -172,7 +212,6 @@ const ThemeContent = ({
             </label>
           </div>
         </div>
-        <Separator className="my-2" />
         <div className='flex items-center justify-between'>
           <div>
             <h3 className='text-base'>배경색</h3>
@@ -189,7 +228,7 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>하우스의 메인 색상을 변경해보세요.</p>
           </div>
           <div>
-            <Select defaultValue={style.color} onValueChange={(v) => handleTheme('color', v)}>
+            <Select defaultValue={style.color} onValueChange={(v) => handleUpdateStyle('color', v)}>
               <SelectTrigger className='w-40'>
                 <SelectValue placeholder="색상을 선택하세요." />
               </SelectTrigger>
@@ -210,34 +249,11 @@ const ThemeContent = ({
         </div>
         <div className='flex items-center justify-between'>
           <div>
-            <h3 className='text-base'>테두리 둥글게</h3>
-            <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요.</p>
-          </div>
-          <div>
-            <Select defaultValue={style.radius} onValueChange={(v) => handleTheme('radius', v)}>
-              <SelectTrigger className='w-40'>
-                <SelectValue placeholder="수치를 선택하세요." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {radiusArr.map((item) => (
-                    <SelectItem key={item} value={String(item * 100)}>
-                      {String(item * 100)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className='flex items-center justify-between'>
-          <div>
             <h3 className='text-base'>모드</h3>
             <p className='text-sm text-muted-foreground'>하우스 모드를 변경해보세요.</p>
           </div>
           <div>
-            <Select defaultValue={style.mode} onValueChange={(v) => handleTheme('mode', v)}>
+            <Select defaultValue={style.mode} onValueChange={(v) => handleUpdateStyle('mode', v)}>
               <SelectTrigger className='w-40'>
                 <SelectValue placeholder="모드를 선택하세요." />
               </SelectTrigger>
@@ -250,7 +266,70 @@ const ThemeContent = ({
             </Select>
           </div>
         </div>
-
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>박스 테두리</h3>
+            <p className='text-sm text-muted-foreground'>박스 테두리의 사용 여부를 설정하세요.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.border ? '1' : '0'} onValueChange={(v) => handleUpdateBoxStyle('border', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem key='1' value='1'>사용함</SelectItem>
+                  <SelectItem key='0' value='0'>사용하지 않음</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>박스 배경</h3>
+            <p className='text-sm text-muted-foreground'>박스 배경의 투명도를 설정하세요.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.opacity} onValueChange={(v) => handleUpdateBoxStyle('opacity', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {opacityArr.map((item) => (
+                    <SelectItem key={item} value={String(item)}>
+                      {item * 100}%
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>테두리 둥글게</h3>
+            <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요. 숫자가 클수록 둥글고 작을수록 각집니다.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.border_radius} onValueChange={(v) => handleUpdateBoxStyle('border_radius', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {radiusArr.map((item) => (
+                    <SelectItem key={item} value={String(item)}>
+                      {String(item)}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
     </ScrollArea>
   );

@@ -81,7 +81,7 @@ export interface Style {
   mode: string;
   box_style: {
     opacity: string,
-    border: boolean,
+    border: string,
     border_radius: string
   }
 }

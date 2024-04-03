@@ -44,7 +44,7 @@ export default async function HouseLayout({
         'h-screen flex',
         house.style.mode == 'dark' && 'dark',
         house.style.color && `color-${house.style.color}`,
-        !house.style.box_style.border && `no-border`
+        house.style.box_style.border == '0' && `no-border`
       )}
       style={style}
     >

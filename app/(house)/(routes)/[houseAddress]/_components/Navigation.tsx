@@ -51,7 +51,7 @@ const Navigation = ({
     if (house.style.mode == 'dark') {
       document.body.classList.add('dark');
     }
-    if (!house.style.box_style.border) {
+    if (house.style.box_style.border == '0') {
       document.body.classList.add('no-border');
     }
     document.body.classList.add(`color-${house.style.color}`);
