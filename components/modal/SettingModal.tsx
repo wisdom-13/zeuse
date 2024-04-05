@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+
+import useHouseBuild from '@/hooks/useHouseBuild';
+import { getPublicUrl } from '@/util/getPublicUrl';
+
 import {
   Dialog,
   DialogContent
 } from '@/components/ui/dialog';
 import useSettingModal from '@/hooks/useSettingModal';
 import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
-import useGetHouseBuildByAddress from '@/hooks/useGetHouseBuildByAddress';
 
 import SettingItem from '../SettingItem';
 import ProfileContent from './settingContent/ProfileContent';
@@ -20,11 +22,37 @@ import ThemeContent from './settingContent/ThemeContent';
 import WidgetContent from './settingContent/WidgetContent';
 
 export const SettingModal = () => {
-  const param = useParams();
+  const { houseBuild: house, setHouseBuild } = useHouseBuild();
   const { onClose, isOpen } = useSettingModal();
   const [activeMenu, setActiveMenu] = useState('house');
 
-  const { house, updateHouse } = useGetHouseBuildByAddress(param.houseAddress);
+  const themeWrap = document.getElementById('theme-wrap');
+
+  useEffect(() => {
+    if (!house) return;
+
+    const style = `
+      background: ${house?.style.bg_image ? `url(${getPublicUrl(`style/background/${house.style.bg_image}`)})` : `${house?.style.bg_color}`};
+      --radius:${house?.style.box_style.radius}rem;
+      --boxOpacity: ${house?.style.box_style.opacity};
+    `;
+
+    const className = cn(
+      house?.style.mode == 'dark' && 'dark',
+      house?.style.color && `color-${house?.style.color}`,
+      house?.style.box_style.border !== 'none' && `border-${house?.style.box_style.border}`
+    )
+
+    document.body.className = className
+    document.body.style.cssText = style;
+
+    if (themeWrap) {
+      themeWrap.className = `h-screen flex ${className}`;
+      themeWrap.style.cssText = style;
+    }
+  }, [house, themeWrap]);
+
+
 
   if (!house) {
     return false;
@@ -89,14 +117,14 @@ export const SettingModal = () => {
         </div>
 
         <div className='flex flex-col justify-between w-full pt-4 px-2'>
-          {activeMenu == 'profile' && <ProfileContent house={house} updateHouse={updateHouse} />}
-          {activeMenu == 'family' && <FamilyContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'profile' && <ProfileContent house={house} setHouseBuild={setHouseBuild} />}
+          {activeMenu == 'family' && <FamilyContent house={house} setHouseBuild={setHouseBuild} />}
 
-          {activeMenu == 'house' && <HouseContent house={house} updateHouse={updateHouse} />}
-          {activeMenu == 'board' && <BoardContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'house' && <HouseContent house={house} setHouseBuild={setHouseBuild} />}
+          {activeMenu == 'board' && <BoardContent house={house} setHouseBuild={setHouseBuild} />}
 
-          {activeMenu == 'theme' && <ThemeContent house={house} updateHouse={updateHouse} />}
-          {activeMenu == 'widget' && <WidgetContent house={house} updateHouse={updateHouse} />}
+          {activeMenu == 'theme' && <ThemeContent house={house} setHouseBuild={setHouseBuild} />}
+          {activeMenu == 'widget' && <WidgetContent house={house} setHouseBuild={setHouseBuild} />}
         </div>
 
       </DialogContent>

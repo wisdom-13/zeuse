@@ -26,12 +26,12 @@ import { Spinner } from '@/components/Spinner';
 
 interface ThemeContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 const ThemeContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: ThemeContentProps) => {
   const supabaseClient = useSupabaseClient();
   const { style } = house;
@@ -51,7 +51,7 @@ const ThemeContent = ({
     }
 
     changeStyle(type, value);
-    updateHouse({
+    setHouseBuild({
       ...house,
       style: {
         ...house.style,
@@ -76,7 +76,7 @@ const ThemeContent = ({
       return;
     }
     changeStyle(type, value);
-    updateHouse({
+    setHouseBuild({
       ...house,
       style: {
         ...house.style,

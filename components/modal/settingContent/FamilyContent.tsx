@@ -14,13 +14,13 @@ import { Button } from '@/components/ui/button';
 
 interface FamilyContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 
 const FamilyContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: FamilyContentProps) => {
   return (
     <ScrollArea>

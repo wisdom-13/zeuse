@@ -8,13 +8,13 @@ import { HouseBuild } from '@/types';
 
 interface HouseContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 
 const HouseContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: HouseContentProps) => {
   console.log(house);
   return (

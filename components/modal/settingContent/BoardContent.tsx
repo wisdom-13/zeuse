@@ -3,13 +3,13 @@ import { HouseBuild } from '@/types';
 
 interface BoardContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 
 const BoardContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: BoardContentProps) => {
   return (
     <div className='py-4 px-2 w-full'>

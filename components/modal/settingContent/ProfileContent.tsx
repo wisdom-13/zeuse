@@ -7,13 +7,13 @@ import { HouseBuild } from '@/types';
 
 interface ProfileContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 
 const ProfileContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: ProfileContentProps) => {
   const { user } = useUser();
   const myProfile = house.family.filter((item) => item.user_id === user?.id)[0];

@@ -8,13 +8,13 @@ import { useRouter } from 'next/navigation';
 
 interface WidgetContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 
 const WidgetContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: WidgetContentProps) => {
   const widgetEdit = useWidgetEdit();
   const settingModal = useSettingModal();
