@@ -50,7 +50,6 @@ const ThemeContent = ({
       return;
     }
 
-    changeStyle(type, value);
     setHouseBuild({
       ...house,
       style: {
@@ -75,7 +74,7 @@ const ThemeContent = ({
       toast.error(error.message);
       return;
     }
-    changeStyle(type, value);
+
     setHouseBuild({
       ...house,
       style: {
@@ -88,34 +87,6 @@ const ThemeContent = ({
     });
   }
 
-  const changeStyle = (type: string, value: string) => {
-    // if (type == 'mode') {
-    //   if (value == 'light') {
-    //     document.body.classList.remove('dark');
-    //     document.getElementById('theme-wrap')?.classList.remove('dark');
-    //   } else if (value == 'dark') {
-    //     document.body.classList.add('dark');
-    //     document.getElementById('theme-wrap')?.classList.add('dark');
-    //   }
-    // } else if (type == 'color') {
-    //   document.body.classList.replace(`color-${style.color}`, `color-${value}`);
-    //   document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
-    // } else if (type === 'border') {
-    //   if (value == '0') {
-    //     document.body.classList.add('no-border');
-    //     document.getElementById('theme-wrap')?.classList.add('no-border');
-    //   } else if (value == '1') {
-    //     document.body.classList.remove('no-border');
-    //     document.getElementById('theme-wrap')?.classList.remove('no-border');
-    //   }
-    // } else if (type == 'opacity') {
-    //   document.body.style.setProperty('--boxOpacity', value);
-    //   document.getElementById('theme-wrap')?.style.setProperty('--boxOpacity', value);
-    // } else if (type == 'border_radius') {
-    //   document.body.style.setProperty('--radius', value);
-    //   document.getElementById('theme-wrap')?.style.setProperty('--radius', value);
-    // }
-  }
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.id || !event.target.files) return
