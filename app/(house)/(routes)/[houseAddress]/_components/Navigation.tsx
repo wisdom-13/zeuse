@@ -39,6 +39,7 @@ const Navigation = ({
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsRestting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const owner = house.family.find((item) => item.is_owner);
 
@@ -105,15 +106,15 @@ const Navigation = ({
           </div>
 
           <div className='flex flex-col justify-center gap-y-2 p-8 min-h-44 mt-6'>
-            <Link href={`/${house.address}`}>
+            <Link href={`/${house.address}`} className='relative w-full min-h-40'>
               {true ? (
                 <Image
                   src={getPublicUrl(`style/logo/${house.style.logo_image}`)}
                   alt='logo'
-                  // fill
-                  width={240}
-                  height={240}
-                  className='object-cover relative'
+                  onLoad={() => setImageLoaded(true)}
+                  className={imageLoaded ? 'opacity-100' : 'opacity-0'}
+                  objectFit='contain'
+                  fill
                 />
               ) : (
                 <h1 className='text-3xl text-center font-bold'>
