@@ -39,7 +39,7 @@ export const Widget = ({
         }}
         className={cn(
           editing && 'aniamte-shake',
-          'border border-black rounded-md bg-card text-card-foreground overflow-hidden w-full h-full'
+          'custom-card rounded-md text-card-foreground overflow-hidden w-full h-full'
         )}
       >
         {widgetData?.type == 'image' && <WidgetImage widget={widgetData} />}

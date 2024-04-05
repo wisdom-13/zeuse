@@ -22,6 +22,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import ColorPickerButton from '@/components/ColorPickerButton';
 import { colorArr, opacityArr, radiusArr } from '@/data/theme';
 import { getPublicUrl } from '@/util/getPublicUrl';
+import { Spinner } from '@/components/Spinner';
 
 interface ThemeContentProps {
   house: HouseBuild;
@@ -88,32 +89,32 @@ const ThemeContent = ({
   }
 
   const changeStyle = (type: string, value: string) => {
-    if (type == 'mode') {
-      if (value == 'light') {
-        document.body.classList.remove('dark');
-        document.getElementById('theme-wrap')?.classList.remove('dark');
-      } else if (value == 'dark') {
-        document.body.classList.add('dark');
-        document.getElementById('theme-wrap')?.classList.add('dark');
-      }
-    } else if (type == 'color') {
-      document.body.classList.replace(`color-${style.color}`, `color-${value}`);
-      document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
-    } else if (type === 'border') {
-      if (value == '0') {
-        document.body.classList.add('no-border');
-        document.getElementById('theme-wrap')?.classList.add('no-border');
-      } else if (value == '1') {
-        document.body.classList.remove('no-border');
-        document.getElementById('theme-wrap')?.classList.remove('no-border');
-      }
-    } else if (type == 'opacity') {
-      document.body.style.setProperty('--boxOpacity', value);
-      document.getElementById('theme-wrap')?.style.setProperty('--boxOpacity', value);
-    } else if (type == 'border_radius') {
-      document.body.style.setProperty('--radius', value);
-      document.getElementById('theme-wrap')?.style.setProperty('--radius', value);
-    }
+    // if (type == 'mode') {
+    //   if (value == 'light') {
+    //     document.body.classList.remove('dark');
+    //     document.getElementById('theme-wrap')?.classList.remove('dark');
+    //   } else if (value == 'dark') {
+    //     document.body.classList.add('dark');
+    //     document.getElementById('theme-wrap')?.classList.add('dark');
+    //   }
+    // } else if (type == 'color') {
+    //   document.body.classList.replace(`color-${style.color}`, `color-${value}`);
+    //   document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
+    // } else if (type === 'border') {
+    //   if (value == '0') {
+    //     document.body.classList.add('no-border');
+    //     document.getElementById('theme-wrap')?.classList.add('no-border');
+    //   } else if (value == '1') {
+    //     document.body.classList.remove('no-border');
+    //     document.getElementById('theme-wrap')?.classList.remove('no-border');
+    //   }
+    // } else if (type == 'opacity') {
+    //   document.body.style.setProperty('--boxOpacity', value);
+    //   document.getElementById('theme-wrap')?.style.setProperty('--boxOpacity', value);
+    // } else if (type == 'border_radius') {
+    //   document.body.style.setProperty('--radius', value);
+    //   document.getElementById('theme-wrap')?.style.setProperty('--radius', value);
+    // }
   }
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +143,7 @@ const ThemeContent = ({
   }
 
   return (
-    <ScrollArea className='h-full'>
+    <ScrollArea className='h-full pb-4'>
       <h2 className='text-xl font-medium'>
         외관
       </h2>
@@ -270,7 +271,7 @@ const ThemeContent = ({
         <div className='flex items-center justify-between'>
           <div>
             <h3 className='text-base'>박스 테두리</h3>
-            <p className='text-sm text-muted-foreground'>박스 테두리의 사용 여부를 설정하세요.</p>
+            <p className='text-sm text-muted-foreground'>박스 테두리 스타일을 설정하세요.</p>
           </div>
           <div>
             <Select defaultValue={style.box_style.border ? '1' : '0'} onValueChange={(v) => handleUpdateBoxStyle('border', v)}>
@@ -279,8 +280,9 @@ const ThemeContent = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem key='1' value='1'>사용함</SelectItem>
-                  <SelectItem key='0' value='0'>사용하지 않음</SelectItem>
+                  <SelectItem key='line' value='line'>선</SelectItem>
+                  <SelectItem key='shadow' value='shadow'>그림자</SelectItem>
+                  <SelectItem key='none' value='none'>테두리 없음</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -314,7 +316,7 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요. 숫자가 클수록 둥글고 작을수록 각집니다.</p>
           </div>
           <div>
-            <Select defaultValue={style.box_style.border_radius} onValueChange={(v) => handleUpdateBoxStyle('border_radius', v)}>
+            <Select defaultValue={style.box_style.radius} onValueChange={(v) => handleUpdateBoxStyle('radius', v)}>
               <SelectTrigger className='w-40'>
                 <SelectValue placeholder="수치를 선택하세요." />
               </SelectTrigger>

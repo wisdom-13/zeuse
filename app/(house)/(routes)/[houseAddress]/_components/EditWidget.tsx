@@ -97,7 +97,7 @@ export const EditWidget = ({
           gridRow: `auto / span ${row}`
         }}
         className={cn(
-          'aniamte-shake border border-black rounded-md bg-card text-card-foreground overflow-hidden relative',
+          'custom-card aniamte-shake rounded-md text-card-foreground overflow-hidden relative',
           isDragging ? 'opacity-0' : 'opacity-100'
         )}
         onClick={widgetEdit.onModalOpen}

@@ -42,23 +42,6 @@ const Navigation = ({
 
   const owner = house.family.find((item) => item.is_owner);
 
-  const style = `
-    --radius:${house.style.box_style.border_radius}rem;
-    --boxOpacity: ${house.style.box_style.opacity}
-  `;
-
-  useEffect(() => {
-    if (house.style.mode == 'dark') {
-      document.body.classList.add('dark');
-    }
-    if (house.style.box_style.border == '0') {
-      document.body.classList.add('no-border');
-    }
-    document.body.classList.add(`color-${house.style.color}`);
-    document.body.style.cssText = style;
-  }, [house.style, style]);
-
-
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
       setIsCollapsed(false);
@@ -106,7 +89,8 @@ const Navigation = ({
     <>
       <aside
         ref={sidebarRef}
-        className={cn('group/sidebar h-screen bg-card text-card-foreground border-y border-r border-primary overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
+        className={cn(
+          'custom-card group/sidebar h-screen bg-card text-card-foreground border-y border-r overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}

@@ -277,11 +277,17 @@ body,
   --ring: 20.5 90.2% 48.2%;
 }
 
-.no-border .border-primary {
-  border-color: transparent;
+.border-line .custom-card {
+  @apply border border-primary;
 }
 
-.bg-card {
+.border-shadow .custom-card {
+  @apply shadow-md;
+}
+
+.border-none .custom-card,
+.custom-card {
+  @apply border-transparent;
   background-color: hsla(var(--card), var(--boxOpacity));
 }
 

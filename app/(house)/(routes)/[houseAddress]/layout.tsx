@@ -33,7 +33,7 @@ export default async function HouseLayout({
 
   const style = {
     background: house.style.bg_image ? `url(${getPublicUrl(`style/background/${house.style.bg_image}`)})` : `${house.style.bg_color}`,
-    '--radius': `${house.style.box_style.border_radius}rem`,
+    '--radius': `${house.style.box_style.radius}rem`,
     '--boxOpacity': `${house.style.box_style.opacity}`
   } as const;
 
@@ -44,7 +44,7 @@ export default async function HouseLayout({
         'h-screen flex',
         house.style.mode == 'dark' && 'dark',
         house.style.color && `color-${house.style.color}`,
-        house.style.box_style.border == '0' && `no-border`
+        house.style.box_style.border !== 'none' && `border-${house.style.box_style.border}`
       )}
       style={style}
     >

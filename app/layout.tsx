@@ -30,14 +30,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={openSans.className}>
-        <SupabaseProvider>
-          <UserProvider>
-            <Toaster position="bottom-right" />
-            <ModalProvider />
-            {children}
-          </UserProvider>
-        </SupabaseProvider>
+      <body>
+        <div className={openSans.className}>
+          <SupabaseProvider>
+            <UserProvider>
+              <Toaster position="bottom-right" />
+              <ModalProvider />
+              {children}
+            </UserProvider>
+          </SupabaseProvider>
+        </div>
       </body>
     </html>
   )

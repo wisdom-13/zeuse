@@ -13,7 +13,7 @@ export default function BoardLayout({
 
   return (
     <div
-      className='h-full w-full bg-card text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
+      className='custom-card h-full w-full text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
     >
       {children}
     </div>
