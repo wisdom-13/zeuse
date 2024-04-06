@@ -1,7 +1,6 @@
 import moment from 'moment';
 import getPostById from '@/action/getPostById';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Editor from '../../_components/Editor';
 import { isJSONString } from '@/util/isJSONString';
@@ -26,7 +25,7 @@ const PostPage = async ({
   return (
     <ScrollArea className='w-full h-full'>
       <div className='flex flex-col gap-y-2'>
-        <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pb-2 mt-4'>
+        <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pb-2 mt-8'>
           <div className='flex items-center gap-x-4'>
             <h1 className='text-4xl font-semibold'>
               {post.title}

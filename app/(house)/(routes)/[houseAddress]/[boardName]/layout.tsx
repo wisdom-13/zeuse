@@ -21,7 +21,7 @@ export default async function BoardLayout({
 
   return (
     <div
-      className='custom-card h-full w-full text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
+      className='custom-card flex flex-col h-full w-full text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
     >
       {children}
     </div>

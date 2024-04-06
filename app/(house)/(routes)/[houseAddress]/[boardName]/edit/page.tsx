@@ -1,22 +1,20 @@
-'use client'
+'use client';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Input } from '@/components/ui/input';
-import Editor from '../../_components/Editor';
+import { useParams } from 'next/navigation';
+
+import useGetBoardByName from '@/hooks/useGetBoardByName';
+import useHouseBuild from '@/hooks/useHouseBuild';
+import PostEdit from '../_components/PostEdit';
 
 const EditPage = () => {
-  return (
-    <ScrollArea className='w-full h-full py-6'>
-      <div className='flex flex-col gap-y-4'>
-        <div className='flex items-center gap-x-4 px-6  mt-4'>
-          <Input className='text-3xl font-semibold border-none' placeholder='제목을 입력하세요' />
-        </div>
-        <div className='flex flex-col'>
-          <Editor />
-        </div>
-      </div>
-    </ScrollArea>
+  const param = useParams();
+  const { houseId } = useHouseBuild();
+  const { board, isLoading } = useGetBoardByName(houseId, param.boardName);
 
+  return (
+    <>
+      {board?.type == 'post' && <PostEdit board={board} />}
+    </>
   );
 }
 

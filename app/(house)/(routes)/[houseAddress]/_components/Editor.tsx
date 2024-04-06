@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { getPublicUrl } from '@/util/getPublicUrl';
 import {
   BlockNoteEditor,
   PartialBlock
@@ -9,34 +11,44 @@ import {
   useCreateBlockNote
 } from '@blocknote/react';
 import "@blocknote/react/style.css";
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { toast } from 'sonner';
+import { v4 as uuid } from 'uuid';
 
 
 interface EditorProps {
-  // onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
+  onChange?: (value: string) => void;
 };
 
 const Editor = ({
-  // onChange,
   initialContent,
-  editable
+  editable,
+  onChange
 }: EditorProps) => {
+  const supabaseClient = useSupabaseClient();
 
-  // const handleUpload = async (file: File) => {
-  //   const response = await edgestore.publicFiles.upload({
-  //     file
-  //   });
+  const handleUpload = async (file: File) => {
+    const { data, error } = await supabaseClient
+      .storage
+      .from(`post`)
+      .upload(`${uuid()}`, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+    if (error) {
+      toast.error('이미지를 업로드하는 중 오류가 발생했습니다.')
+    }
+    return data ? getPublicUrl(`post/${data.path}`) : '';
+  }
 
-  //   return response.url;
-  // }
-
-  const editor = useCreateBlockNote({
+  const editor: BlockNoteEditor = useCreateBlockNote({
     initialContent:
       initialContent
         ? JSON.parse(initialContent) as PartialBlock[]
         : undefined,
-    // uploadFile: handleUpload
+    uploadFile: handleUpload,
   });
 
   return (
@@ -44,8 +56,7 @@ const Editor = ({
       <BlockNoteView
         editor={editor}
         editable={editable}
-      // theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      // onChange={() => { onChange(JSON.stringify(editor.document)) }}
+        onChange={() => onChange && onChange(JSON.stringify(editor.document))}
       />
     </div>
   )

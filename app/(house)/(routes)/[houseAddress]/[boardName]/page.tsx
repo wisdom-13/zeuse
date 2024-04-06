@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import useGetBoardByName from '@/hooks/useGetBoardByName';
@@ -8,7 +8,6 @@ import useHouseBuild from '@/hooks/useHouseBuild';
 
 import PostList from './_components/PostList';
 import MemoList from './_components/MemoList';
-
 
 const BoardPage = () => {
   const param = useParams();
@@ -26,17 +25,14 @@ const BoardPage = () => {
     )
   }
 
-  if (board) {
-    return (
-      <>
-        <div className='flex flex-col h-full gap-y-4 p-6'>
-          {board.type == 'post' && <PostList board={board} />}
-          {board.type == 'memo' && <MemoList board={board} />}
-        </div>
-      </>
-    );
-  }
-
+  return (
+    <>
+      <div className='flex flex-col h-full gap-y-4 p-6'>
+        {board?.type == 'post' && <PostList board={board} />}
+        {board?.type == 'memo' && <MemoList board={board} />}
+      </div>
+    </>
+  );
 }
 
 export default BoardPage;
