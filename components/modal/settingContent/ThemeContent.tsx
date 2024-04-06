@@ -22,7 +22,6 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import ColorPickerButton from '@/components/ColorPickerButton';
 import { colorArr, opacityArr, radiusArr } from '@/data/theme';
 import { getPublicUrl } from '@/util/getPublicUrl';
-import { Spinner } from '@/components/Spinner';
 
 interface ThemeContentProps {
   house: HouseBuild;
@@ -245,7 +244,7 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>박스 테두리 스타일을 설정하세요.</p>
           </div>
           <div>
-            <Select defaultValue={style.box_style.border ? '1' : '0'} onValueChange={(v) => handleUpdateBoxStyle('border', v)}>
+            <Select defaultValue={style.box_style.border} onValueChange={(v) => handleUpdateBoxStyle('border', v)}>
               <SelectTrigger className='w-40'>
                 <SelectValue placeholder="수치를 선택하세요." />
               </SelectTrigger>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Memo } from '@/types';
+import { Board, Memo } from '@/types';
 
 
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,17 +11,18 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import useGetMemoListById from '@/hooks/useGetMemoListById';
 import MemoItem from './MemoItem';
+import { useState } from 'react';
+import SearchBar from './SearchBar';
 
 interface MemoListProps {
-  id: string;
-  searchKeyword: string;
+  board: Board;
 }
 
 const MemoList = ({
-  id,
-  searchKeyword
+  board,
 }: MemoListProps) => {
-  const { memos, isLoading } = useGetMemoListById(id);
+  const { memos } = useGetMemoListById(board.id);
+  const [value, setValue] = useState('');
 
   if (!memos) {
     return false;
@@ -29,11 +30,17 @@ const MemoList = ({
 
   const filterMemos = memos
     .filter((memo: Memo) => {
-      return memo.title?.toLowerCase().includes(searchKeyword) || memo.content.toLowerCase().includes(searchKeyword);
+      return memo.title?.toLowerCase().includes(value) || memo.content.toLowerCase().includes(value);
     });
 
   return (
     <>
+      <div className='flex items-center justify-start gap-x-2 mt-8'>
+        <h1 className='text-3xl font-semibold w-full'>
+          {board.title}
+        </h1>
+        <SearchBar className='w-96' value={value} handleChange={setValue} />
+      </div>
       <div>
         <Textarea placeholder='내용을 입력하세요.' />
         <div className='flex items-center justify-end gap-x-2 mt-2'>

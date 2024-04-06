@@ -173,7 +173,7 @@ const Navigation = ({
           </div>
 
         </div>
-      </aside >
+      </aside>
       <div
         ref={navbarRef}
         className={cn('absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]',

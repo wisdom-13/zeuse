@@ -1,17 +1,23 @@
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   value: string;
   handleChange: (value: string) => void;
+  className?: string;
 }
 
 const SearchBar = ({
   value,
-  handleChange
+  handleChange,
+  className
 }: SearchBarProps) => {
   return (
-    <div className='relative'>
+    <div className={cn(
+      'relative',
+      className && className
+    )}>
       <Input
         value={value}
         onChange={(e) => handleChange(e.target.value)}
