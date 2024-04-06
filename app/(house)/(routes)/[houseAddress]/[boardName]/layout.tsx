@@ -1,15 +1,23 @@
-import { ScrollArea } from '@/components/ui/scroll-area'
+import getBoardByName from '@/action/getBoardByName';
+import { notFound } from 'next/navigation';
 
 interface BoardLayoutProps {
   params: {
-    houseAddress: string
+    houseAddress: string;
+    boardName: string;
   }
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-export default function BoardLayout({
+export default async function BoardLayout({
+  params,
   children,
 }: BoardLayoutProps) {
+  const chkBoard = await getBoardByName(params.houseAddress, params.boardName);
+
+  if (!chkBoard) {
+    notFound();
+  }
 
   return (
     <div

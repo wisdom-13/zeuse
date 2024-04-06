@@ -8,6 +8,7 @@ import { cookies } from 'next/headers'
 import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
 import { cn } from '@/lib/utils'
 import { getPublicUrl } from '@/util/getPublicUrl'
+import { notFound } from 'next/navigation'
 
 interface HouseLayoutProps {
   params: {
@@ -28,7 +29,7 @@ export default async function HouseLayout({
   const house = await getHouseBuildByAddress(houseAddress);
 
   if (!house) {
-    return false;
+    notFound();
   }
 
   const style = {
