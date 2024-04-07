@@ -19,13 +19,17 @@ import { v4 as uuid } from 'uuid';
 interface EditorProps {
   initialContent?: string;
   editable?: boolean;
+  thumbnailPath?: string;
   onChange?: (value: string) => void;
+  setThumbnailPath: (value: string) => void;
 };
 
 const Editor = ({
   initialContent,
   editable,
-  onChange
+  onChange,
+  setThumbnailPath,
+  thumbnailPath
 }: EditorProps) => {
   const supabaseClient = useSupabaseClient();
 
@@ -37,10 +41,20 @@ const Editor = ({
         cacheControl: '3600',
         upsert: false
       });
+
     if (error) {
       toast.error('이미지를 업로드하는 중 오류가 발생했습니다.')
     }
-    return data ? getPublicUrl(`post/${data.path}`) : '';
+
+    if (data) {
+      if (thumbnailPath == '') {
+        setThumbnailPath(data.path);
+      }
+
+      return getPublicUrl(`post/${data.path}`);
+    }
+
+    return '';
   }
 
   const editor: BlockNoteEditor = useCreateBlockNote({
