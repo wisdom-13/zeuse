@@ -8,22 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { Board } from '@/types';
 import { useParams, useRouter } from 'next/navigation';
+import useGetBoardByName from '@/hooks/useGetBoardByName';
 
-interface PostEditProps {
-  board: Board
-}
-
-const PostEdit = ({
-  board
-}: PostEditProps) => {
+const PostEdit = () => {
+  const param = useParams();
+  const router = useRouter();
   const Editor = useMemo(() => dynamic(() => import("../../_components/Editor"), { ssr: false }), []);
   const supabaseClient = useSupabaseClient();
+  const { board } = useGetBoardByName(param.houseAddress, param.boardName);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const router = useRouter();
-  const param = useParams();
+
+  if (!board) {
+    return;
+  }
 
   const handleSubmit = async () => {
     if (title.trim() == '') {

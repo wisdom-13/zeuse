@@ -3,13 +3,13 @@ import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
-const useGetBoardByName = (house_id?: string, board_name?: string | string[]) => {
+const useGetBoardByName = (house_address?: string | string[], board_name?: string | string[]) => {
   const [isLoading, setIsLoading] = useState(false);
   const [board, setBoard] = useState<Board | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
-    if (!house_id || !board_name) {
+    if (!house_address || !board_name) {
       return;
     }
 
@@ -18,9 +18,12 @@ const useGetBoardByName = (house_id?: string, board_name?: string | string[]) =>
     const fetchBoard = async () => {
       const { data, error } = await supabaseClient
         .from('board')
-        .select('*')
-        .eq('house_id', house_id)
+        .select(`
+          *,
+          houses:houses!inner(*)
+        `)
         .eq('name', board_name)
+        .eq('houses.address', house_address)
         .single();
 
       if (error) {
@@ -33,7 +36,7 @@ const useGetBoardByName = (house_id?: string, board_name?: string | string[]) =>
     }
 
     fetchBoard();
-  }, [house_id, board_name, supabaseClient]);
+  }, [house_address, board_name, supabaseClient]);
 
   return useMemo(() => ({
     isLoading,

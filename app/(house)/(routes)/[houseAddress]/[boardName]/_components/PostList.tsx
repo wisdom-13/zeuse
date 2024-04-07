@@ -2,7 +2,6 @@
 
 import { Board, PostFamily } from '@/types';
 
-
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import useGetPostListById from '@/hooks/useGetPostListById';
@@ -14,6 +13,8 @@ import SearchBar from './SearchBar';
 import { Button } from '@/components/ui/button';
 import { Pen } from 'lucide-react';
 import { useState } from 'react';
+import { useUser } from '@/hooks/useUser';
+import useHouseBuild from '@/hooks/useHouseBuild';
 
 interface PostListProps {
   board: Board;
@@ -22,14 +23,18 @@ interface PostListProps {
 const PostList = ({
   board,
 }: PostListProps) => {
+  const { user } = useUser();
+  const { houseBuild } = useHouseBuild();
+  const { posts } = useGetPostListById(board.id);
   const param = useParams();
-  const { posts, isLoading } = useGetPostListById(board.id);
   const [value, setValue] = useState('');
+
+  const family = houseBuild?.family.filter((item) => item.user_id == user?.id)?.[0];
 
   const Item = (board.view == 'list') ? ListItem : CardItem;
 
   if (!posts) {
-    return false;
+    return
   }
 
   const filterPosts = posts
@@ -44,12 +49,14 @@ const PostList = ({
           {board.title}
         </h1>
         <SearchBar className='w-96' value={value} handleChange={setValue} />
-        <Link href={`/${param.houseAddress}/${param.boardName}/edit`}>
-          <Button className='flex gap-x-2' size='sm'>
-            새 글 작성
-            <Pen size={16} />
-          </Button>
-        </Link>
+        {family && (
+          <Link href={`/${param.houseAddress}/${param.boardName}/edit`}>
+            <Button className='flex gap-x-2' size='sm'>
+              새 글 작성
+              <Pen size={16} />
+            </Button>
+          </Link>
+        )}
       </div>
       {filterPosts && filterPosts.length === 0 ? (
         <div className='mt-4'>

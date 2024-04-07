@@ -1,14 +1,13 @@
-import type { Metadata } from 'next'
-import getHouseByAddress from '@/action/getHouseByAddress'
-import Navigation from './_components/Navigation'
-import HouseIdProvider from '@/providers/HouseIdProvider'
-import getHousesByUserId from '@/action/getHousesByUserId'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
-import { cn } from '@/lib/utils'
-import { getPublicUrl } from '@/util/getPublicUrl'
-import { notFound } from 'next/navigation'
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { getPublicUrl } from '@/util/getPublicUrl';
+
+import HouseIdProvider from '@/providers/HouseIdProvider';
+import getHouseByAddress from '@/action/getHouseByAddress';
+import getHousesByUserId from '@/action/getHousesByUserId';
+import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
+import Navigation from './_components/Navigation';
 
 interface HouseLayoutProps {
   params: {
@@ -21,10 +20,6 @@ export default async function HouseLayout({
   params: { houseAddress },
   children,
 }: HouseLayoutProps) {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
-
-  const { data: { session } } = await supabase.auth.getSession();
   const houses = await getHousesByUserId();
   const house = await getHouseBuildByAddress(houseAddress);
 

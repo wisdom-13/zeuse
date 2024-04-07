@@ -4,15 +4,13 @@ import { useParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import useGetBoardByName from '@/hooks/useGetBoardByName';
-import useHouseBuild from '@/hooks/useHouseBuild';
 
 import PostList from './_components/PostList';
 import MemoList from './_components/MemoList';
 
 const BoardPage = () => {
   const param = useParams();
-  const { houseId } = useHouseBuild();
-  const { board, isLoading } = useGetBoardByName(houseId, param.boardName);
+  const { board, isLoading } = useGetBoardByName(param.houseAddress, param.boardName);
 
   if (isLoading) {
     return (

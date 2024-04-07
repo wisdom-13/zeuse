@@ -1,22 +1,25 @@
 'use client';
 
-import { ElementRef, useEffect, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
-import { useMediaQuery } from 'usehooks-ts';
-import { cn } from '@/lib/utils';
 import { House, HouseBuild } from '@/types';
-
-import { HouseList } from '@/components/HouseList';
-import useAuthModal from '@/hooks/useAuthModal';
-import MenuItem from './MenuItem';
-import { toast } from 'sonner';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import useSettingModal from '@/hooks/useSettingModal';
+import { ElementRef, useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useUser } from '@/hooks/useUser';
+
+import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
+import { useMediaQuery } from 'usehooks-ts';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { getPublicUrl } from '@/util/getPublicUrl';
+
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+
+import useAuthModal from '@/hooks/useAuthModal';
+import useSettingModal from '@/hooks/useSettingModal';
+import { useUser } from '@/hooks/useUser';
+
+import { HouseList } from '@/components/HouseList';
+import MenuItem from './MenuItem';
 
 interface HouseMenuProps {
   house: HouseBuild;

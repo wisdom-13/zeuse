@@ -1,5 +1,5 @@
-import getBoardByName from '@/action/getBoardByName';
 import { notFound } from 'next/navigation';
+import getBoardByName from '@/action/getBoardByName';
 
 interface BoardLayoutProps {
   params: {
@@ -10,10 +10,10 @@ interface BoardLayoutProps {
 }
 
 export default async function BoardLayout({
-  params,
+  params: { houseAddress, boardName },
   children,
 }: BoardLayoutProps) {
-  const chkBoard = await getBoardByName(params.houseAddress, params.boardName);
+  const chkBoard = await getBoardByName(houseAddress, boardName);
 
   if (!chkBoard) {
     notFound();
