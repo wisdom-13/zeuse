@@ -32,7 +32,7 @@ const EditPage = async ({
 
   return (
     <>
-      {board?.type == 'post' && <PostEdit />}
+      {board?.type == 'post' && <PostEdit familyId={family.id} />}
     </>
   );
 }
