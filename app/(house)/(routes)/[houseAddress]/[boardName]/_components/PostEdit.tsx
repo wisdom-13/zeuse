@@ -12,7 +12,7 @@ import { useParams, useRouter } from 'next/navigation';
 import useGetBoardByName from '@/hooks/useGetBoardByName';
 import Image from 'next/image';
 import { getPublicUrl } from '@/util/getPublicUrl';
-import { Globe, ImageIcon, Lock } from 'lucide-react';
+import { Eye, Globe, ImageIcon, Lock } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
@@ -22,6 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Label } from '@/components/ui/label';
 
 interface PostEditProps {
   familyId: string;
@@ -39,12 +40,14 @@ const PostEdit = ({
   const [content, setContent] = useState('');
   const [thumbnailPath, setThumbnailPath] = useState('');
   const [isSetting, setIsSetting] = useState(false);
+  const [role, setRole] = useState(0);
+  const [password, setPassword] = useState('');
 
   if (!board) {
     return;
   }
 
-  const handleSubmit = async () => {
+  const validation = () => {
     if (title.trim() == '') {
       toast.info('제목을 입력하세요.');
       return;
@@ -55,6 +58,15 @@ const PostEdit = ({
       return;
     }
 
+    setIsSetting(true);
+  }
+
+  const handelSubmit = async () => {
+    if (role == 9 && password == '') {
+      toast.info('암호를 입력하세요.');
+      return;
+    }
+
     const { data, error } = await supabaseClient
       .from('posts')
       .insert({
@@ -62,7 +74,9 @@ const PostEdit = ({
         board_id: board.id,
         title: title,
         content: content,
-        thumbnailPath: thumbnailPath,
+        thumbnail_path: thumbnailPath,
+        role: role,
+        password: password,
         created_at: new Date(),
       })
       .select()
@@ -75,87 +89,97 @@ const PostEdit = ({
 
     toast.info('포스트가 등록되었습니다.');
     router.push(`/${param.houseAddress}/${param.boardName}/${data.id}`)
-
   }
 
   return (
     <>
       <ScrollArea className='w-full h-full pt-6'>
-        {!isSetting ? (
-          <div className='flex flex-col gap-y-4'>
-            <div className='flex items-center px-6 mt-10'>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className='text-4xl font-bold border-none px-0'
-                placeholder='제목을 입력하세요'
-              />
-            </div>
-            <div className='flex flex-col'>
-              <Editor
-                editable={true}
-                onChange={setContent}
-                setThumbnailPath={setThumbnailPath}
-                thumbnailPath={thumbnailPath}
-              />
-            </div>
+        <div className='flex flex-col gap-y-4'>
+          <div className='flex items-center px-6 mt-10'>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className='text-4xl font-bold border-none px-0'
+              placeholder='제목을 입력하세요'
+            />
           </div>
-        ) : (
-          <div className='flex flex-col p-6'>
-            <div className='flex flex-col gap-y-4'>
-              <h3 className='text-2xl font-bold'>포스트 미리보기</h3>
-              <div className='w-60 h-36 bg-gray-200 flex flex-col items-center justify-center rounded-md'>
-                {
-                  thumbnailPath ? (
-                    <div className='w-44 h-10 relative'>
-                      <Image
-                        src={getPublicUrl(`post/${thumbnailPath}`)}
-                        alt='thumbnail'
-                        fill
-                        className='object-cover'
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <ImageIcon size={36} />
-                      <span className='text-sm mt-2'>썸네일 업로드</span>
-                    </>
-                  )
-                }
-              </div>
-            </div>
-            <Separator orientation='vertical' className='mx-10' />
-            <div className='flex flex-col gap-y-4'>
-              <h3 className='text-2xl font-bold'>공개설정</h3>
-              <div className='flex gap-x-2'>
-                <Button variant='outline' size='lg' className='flex gap-x-2 font-semibold w-36'>
-                  <Globe size={18} />
-                  전체 공개
-                </Button>
-                <Button variant='secondary' size='lg' className='flex gap-x-2 font-semibold w-36'>
-                  <Lock size={18} />
-                  비공개
-                </Button>
-              </div>
-            </div>
+          <div className='flex flex-col'>
+            <Editor
+              editable={true}
+              onChange={setContent}
+              setThumbnailPath={setThumbnailPath}
+              thumbnailPath={thumbnailPath}
+            />
           </div>
-        )}
+        </div>
 
       </ScrollArea>
       <div className='flex gap-x-2 p-6 justify-end'>
-        {/* <Button variant='outline'>저장</Button> */}
-        {isSetting && <Button variant='outline' onClick={() => setIsSetting(false)}>취소</Button>}
-        <Button onClick={isSetting ? handleSubmit : () => setIsSetting(true)}>발행</Button>
-        <Dialog>
-          <DialogTrigger>Open</DialogTrigger>
+        <Button onClick={validation}>발행</Button>
+        <Dialog open={isSetting} onOpenChange={() => setIsSetting(!isSetting)}>
           <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your account
-                and remove your data from our servers.
-              </DialogDescription>
+            <DialogHeader className='pb-2'>
+              <h2 className='text-lg font-medium text-center'>
+                포스트 발행
+              </h2>
             </DialogHeader>
+            <div className='flex flex-col gap-y-8'>
+              <div className='flex flex-col gap-y-4'>
+                <Label>포스트 미리보기</Label>
+                <div className='w-56 h-32 bg-gray-200 flex flex-col items-center justify-center rounded-md relative overflow-hidden border'>
+                  {
+                    thumbnailPath ? (
+                      <div className='w-full h-full'>
+                        <Image
+                          src={getPublicUrl(`post/${thumbnailPath}`)}
+                          alt='thumbnail'
+                          fill
+                          className='object-cover'
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <ImageIcon size={36} />
+                        <span className='text-sm mt-2'>썸네일 업로드</span>
+                      </>
+                    )
+                  }
+                </div>
+              </div>
+              <div className='flex flex-col gap-y-4'>
+                <Label>공개설정</Label>
+                <div className='grid grid-cols-3 gap-x-2'>
+                  <Button variant={role == 0 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(0)}>
+                    <Globe size={18} />
+                    전체 공개
+                  </Button>
+                  <Button variant={role == 1 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(1)}>
+                    <Lock size={18} />
+                    비공개
+                  </Button>
+                  <Button variant={role == 9 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(9)}>
+                    <Eye size={18} />
+                    암호 설정
+                  </Button>
+                </div>
+              </div>
+              {role == 9 && (
+                <div className='flex flex-col gap-y-4'>
+                  <Label>암호 설정</Label>
+                  <div>
+                    <Input placeholder='암호를 설정하세요.' onChange={(e) => setPassword(e.target.value)} />
+                    <p className='text-sm text-muted-foreground pt-2'>포스트를 열람하기 위한 암호를 설정합니다.</p>
+                  </div>
+                </div>
+              )}
+              <Button
+                size='lg'
+                className='w-full'
+                onClick={handelSubmit}
+              >
+                발행하기
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
