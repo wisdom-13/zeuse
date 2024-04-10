@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from '@/components/ui/label';
+import { postRole } from '@/data/common';
 
 interface PostEditProps {
   familyId: string;
@@ -126,7 +127,7 @@ const PostEdit = ({
             <div className='flex flex-col gap-y-8'>
               <div className='flex flex-col gap-y-4'>
                 <Label>포스트 미리보기</Label>
-                <div className='w-56 h-32 bg-gray-200 flex flex-col items-center justify-center rounded-md relative overflow-hidden border'>
+                <div className='w-56 h-32 bg-secondary flex flex-col items-center justify-center rounded-md relative overflow-hidden border'>
                   {
                     thumbnailPath ? (
                       <div className='w-full h-full'>
@@ -149,18 +150,18 @@ const PostEdit = ({
               <div className='flex flex-col gap-y-4'>
                 <Label>공개설정</Label>
                 <div className='grid grid-cols-3 gap-x-2'>
-                  <Button variant={role == 0 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(0)}>
-                    <Globe size={18} />
-                    전체 공개
-                  </Button>
-                  <Button variant={role == 1 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(1)}>
-                    <Lock size={18} />
-                    비공개
-                  </Button>
-                  <Button variant={role == 9 ? 'outline' : 'secondary'} size='lg' className='flex gap-x-2 font-semibold' onClick={() => setRole(9)}>
-                    <Eye size={18} />
-                    암호 설정
-                  </Button>
+                  {postRole.map((item) => (
+                    <Button
+                      key={item.id}
+                      size='lg'
+                      className='flex gap-x-2 font-semibold'
+                      variant={role == item.id ? 'outline' : 'secondary'}
+                      onClick={() => setRole(item.id)}
+                    >
+                      <item.icon size={18} />
+                      {item.name}
+                    </Button>
+                  ))}
                 </div>
               </div>
               {role == 9 && (
