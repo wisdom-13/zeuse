@@ -16,7 +16,6 @@ const HouseContent = ({
   house,
   setHouseBuild
 }: HouseContentProps) => {
-  console.log(house);
   return (
     <>
       <ScrollArea>

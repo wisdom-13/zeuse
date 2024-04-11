@@ -66,7 +66,7 @@ export const HouseList = ({
                 <AvatarImage src={userDetails?.avatar_url} />
               </Avatar>
             )}
-            <span className='font-medium line-clamp-1'>
+            <span className='font-medium line-clamp-1 text-muted-foreground'>
               {userDetails?.name ? userDetails?.name : user?.email?.split('@')[0]}의 하우스
             </span>
           </div>

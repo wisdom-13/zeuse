@@ -36,7 +36,6 @@ const WidgetImage = ({
 
     setCount(api.scrollSnapList().length)
     setCurrent(api.selectedScrollSnap() + 1)
-    console.log(count)
 
     api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1)

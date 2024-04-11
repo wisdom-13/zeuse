@@ -24,7 +24,7 @@ const MenuItem = ({
   onClick
 }: MenuItemProps) => {
 
-  const iconFill = (type !== 'link') && { 'fill': 'text-card-foreground' };
+  const iconFill = (type !== 'link') && { 'fill': 'hsl(var(--primary))' };
 
   return (
     <>
@@ -33,8 +33,8 @@ const MenuItem = ({
           href={href}
           target={type == 'link' ? '_blank' : '_self'}
           className={cn(
-            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer text-card-foreground transition hover:bg-primary/5 rounded-md`,
-            active && 'text-primary'
+            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-lg font-medium cursor-pointer transition hover:bg-primary/5 rounded-md text-primary`,
+            active && 'font-bold'
           )}
         >
           <Icon {...iconFill} />
@@ -44,8 +44,8 @@ const MenuItem = ({
       {isButton && (
         <button
           className={cn(
-            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-base font-medium cursor-pointer text-card-foreground transition hover:bg-primary/5 rounded-md`,
-            active && 'text-primary'
+            `flex flex-row h-auto items-center w-full gap-x-4 p-3 text-base font-medium cursor-pointer transition hover:bg-primary/5 rounded-md text-primary`,
+            active && 'font-bold'
           )}
           onClick={onClick}
         >

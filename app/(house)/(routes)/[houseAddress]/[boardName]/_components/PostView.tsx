@@ -48,7 +48,7 @@ const PostView = ({
         <ScrollArea className='w-full h-full'>
           <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pb-2'>
             <div className='flex items-center gap-x-4'>
-              <h1 className='text-4xl font-bold'>
+              <h1 className='text-4xl font-bold text-primary'>
                 {post.title}
               </h1>
             </div>
