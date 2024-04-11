@@ -12,15 +12,11 @@ import { useParams, useRouter } from 'next/navigation';
 import useGetBoardByName from '@/hooks/useGetBoardByName';
 import Image from 'next/image';
 import { getPublicUrl } from '@/util/getPublicUrl';
-import { Eye, Globe, ImageIcon, Lock } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { ImageIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from '@/components/ui/label';
 import { postRole } from '@/data/common';

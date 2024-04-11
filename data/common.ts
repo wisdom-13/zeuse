@@ -9,11 +9,11 @@ export const postRole = [
   {
     id: 1,
     name: '비공개',
-    icon: Lock
+    icon: Eye
   },
   {
     id: 9,
     name: '암호 설정',
-    icon: Eye
+    icon: Lock
   },
 ]
