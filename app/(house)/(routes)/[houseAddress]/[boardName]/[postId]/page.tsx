@@ -1,9 +1,11 @@
-import getPostById from '@/action/getPostById';
-import PostView from '../_components/PostView';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import getPostById from '@/action/getPostById';
 import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
+import getBoardByName from '@/action/getBoardByName';
+import PostView from '../_components/PostView';
+import BoardBack from '../_components/BoardBack';
 
 interface BoardPageProps {
   params: {
@@ -14,7 +16,7 @@ interface BoardPageProps {
 }
 
 const PostPage = async ({
-  params: { houseAddress, postId }
+  params: { houseAddress, boardName, postId }
 }: BoardPageProps) => {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
@@ -22,6 +24,7 @@ const PostPage = async ({
   const { data: { session } } = await supabase.auth.getSession();
 
   const house = await getHouseBuildByAddress(houseAddress);
+  const board = await getBoardByName(houseAddress, boardName);
   const post = await getPostById(postId);
 
   const family = house?.family.filter((item) => item.user_id == session?.user.id)?.[0];
@@ -36,6 +39,7 @@ const PostPage = async ({
 
   return (
     <>
+      <BoardBack url={`/${houseAddress}/${boardName}`} title={board?.title} />
       <PostView post={post} family={family} />
     </>
   );

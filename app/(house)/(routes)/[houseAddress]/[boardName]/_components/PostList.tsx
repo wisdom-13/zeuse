@@ -45,7 +45,7 @@ const PostList = ({
   return (
     <>
       <div className='flex items-center justify-start gap-x-2 mt-8'>
-        <h1 className='w-full text-4xl font-semibold'>
+        <h1 className='w-full text-4xl font-bold'>
           {board.title}
         </h1>
         <SearchBar className='w-96' value={value} handleChange={setValue} />
