@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { getPublicUrl } from '@/util/getPublicUrl';
 import {
   BlockNoteEditor,
@@ -15,13 +14,12 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 
-
 interface EditorProps {
   initialContent?: string;
   editable?: boolean;
   thumbnailPath?: string;
   onChange?: (value: string) => void;
-  setThumbnailPath: (value: string) => void;
+  setThumbnailPath?: (value: string) => void;
 };
 
 const Editor = ({
@@ -47,7 +45,7 @@ const Editor = ({
     }
 
     if (data) {
-      if (thumbnailPath == '') {
+      if (thumbnailPath == '' && setThumbnailPath) {
         setThumbnailPath(data.path);
       }
 
