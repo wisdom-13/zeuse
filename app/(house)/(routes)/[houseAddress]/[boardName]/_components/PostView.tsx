@@ -12,7 +12,17 @@ import Editor from '../../_components/Editor';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 interface BoardPageProps {
   post: PostFamily;
@@ -25,6 +35,9 @@ const PostView = ({
 }: BoardPageProps) => {
   const editAuth = family?.is_owner || post.family_id == family?.id;
   const param = useParams();
+  const router = useRouter();
+
+  const supabaseClient = useSupabaseClient();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +56,28 @@ const PostView = ({
       setPassword('');
       toast.error('잘못된 암호입니다.')
     }
+  }
+
+  const handelDelete = async () => {
+    if (post.thumbnail_path) {
+      await supabaseClient
+        .storage
+        .from('post')
+        .remove([post.thumbnail_path]);
+    }
+
+    const { error } = await supabaseClient
+      .from('posts')
+      .delete()
+      .eq('id', post.id)
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.info('포스트를 삭제했습니다.');
+    router.push(`/${param.houseAddress}/${param.boardName}`);
   }
 
   return (
@@ -92,7 +127,27 @@ const PostView = ({
                       <button>수정</button>
                     </Link>
                   )}
-                  <button>삭제</button>
+                  <Dialog>
+                    <DialogTrigger>삭제</DialogTrigger>
+                    <DialogContent className='text-center sm:max-w-80'>
+                      <DialogHeader>
+                        <DialogTitle>포스트를 삭제할까요?</DialogTitle>
+                        <DialogDescription>
+                          삭제한 포스트는 되돌릴 수 없습니다.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button
+                          variant='destructive'
+                          size='sm'
+                          className='w-full'
+                          onClick={handelDelete}
+                        >
+                          삭제
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
             </div>
