@@ -1,26 +1,26 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+import { ImageIcon, X } from 'lucide-react';
+import { toast } from 'sonner';
+import { v4 as uuid } from 'uuid';
+
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import useGetBoardByName from '@/hooks/useGetBoardByName';
+import useGetPostById from '@/hooks/useGetPostById';
+
+import { postRole } from '@/data/common';
+import { getPublicUrl } from '@/util/getPublicUrl';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import useGetBoardByName from '@/hooks/useGetBoardByName';
-import Image from 'next/image';
-import { getPublicUrl } from '@/util/getPublicUrl';
-import { ImageIcon } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Label } from '@/components/ui/label';
-import { postRole } from '@/data/common';
-import useGetPostById from '@/hooks/useGetPostById';
 
 interface PostEditProps {
   familyId: string;
@@ -38,6 +38,7 @@ const PostEdit = ({
   const [isSetting, setIsSetting] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [thumbnail, setThumbnail] = useState<File>();
   const [thumbnailPath, setThumbnailPath] = useState('');
   const [role, setRole] = useState(0);
   const [password, setPassword] = useState('');
@@ -47,14 +48,11 @@ const PostEdit = ({
 
   useEffect(() => {
     if (!post) return;
-
     setTitle(post.title);
     setThumbnailPath(post.thumbnail_path);
     setRole(post.role);
     setContent(post.content);
-
-  }, [post])
-
+  }, [post]);
 
   if (!board) {
     return;
@@ -74,6 +72,19 @@ const PostEdit = ({
     setIsSetting(true);
   }
 
+  const handleThumbnail = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.id || !event.target.files) return
+    const image = event.target.files[0];
+    setThumbnail(image);
+    setThumbnailPath('');
+  }
+
+  const handleImageDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setThumbnail(undefined);
+    setThumbnailPath('');
+  }
+
   const handelSubmit = async () => {
     if (role == 9 && password == '') {
       toast.info('암호를 입력하세요.');
@@ -89,6 +100,25 @@ const PostEdit = ({
       role: role,
       password: password,
       created_at: new Date(),
+    }
+
+    if (thumbnail) {
+      const { data, error } = await supabaseClient
+        .storage
+        .from('post')
+        .upload(`thumbnail-${uuid()}`, thumbnail, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        toast.error('썸네일을 업로드하는 중 오류가 발생했습니다.');
+      }
+
+      if (data) {
+        setThumbnailPath(`${data.path}`);
+        postData.thumbnail_path = data.path;
+      }
     }
 
     const { data, error } = post ? (
@@ -150,24 +180,42 @@ const PostEdit = ({
             <div className='flex flex-col gap-y-8'>
               <div className='flex flex-col gap-y-4'>
                 <Label>포스트 미리보기</Label>
-                <div className='w-56 h-32 bg-secondary flex flex-col items-center justify-center rounded-md relative overflow-hidden border'>
-                  {
-                    thumbnailPath ? (
-                      <div className='w-full h-full'>
-                        <Image
-                          src={getPublicUrl(thumbnailPath)}
-                          alt='thumbnail'
-                          fill
-                          className='object-cover'
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <ImageIcon size={36} />
-                        <span className='text-sm mt-2'>썸네일 업로드</span>
-                      </>
-                    )
-                  }
+                <div className='group w-56 h-32 relative bg-secondary rounded-md  overflow-hidden border'>
+                  <label
+                    htmlFor='thumbnail'
+                    className='h-full flex flex-col items-center justify-center '
+                  >
+                    <input
+                      id='thumbnail'
+                      accept='image/*,.jpeg,.jpg,.png'
+                      type='file'
+                      onChange={handleThumbnail}
+                      className='hidden'
+                    />
+                    {
+                      (thumbnail || thumbnailPath) ? (
+                        <div className='w-full h-full'>
+                          <Image
+                            src={thumbnail ? URL.createObjectURL(thumbnail) : getPublicUrl(`post/${thumbnailPath}`)}
+                            alt='thumbnail'
+                            fill
+                            className='object-cover'
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <ImageIcon size={36} />
+                          <span className='text-sm mt-2'>썸네일 업로드</span>
+                        </>
+                      )
+                    }
+                  </label>
+                  {(thumbnail || thumbnailPath) && <button
+                    className='hidden group-hover:block absolute z-[999999] top-1 right-1 bg-background rounded-full p-1'
+                    onClick={handleImageDelete}
+                  >
+                    <X size={16} />
+                  </button>}
                 </div>
               </div>
               <div className='flex flex-col gap-y-4'>
@@ -207,10 +255,7 @@ const PostEdit = ({
           </DialogContent>
         </Dialog>
       </div>
-
-
     </>
-
   );
 }
 
