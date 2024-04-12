@@ -126,7 +126,7 @@ const ThemeContent = ({
           </div>
           <label
             htmlFor='logo_image'
-            className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
+            className='flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
           >
             <input
               id='logo_image'
@@ -137,7 +137,7 @@ const ThemeContent = ({
             />
             {style.logo_image ? (
               <Image
-                src={getPublicUrl(style.logo_image)}
+                src={getPublicUrl(`style/${style.logo_image}`)}
                 alt="logo_image"
                 fill
                 className='object-contain'
@@ -169,7 +169,7 @@ const ThemeContent = ({
               />
               {style.bg_image ? (
                 <Image
-                  src={getPublicUrl(style.bg_image)}
+                  src={getPublicUrl(`style/${style.bg_image}`)}
                   alt="bg_image"
                   fill
                   className='object-cover'

@@ -26,7 +26,7 @@ const CardItem = ({
           post.thumbnail_path && (
             <div className='w-full h-44 relative'>
               <Image
-                src={getPublicUrl(post.thumbnail_path)}
+                src={getPublicUrl(`post/${post.thumbnail_path}`)}
                 alt='thumbnail'
                 fill
                 className='object-cover'

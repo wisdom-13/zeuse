@@ -112,7 +112,7 @@ const Navigation = ({
             <Link href={`/${house.address}`} className='relative w-full min-h-20'>
               {house.style.logo_image ? (
                 <Image
-                  src={getPublicUrl(house.style.logo_image)}
+                  src={getPublicUrl(`/style/${house.style.logo_image}`)}
                   alt='logo'
                   onLoad={() => setImageLoaded(true)}
                   className={cn(

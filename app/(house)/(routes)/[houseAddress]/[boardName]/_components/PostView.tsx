@@ -115,7 +115,6 @@ const PostView = ({
                     <Badge variant='secondary' className='cursor-pointer'>
                       {post.role == 0 && '전체 공개'}
                       {post.role == 1 && '비공개'}
-                      {post.role == 9 && <span>암호 : {post.password}</span>}
                     </Badge>
                   )
                 )}
