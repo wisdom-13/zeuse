@@ -29,7 +29,7 @@ interface PostEditProps {
 const PostEdit = ({
   familyId
 }: PostEditProps) => {
-  const Editor = useMemo(() => dynamic(() => import("../../_components/Editor"), { ssr: false }), []);
+  const Editor = useMemo(() => dynamic(() => import('../../_components/Editor'), { ssr: false }), []);
   const param = useParams();
   const router = useRouter();
 
@@ -155,7 +155,7 @@ const PostEdit = ({
                     thumbnailPath ? (
                       <div className='w-full h-full'>
                         <Image
-                          src={getPublicUrl(`post/${thumbnailPath}`)}
+                          src={getPublicUrl(thumbnailPath)}
                           alt='thumbnail'
                           fill
                           className='object-cover'

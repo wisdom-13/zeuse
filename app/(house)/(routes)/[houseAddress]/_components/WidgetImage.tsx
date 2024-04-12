@@ -51,7 +51,7 @@ const WidgetImage = ({
     );
   }
 
-  const slides = widget.image_array.map((image) => (getPublicUrl(`widget/${image}`)))
+  const slides = widget.image_array.map((image) => (getPublicUrl(image)))
 
   if (slides.length === 1) {
     return (

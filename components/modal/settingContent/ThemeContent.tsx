@@ -108,7 +108,7 @@ const ThemeContent = ({
     }
 
     if (data) {
-      handleUpdateStyle(id, data.path);
+      handleUpdateStyle(id, `style/${id == 'logo_image' ? 'logo' : 'background'}/${data.path}`);
     }
   }
 
@@ -137,7 +137,7 @@ const ThemeContent = ({
             />
             {style.logo_image ? (
               <Image
-                src={getPublicUrl(`style/logo/${style.logo_image}`)}
+                src={getPublicUrl(style.logo_image)}
                 alt="logo_image"
                 fill
                 className='object-contain'
@@ -169,7 +169,7 @@ const ThemeContent = ({
               />
               {style.bg_image ? (
                 <Image
-                  src={getPublicUrl(`style/background/${style.bg_image}`)}
+                  src={getPublicUrl(style.bg_image)}
                   alt="bg_image"
                   fill
                   className='object-cover'

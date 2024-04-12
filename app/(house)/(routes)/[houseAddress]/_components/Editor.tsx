@@ -46,7 +46,7 @@ const Editor = ({
 
     if (data) {
       if (thumbnailPath == '' && setThumbnailPath) {
-        setThumbnailPath(data.path);
+        setThumbnailPath(`post/${data.path}`);
       }
 
       return getPublicUrl(`post/${data.path}`);
