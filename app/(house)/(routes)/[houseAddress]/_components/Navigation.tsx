@@ -117,9 +117,9 @@ const Navigation = ({
                   onLoad={() => setImageLoaded(true)}
                   className={cn(
                     imageLoaded ? 'opacity-100' : 'opacity-0',
-                    'pointer-events-none'
+                    'pointer-events-none',
+                    'object-contain'
                   )}
-                  objectFit='contain'
                   fill
                 />
               ) : (

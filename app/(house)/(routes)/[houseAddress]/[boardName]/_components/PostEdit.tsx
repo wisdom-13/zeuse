@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import useGetBoardByName from '@/hooks/useGetBoardByName';
 import Image from 'next/image';
 import { getPublicUrl } from '@/util/getPublicUrl';
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from '@/components/ui/label';
 import { postRole } from '@/data/common';
+import useGetPostById from '@/hooks/useGetPostById';
 
 interface PostEditProps {
   familyId: string;
@@ -28,17 +29,32 @@ interface PostEditProps {
 const PostEdit = ({
   familyId
 }: PostEditProps) => {
+  const Editor = useMemo(() => dynamic(() => import("../../_components/Editor"), { ssr: false }), []);
   const param = useParams();
   const router = useRouter();
-  const Editor = useMemo(() => dynamic(() => import("../../_components/Editor"), { ssr: false }), []);
+
   const supabaseClient = useSupabaseClient();
   const { board } = useGetBoardByName(param.houseAddress, param.boardName);
+  const [isSetting, setIsSetting] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [thumbnailPath, setThumbnailPath] = useState('');
-  const [isSetting, setIsSetting] = useState(false);
   const [role, setRole] = useState(0);
   const [password, setPassword] = useState('');
+
+  const postId = useSearchParams().get('id');
+  const { post } = useGetPostById(postId);
+
+  useEffect(() => {
+    if (!post) return;
+
+    setTitle(post.title);
+    setThumbnailPath(post.thumbnail_path);
+    setRole(post.role);
+    setContent(post.content);
+
+  }, [post])
+
 
   if (!board) {
     return;
@@ -64,27 +80,38 @@ const PostEdit = ({
       return;
     }
 
-    const { data, error } = await supabaseClient
-      .from('posts')
-      .insert({
-        family_id: familyId,
-        board_id: board.id,
-        title: title,
-        content: content,
-        thumbnail_path: thumbnailPath,
-        role: role,
-        password: password,
-        created_at: new Date(),
-      })
-      .select()
-      .single();
+    const postData = {
+      family_id: familyId,
+      board_id: board.id,
+      title: title,
+      content: content,
+      thumbnail_path: thumbnailPath,
+      role: role,
+      password: password,
+      created_at: new Date(),
+    }
+
+    const { data, error } = post ? (
+      await supabaseClient
+        .from('posts')
+        .update(postData)
+        .eq('id', post.id)
+        .select()
+        .single()
+    ) : (
+      await supabaseClient
+        .from('posts')
+        .insert(postData)
+        .select()
+        .single()
+    )
 
     if (error) {
       toast.error(error.message);
       return;
     }
 
-    toast.info('포스트가 등록되었습니다.');
+    toast.info(post ? '포스트를 수정하였습니다.' : '포스트가 등록되었습니다.');
     router.push(`/${param.houseAddress}/${param.boardName}/${data.id}`)
   }
 
@@ -103,13 +130,13 @@ const PostEdit = ({
           <div className='flex flex-col'>
             <Editor
               editable={true}
+              initialContent={post?.content}
               onChange={setContent}
               setThumbnailPath={setThumbnailPath}
               thumbnailPath={thumbnailPath}
             />
           </div>
         </div>
-
       </ScrollArea>
       <div className='flex gap-x-2 p-6 justify-end'>
         <Button onClick={validation}>발행</Button>
@@ -164,7 +191,7 @@ const PostEdit = ({
                 <div className='flex flex-col gap-y-4'>
                   <Label>암호 설정</Label>
                   <div>
-                    <Input placeholder='암호를 설정하세요.' onChange={(e) => setPassword(e.target.value)} />
+                    <Input type='password' placeholder='암호를 설정하세요.' onChange={(e) => setPassword(e.target.value)} />
                     <p className='text-sm text-muted-foreground pt-2'>포스트를 열람하기 위한 암호를 설정합니다.</p>
                   </div>
                 </div>

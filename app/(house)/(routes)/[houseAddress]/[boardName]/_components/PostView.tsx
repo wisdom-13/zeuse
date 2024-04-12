@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import Editor from '../../_components/Editor';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 interface BoardPageProps {
   post: PostFamily;
@@ -22,6 +24,7 @@ const PostView = ({
   family
 }: BoardPageProps) => {
   const editAuth = family?.is_owner || post.family_id == family?.id;
+  const param = useParams();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -84,7 +87,11 @@ const PostView = ({
               </div>
               {(family?.is_owner || post.family_id == family?.id) && (
                 <div className='flex gap-x-3'>
-                  {post.family_id == family.id && <button>수정</button>}
+                  {post.family_id == family.id && (
+                    <Link href={`/${param.houseAddress}/${param.boardName}/edit?id=${post.id}`}>
+                      <button>수정</button>
+                    </Link>
+                  )}
                   <button>삭제</button>
                 </div>
               )}
