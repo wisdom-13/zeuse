@@ -1,9 +1,22 @@
+
+import { HouseBuild } from '@/types';
+import { useEffect, useState } from 'react';
+
+import { GripVertical, Plus } from 'lucide-react';
+import { toast } from 'sonner';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { cn } from '@/lib/utils';
+import { boardTypes, viewTypes } from '@/data/common';
+
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { HouseBuild } from '@/types';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -12,11 +25,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { boardTypes, viewTypes } from '@/data/common';
-import { GripVertical, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { toast } from 'sonner';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+
 
 interface BoardContentProps {
   house: HouseBuild;
@@ -31,6 +47,7 @@ const BoardContent = ({
 }: BoardContentProps) => {
   const supabaseClient = useSupabaseClient();
   const [selectBoard, setSelectBoard] = useState(house.board[0]);
+  const boardNameList = house.board.map((item) => item.name);
 
   const newBoard = {
     title: '',
@@ -43,25 +60,76 @@ const BoardContent = ({
     house_id: house.id
   }
 
-  const handleChange = (name: string, value: string) => {
-    setSelectBoard((prevBoard) => ({
-      ...prevBoard,
-      [name]: value,
-    }));
-  };
+  const formSchema = z.object({
+    title: z
+      .string().min(1, '룸 이름을 입력해주세요.'),
+    type: z.string().min(1, '유형을 선택해주세요.'),
+    name: z
+      .string()
+      .regex(/^(?:[0-9A-Za-z-]+)?$/, '주소에는 영문, 숫자, 하이픈(-)만 사용할 수 있어요.')
+      .optional(),
+    view: z.string().optional(),
+    link: z.string().optional(),
+  })
+    .refine((data) => !((data.type && data.type !== 'link') && !data.name), {
+      path: ['name'],
+      message: '룸 주소를 입력해주세요.'
+    })
+    .refine((data) => !(!selectBoard.id && data.name && boardNameList.includes(data.name)), {
+      path: ['name'],
+      message: '이미 사용하고 있는 룸 주소예요.'
+    })
+    .refine((data) => !(data.type === 'post' && !data.view), {
+      path: ['view'],
+      message: '보기 형식을 선택하세요.'
+    })
+    .refine((data) => !(data.type === 'link' && !data.link), {
+      path: ['link'],
+      message: 'URL을 입력하세요.'
+    });
 
-  const handleSubmit = async () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    shouldFocusError: false,
+    mode: 'onBlur',
+    defaultValues: {
+      title: '',
+      name: '',
+      type: '',
+      view: '',
+      link: '',
+    },
+  })
+
+  useEffect(() => {
+    form.reset({
+      title: selectBoard.title || '',
+      name: selectBoard.name || '',
+      type: selectBoard.type || '',
+      view: selectBoard.view || '',
+      link: selectBoard.link || ''
+    })
+  }, [form, form.reset, selectBoard])
+
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const boardData = {
+      ...values,
+      role: 0,
+      sort_order: 0,
+      house_id: house.id
+    }
     const { data, error } = selectBoard.id ? (
       await supabaseClient
         .from('board')
-        .update(selectBoard)
+        .update(boardData)
         .eq('id', selectBoard.id)
         .select()
         .single()
     ) : (
       await supabaseClient
         .from('board')
-        .insert(selectBoard)
+        .insert(boardData)
         .select()
         .single()
     )
@@ -82,7 +150,6 @@ const BoardContent = ({
         board: updatedBoard,
       });
 
-      // console.log(updatedBoard)
       toast.error('변경사항을 저장했습니다.');
     }
   }
@@ -93,7 +160,7 @@ const BoardContent = ({
         <h2 className='text-xl font-medium'>
           룸
         </h2>
-        <Separator className="my-4" />
+        <Separator className='my-4' />
       </div>
       <div className='flex h-full gap-x-8'>
         <div className='flex flex-col gap-y-2 w-44 rounded-md bg-muted py-4 px-2'>
@@ -106,7 +173,7 @@ const BoardContent = ({
             <Plus size={16} className='text-muted-foreground' />
             새로운 룸 생성
           </button>
-          <Separator className="my-2" />
+          <Separator className='my-2' />
           {house.board.map((item) => (
             <button
               key={item.id}
@@ -122,93 +189,152 @@ const BoardContent = ({
           ))}
 
         </div>
-        <div className='grow flex flex-col justify-between'>
-          <ScrollArea>
-            <div className='flex flex-col gap-y-4'>
-              <div className='flex items-center justify-between'>
-                <div className='w-40'>
-                  <h3 className='text-base'>룸 이름</h3>
+        <div className='grow pt-4 px-2'>
+          <Form {...form}>
+            <form className='flex flex-col justify-between space-y-8 h-full' onSubmit={form.handleSubmit(onSubmit)}>
+              <ScrollArea>
+                <div className='flex flex-col gap-y-4'>
+                  <div className='flex items-center justify-between'>
+                    <FormField
+                      control={form.control}
+                      name='title'
+                      render={({ field }) => (
+                        <FormItem className='flex items-center justify-between w-full'>
+                          <Label className='w-40 text-base'>
+                            룸 이름
+                          </Label>
+                          <div className='w-full'>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <FormField
+                      control={form.control}
+                      name='type'
+                      render={({ field }) => (
+                        <FormItem className='flex items-center justify-between w-full'>
+                          <Label className='w-40 text-base'>
+                            유형
+                          </Label>
+                          <div className='w-full'>
+                            <FormControl>
+                              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!!selectBoard.id}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder='유형을 선택하세요.' />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    {Object.values(boardTypes).map((item) => (
+                                      <SelectItem key={item.type} value={item.type}>{item.name}</SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  {
+                    (form.watch('type') !== '' && form.watch('type') !== 'link') && (
+                      <div className='flex items-center justify-between'>
+                        <FormField
+                          control={form.control}
+                          name='name'
+                          render={({ field }) => (
+                            <FormItem className='flex items-center justify-between w-full'>
+                              <Label className='w-40 text-base'>
+                                주소
+                              </Label>
+                              <div className='w-full'>
+                                <FormControl>
+                                  <Input {...field} disabled={!!selectBoard.id} />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )
+                  }
+                  {
+                    form.watch('type') == 'post' && (
+                      <div className='flex items-center justify-between'>
+                        <FormField
+                          control={form.control}
+                          name='view'
+                          render={({ field }) => (
+                            <FormItem className='flex items-center justify-between w-full'>
+                              <Label className='w-40 text-base'>
+                                보기 형식
+                              </Label>
+                              <div className='w-full'>
+                                <FormControl>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!!selectBoard.id}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder='보기 형식을 선택하세요.' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectGroup>
+                                        {Object.values(viewTypes).map((item) => (
+                                          <SelectItem key={item.type} value={item.type}>{item.name}</SelectItem>
+                                        ))}
+                                      </SelectGroup>
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )
+                  }
+                  {
+                    form.watch('type') == 'link' && (
+                      <div className='flex items-center justify-between'>
+                        <FormField
+                          control={form.control}
+                          name='link'
+                          render={({ field }) => (
+                            <FormItem className='flex items-center justify-between w-full'>
+                              <Label className='w-40 text-base'>
+                                URL
+                              </Label>
+                              <div className='w-full'>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )
+                  }
                 </div>
-                <div className='w-full'>
-                  <Input name='title' value={selectBoard.title} onChange={(e) => handleChange('title', e.target.value)} />
-                </div>
+              </ScrollArea>
+              <div className='flex gap-x-2 mt-4 justify-end'>
+                <Button type='submit'>저장</Button>
+                <Button variant='outline'>닫기</Button>
               </div>
-              <div className='flex items-center justify-between'>
-                <div className='w-40'>
-                  <h3 className='text-base'>유형</h3>
-                </div>
-                <div className='w-full'>
-                  <Select name='type' value={selectBoard.type} onValueChange={(v) => handleChange('type', v)} disabled={!!selectBoard.id}>
-                    <SelectTrigger>
-                      <SelectValue placeholder='유형을 선택하세요.' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {Object.values(boardTypes).map((item) => (
-                          <SelectItem key={item.type} value={item.type}>{item.name}</SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {
-                selectBoard.type != 'link' && (
-                  <div className='flex items-center justify-between'>
-                    <div className='w-40'>
-                      <h3 className='text-base'>주소</h3>
-                    </div>
-                    <div className='w-full'>
-                      <Input name='name' value={selectBoard.name} onChange={(e) => handleChange('name', e.target.value)} disabled={!!selectBoard.id} />
-                    </div>
-                  </div>
-                )
-              }
-              {
-                selectBoard.type == 'post' && (
-                  <div className='flex items-center justify-between'>
-                    <div className='w-40'>
-                      <h3 className='text-base'>보기 형식</h3>
-                    </div>
-                    <div className='w-full'>
-                      <Select name='view' value={selectBoard.view} onValueChange={(v) => handleChange('view', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder='유형을 선택하세요.' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {Object.values(viewTypes).map((item) => (
-                              <SelectItem key={item.type} value={item.type}>{item.name}</SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                )
-              }
-              {
-                selectBoard.type == 'link' && (
-                  <div className='flex items-center justify-between'>
-                    <div className='w-40'>
-                      <h3 className='text-base'>URL</h3>
-                    </div>
-                    <div className='w-full'>
-                      <Input name='link' value={selectBoard.link} onChange={(e) => handleChange('link', e.target.value)} />
-                    </div>
-                  </div>
-                )
-              }
-            </div>
-          </ScrollArea>
-          <div className='flex gap-x-2 mt-4 justify-end'>
-            <Button onClick={handleSubmit}>저장</Button>
-            <Button variant='outline'>닫기</Button>
-          </div>
+            </form>
+          </Form>
         </div>
 
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -20,9 +20,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -42,7 +42,7 @@ const formSchema = z.object({
     .string({ required_error: '블로그 주소를 입력해주세요.' })
     .regex(
       /^[a-zA-Z0-9-]{4,32}$/,
-      "4~32자리의 주소를 입력해주세요. (영문, 숫자, 하이픈(-))"
+      '4~32자리의 주소를 입력해주세요. (영문, 숫자, 하이픈(-))'
     ),
   nick_name: z
     .string({ required_error: '블로그에서 사용할 닉네임을 입력해주세요.' }),
@@ -154,10 +154,10 @@ const CreateHouseModal = () => {
         </DialogHeader>
         <ScrollArea className='h-[80vh]'>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               <FormField
                 control={form.control}
-                name="title"
+                name='title'
                 render={({ field }) => (
                   <FormItem>
                     <Label>
@@ -177,7 +177,7 @@ const CreateHouseModal = () => {
               />
               <FormField
                 control={form.control}
-                name="description"
+                name='description'
                 render={({ field }) => (
                   <FormItem>
                     <Label>하우스 설명</Label>
@@ -193,7 +193,7 @@ const CreateHouseModal = () => {
               />
               <FormField
                 control={form.control}
-                name="address"
+                name='address'
                 render={({ field }) => (
                   <FormItem>
                     <Label>
@@ -216,7 +216,7 @@ const CreateHouseModal = () => {
               />
               <FormField
                 control={form.control}
-                name="nick_name"
+                name='nick_name'
                 render={({ field }) => (
                   <FormItem>
                     <Label>
@@ -235,11 +235,11 @@ const CreateHouseModal = () => {
               />
               <FormField
                 control={form.control}
-                name="is_published"
+                name='is_published'
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
+                  <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                    <div className='space-y-0.5'>
+                      <FormLabel className='text-base'>
                         하우스 공개 여부
                       </FormLabel>
                       <FormDescription className='pr-10'>
@@ -257,7 +257,7 @@ const CreateHouseModal = () => {
                 )}
               />
               <Button
-                type="submit"
+                type='submit'
                 size='lg'
                 className='w-full'
               >
