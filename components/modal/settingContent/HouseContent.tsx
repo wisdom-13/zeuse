@@ -52,7 +52,7 @@ const HouseContent = ({
           </div>
         </div>
       </ScrollArea>
-      <div className='flex gap-x-2 mt-4'>
+      <div className='flex gap-x-2 mt-4 justify-end'>
         <Button>저장</Button>
         <Button variant='outline'>닫기</Button>
       </div>

@@ -16,4 +16,30 @@ export const postRole = [
     name: '암호 설정',
     icon: Lock
   },
-]
+];
+
+export const boardTypes = {
+  post: {
+    type: 'post',
+    name: '포스트형',
+  },
+  memo: {
+    type: 'memo',
+    name: '메모형',
+  },
+  link: {
+    type: 'link',
+    name: '외부링크',
+  },
+};
+
+export const viewTypes = {
+  list: {
+    type: 'list',
+    name: '리스트형'
+  },
+  card: {
+    type: 'card',
+    name: '카드형'
+  },
+}

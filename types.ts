@@ -23,7 +23,7 @@ export interface HouseBuild extends House {
 }
 
 export interface Board {
-  id: string;
+  id?: string;
   house_id: string;
   title: string;
   name: string;

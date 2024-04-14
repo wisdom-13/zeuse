@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -201,7 +201,7 @@ const ThemeContent = ({
           <div>
             <Select defaultValue={style.color} onValueChange={(v) => handleUpdateStyle('color', v)}>
               <SelectTrigger className='w-40'>
-                <SelectValue placeholder="색상을 선택하세요." />
+                <SelectValue placeholder='색상을 선택하세요.' />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -226,7 +226,7 @@ const ThemeContent = ({
           <div>
             <Select defaultValue={style.mode} onValueChange={(v) => handleUpdateStyle('mode', v)}>
               <SelectTrigger className='w-40'>
-                <SelectValue placeholder="모드를 선택하세요." />
+                <SelectValue placeholder='모드를 선택하세요.' />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

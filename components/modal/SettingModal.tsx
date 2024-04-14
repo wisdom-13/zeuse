@@ -11,7 +11,7 @@ import {
   DialogContent
 } from '@/components/ui/dialog';
 import useSettingModal from '@/hooks/useSettingModal';
-import { Box, Home, Notebook, PencilRuler, User, Users } from 'lucide-react';
+import { Box, Home, Lamp, Notebook, PencilRuler, User, Users } from 'lucide-react';
 
 import SettingItem from '../SettingItem';
 import ProfileContent from './settingContent/ProfileContent';
@@ -24,7 +24,7 @@ import WidgetContent from './settingContent/WidgetContent';
 export const SettingModal = () => {
   const { houseBuild: house, setHouseBuild } = useHouseBuild();
   const { onClose, isOpen } = useSettingModal();
-  const [activeMenu, setActiveMenu] = useState('house');
+  const [activeMenu, setActiveMenu] = useState('board');
 
   const themeWrap = document.getElementById('theme-wrap');
 
@@ -67,7 +67,6 @@ export const SettingModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent className='flex w-[calc(100%-15rem)] max-w-[1200px] h-[calc(100%-10rem)]'>
-
         <div className='w-60 h-full rounded-md bg-primary/5 py-4 px-2'>
           <div className='text-sm font-semibold text-muted-foreground p-2 cursor-default'>계정</div>
           <div className='flex flex-col gap-y-2 mb-4'>
@@ -93,8 +92,8 @@ export const SettingModal = () => {
               onClick={() => setActiveMenu('house')}
             />
             <SettingItem
-              icon={Notebook}
-              label='게시판'
+              icon={Lamp}
+              label='룸'
               active={activeMenu === 'board'}
               onClick={() => setActiveMenu('board')}
             />
