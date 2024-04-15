@@ -20,8 +20,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter
-} from "@/components/ui/dialog"
+  DialogFooter,
+  DialogClose
+} from '@/components/ui/dialog'
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 interface BoardPageProps {
@@ -130,12 +131,22 @@ const PostView = ({
                     <DialogTrigger>삭제</DialogTrigger>
                     <DialogContent className='text-center sm:max-w-80'>
                       <DialogHeader>
-                        <DialogTitle>포스트를 삭제할까요?</DialogTitle>
-                        <DialogDescription>
-                          삭제한 포스트는 되돌릴 수 없습니다.
-                        </DialogDescription>
+                        <DialogTitle className='text-center'>포스트 삭제</DialogTitle>
                       </DialogHeader>
+                      <p className='text-sm'>
+                        삭제한 포스트는 되돌릴 수 없어요.<br />
+                        정말 삭제할까요?
+                      </p>
                       <DialogFooter>
+                        <DialogClose asChild>
+                          <Button
+                            variant='secondary'
+                            size='sm'
+                            className='w-full'
+                          >
+                            취소
+                          </Button>
+                        </DialogClose>
                         <Button
                           variant='destructive'
                           size='sm'

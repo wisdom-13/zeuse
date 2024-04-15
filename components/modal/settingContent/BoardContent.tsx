@@ -2,7 +2,7 @@
 import { HouseBuild } from '@/types';
 import { useEffect, useState } from 'react';
 
-import { GripVertical, Plus } from 'lucide-react';
+import { GripVertical, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,7 +32,16 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose
+} from '@/components/ui/dialog'
 
 interface BoardContentProps {
   house: HouseBuild;
@@ -46,8 +55,9 @@ const BoardContent = ({
   setHouseBuild
 }: BoardContentProps) => {
   const supabaseClient = useSupabaseClient();
-  const [selectBoard, setSelectBoard] = useState(house.board[0]);
   const boardNameList = house.board.map((item) => item.name);
+  const [selectBoard, setSelectBoard] = useState(house.board[0]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const newBoard = {
     title: '',
@@ -154,6 +164,28 @@ const BoardContent = ({
     }
   }
 
+  const handelDelete = async () => {
+    const { error } = await supabaseClient
+      .from('board')
+      .delete()
+      .eq('id', selectBoard.id)
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    const updatedBoard = house.board.filter((boardItem) => boardItem.id !== selectBoard.id);
+
+    setHouseBuild({
+      ...house,
+      board: updatedBoard,
+    });
+
+    setDeleteDialogOpen(false);
+    toast.info('룸을 삭제했습니다.');
+  }
+
   return (
     <div className='flex flex-col h-full'>
       <div>
@@ -163,7 +195,7 @@ const BoardContent = ({
         <Separator className='my-4' />
       </div>
       <div className='flex h-full gap-x-8'>
-        <div className='flex flex-col gap-y-2 w-44 rounded-md bg-muted py-4 px-2'>
+        <div className='flex flex-col gap-y-2 w-52 rounded-md bg-muted py-4 px-2'>
           <button
             onClick={() => setSelectBoard(newBoard)}
             className={cn(
@@ -326,8 +358,46 @@ const BoardContent = ({
                 </div>
               </ScrollArea>
               <div className='flex gap-x-2 mt-4 justify-end'>
+                {
+                  selectBoard.id && (
+                    <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button type='button' variant='ghost'>룸 삭제</Button>
+                      </DialogTrigger>
+                      <DialogContent className='text-center sm:max-w-80'>
+                        <DialogHeader>
+                          <DialogTitle className='text-center'>룸 삭제</DialogTitle>
+                        </DialogHeader>
+                        <p className='text-sm'>
+                          {selectBoard.type != 'link' && (
+                            <>룸을 삭제하면 룸에 속한 글이 <span className='text-destructive font-bold'>모두 삭제</span>됩니다.<br /></>
+                          )}
+                          이 작업은 되돌릴 수 없어요. 정말 삭제할까요?
+                        </p>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button
+                              variant='secondary'
+                              size='sm'
+                              className='w-full'
+                            >
+                              취소
+                            </Button>
+                          </DialogClose>
+                          <Button
+                            variant='destructive'
+                            size='sm'
+                            className='w-full'
+                            onClick={handelDelete}
+                          >
+                            삭제
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )
+                }
                 <Button type='submit'>저장</Button>
-                <Button variant='outline'>닫기</Button>
               </div>
             </form>
           </Form>
