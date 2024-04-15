@@ -31,7 +31,7 @@ export interface Board {
   view: string;
   link: string;
   role: number;
-  sort_order: number;
+  order: number;
 }
 
 export interface BoardList extends Board {

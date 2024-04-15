@@ -1,6 +1,6 @@
 
 import { HouseBuild } from '@/types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { GripVertical, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -42,13 +42,14 @@ import {
   DialogFooter,
   DialogClose
 } from '@/components/ui/dialog'
+import BoardContentItem from './BoardContentItem';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface BoardContentProps {
   house: HouseBuild;
   setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
-
-
 
 const BoardContent = ({
   house,
@@ -57,6 +58,8 @@ const BoardContent = ({
   const supabaseClient = useSupabaseClient();
   const boardNameList = house.board.map((item) => item.name);
   const [selectBoard, setSelectBoard] = useState(house.board[0]);
+  const [boardList, setBoardList] = useState(house.board.sort((a, b) => a.order - b.order));
+  const [beforeBoardList, setBeforeBoardList] = useState(house.board.sort((a, b) => a.order - b.order));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const newBoard = {
@@ -66,13 +69,15 @@ const BoardContent = ({
     view: '',
     link: '',
     role: 0,
-    sort_order: 0,
+    order: 0,
     house_id: house.id
   }
 
   const formSchema = z.object({
     title: z
-      .string().min(1, '룸 이름을 입력해주세요.'),
+      .string()
+      .min(1, '룸 이름을 입력해주세요.')
+      .max(10, '최대 10글자의 이름을 사용할수 있어요.'),
     type: z.string().min(1, '유형을 선택해주세요.'),
     name: z
       .string()
@@ -126,7 +131,7 @@ const BoardContent = ({
     const boardData = {
       ...values,
       role: 0,
-      sort_order: 0,
+      order: 0,
       house_id: house.id
     }
     const { data, error } = selectBoard.id ? (
@@ -155,11 +160,13 @@ const BoardContent = ({
         updatedBoard.push(data);
       }
 
+      setBoardList(updatedBoard);
       setHouseBuild({
         ...house,
         board: updatedBoard,
       });
 
+      setSelectBoard(data);
       toast.error('변경사항을 저장했습니다.');
     }
   }
@@ -186,6 +193,34 @@ const BoardContent = ({
     toast.info('룸을 삭제했습니다.');
   }
 
+  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+    const newBoardList = [...boardList];
+    const draggedCard = newBoardList[dragIndex];
+    newBoardList.splice(dragIndex, 1);
+    newBoardList.splice(hoverIndex, 0, draggedCard);
+    setBoardList(newBoardList);
+  }, [boardList]);
+
+  const updateBoardSrot = async () => {
+    if (boardList === beforeBoardList) {
+      return
+    }
+
+    try {
+      boardList.map(async (data, i) => {
+        await supabaseClient
+          .from('board')
+          .update({ order: i })
+          .eq('id', data.id);
+      })
+    } catch (error) {
+      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.');
+    }
+
+    setBeforeBoardList(boardList);
+    toast.error('변경사항을 저장했습니다.');
+  }
+
   return (
     <div className='flex flex-col h-full'>
       <div>
@@ -195,7 +230,7 @@ const BoardContent = ({
         <Separator className='my-4' />
       </div>
       <div className='flex h-full gap-x-8'>
-        <div className='flex flex-col gap-y-2 w-52 rounded-md bg-muted py-4 px-2'>
+        <div className='flex flex-col gap-y-2 w-44 rounded-md bg-muted py-4 px-2'>
           <button
             onClick={() => setSelectBoard(newBoard)}
             className={cn(
@@ -206,19 +241,19 @@ const BoardContent = ({
             새로운 룸 생성
           </button>
           <Separator className='my-2' />
-          {house.board.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelectBoard(item)}
-              className={cn(
-                'flex gap-x-2 items-center text-base p-2 rounded-md hover:bg-muted-foreground/10 text-left',
-                item == selectBoard && 'bg-muted-foreground/10'
-              )}
-            >
-              <GripVertical size={16} className='text-muted-foreground' />
-              {item.title}
-            </button>
-          ))}
+          <DndProvider backend={HTML5Backend}>
+            {boardList.map((item, i) => (
+              <BoardContentItem
+                key={item.id}
+                index={i}
+                board={item}
+                activate={item === selectBoard}
+                moveCard={moveCard}
+                onClick={() => setSelectBoard(item)}
+                updateBoardSrot={updateBoardSrot}
+              />
+            ))}
+          </DndProvider>
 
         </div>
         <div className='grow pt-4 px-2'>

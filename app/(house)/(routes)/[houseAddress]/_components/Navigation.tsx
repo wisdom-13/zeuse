@@ -131,7 +131,7 @@ const Navigation = ({
           </div>
 
           <div className='flex flex-col gap-y-2 py-2 px-8'>
-            {house.board && house.board.sort((a, b) => a.sort_order - b.sort_order).map((item) => (
+            {house.board && house.board.sort((a, b) => a.order - b.order).map((item) => (
               <MenuItem
                 key={item.id}
                 label={item.title}
