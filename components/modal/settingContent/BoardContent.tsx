@@ -84,7 +84,7 @@ const BoardContent = ({
       .regex(/^(?:[0-9A-Za-z-]+)?$/, '주소에는 영문, 숫자, 하이픈(-)만 사용할 수 있어요.')
       .optional(),
     view: z.string().optional(),
-    link: z.string().optional(),
+    link: z.string().url('유효한 URL을 입력해주세요.').optional(),
   })
     .refine((data) => !((data.type && data.type !== 'link') && !data.name), {
       path: ['name'],

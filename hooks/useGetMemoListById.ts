@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 const useGetMemoListById = (board_id?: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [memos, setMemos] = useState<Memo[] | undefined>(undefined);
+  const [memos, setMemos] = useState<Memo[]>([]);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
@@ -36,7 +36,8 @@ const useGetMemoListById = (board_id?: string) => {
 
   return useMemo(() => ({
     isLoading,
-    memos
+    memos,
+    setMemos
   }), [isLoading, memos]);
 }
 
