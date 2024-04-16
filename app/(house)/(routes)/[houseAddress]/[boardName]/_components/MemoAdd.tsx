@@ -4,7 +4,6 @@ import { Family, Memo } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useUser } from '@/hooks/useUser';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -12,14 +11,11 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dispatch, useEffect } from 'react';
-import { Label } from '@/components/ui/label';
-import useHouseBuild from '@/hooks/useHouseBuild';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
 
@@ -37,13 +33,16 @@ const MemoAdd = ({
   const supabaseClient = useSupabaseClient();
 
   const formSchema = z.object({
-    content: z.string().min(4),
+    content: z.string().min(1),
     name: z.string().optional(),
     password: z.string().optional(),
     is_secret: z.boolean(),
   })
-    .refine((data) => !((data.name && data.password) && !family), {
-      path: ['name', 'password'],
+    .refine((data) => !(!data.name && !family), {
+      path: ['name'],
+    })
+    .refine((data) => !(!data.password && !family), {
+      path: ['password'],
     });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -78,7 +77,7 @@ const MemoAdd = ({
       .single()
 
     if (error) {
-      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.');
+      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.' + error.message);
     }
 
     if (data) {

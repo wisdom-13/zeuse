@@ -18,15 +18,13 @@ import {
   DialogTrigger,
   DialogFooter,
   DialogClose
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Editor from '../../_components/Editor';
-
-
 
 interface BoardPageProps {
   post: PostFamily;

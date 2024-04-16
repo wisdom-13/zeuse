@@ -53,7 +53,7 @@ const MemoList = ({
         <ScrollArea className='w-full h-full'>
           <div className='flex flex-col gap-y-4'>
             {filterMemos && filterMemos.map((item) => (
-              <MemoItem key={item.id} memo={item} family={family} />
+              <MemoItem key={item.id} memo={item} family={family} setMemos={setMemos} />
             ))}
           </div>
         </ScrollArea>
