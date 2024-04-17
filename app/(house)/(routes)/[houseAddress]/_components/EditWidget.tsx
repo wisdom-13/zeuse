@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 
 import { useDrag, useDrop } from 'react-dnd';
 import useWidgetEdit from '@/hooks/useWidgetEdit';
-import { Widget as WidgetType } from '@/types';
+import { Widget, Widget as WidgetType } from '@/types';
 import WidgetImage from './WidgetImage';
 import WidgetProfile from './WidgetProfile';
 import WidgetBoard from './WidgetBoard';
@@ -15,16 +15,11 @@ import { Minus } from 'lucide-react';
 import WidgetTimer from './WidgetTimer';
 
 export interface EditWidgetProps {
-  id?: any
-  index: number
-  grid?: {
-    col: number,
-    row: number
-  }
-  moveCard: (dragIndex: number, hoverIndex: number) => void;
-  removeCard: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
+  index: number;
+  widget: WidgetType;
+  moveWidget: (dragIndex: number, hoverIndex: number) => void;
+  removeWidget: (event: React.MouseEvent<HTMLButtonElement>, widget: Widget) => void;
   updateWidget: () => void;
-  widgetData?: WidgetType;
 }
 
 interface DragItem {
@@ -34,13 +29,11 @@ interface DragItem {
 }
 
 export const EditWidget = ({
-  id,
   index,
-  grid: { col, row } = { col: 2, row: 3 },
-  moveCard,
-  removeCard,
+  widget,
+  moveWidget,
+  removeWidget,
   updateWidget,
-  widgetData
 }: EditWidgetProps) => {
   const widgetEdit = useWidgetEdit();
   // TODO : 드래그 개선
@@ -69,14 +62,14 @@ export const EditWidget = ({
         return
       }
 
-      moveCard(dragIndex, hoverIndex)
+      moveWidget(dragIndex, hoverIndex)
       item.index = hoverIndex
     }
   })
 
   const [{ isDragging }, drag] = useDrag({
     type: 'widget',
-    item: { id, index },
+    item: { id: widget.id, index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -93,8 +86,8 @@ export const EditWidget = ({
         ref={ref}
         data-handler-id={handlerId}
         style={{
-          gridColumn: `auto / span ${col}`,
-          gridRow: `auto / span ${row}`
+          gridColumn: `auto / span ${widget.grid.col}`,
+          gridRow: `auto / span ${widget.grid.row}`
         }}
         className={cn(
           'custom-card aniamte-shake rounded-md text-card-foreground overflow-hidden relative',
@@ -102,14 +95,14 @@ export const EditWidget = ({
         )}
         onClick={widgetEdit.onModalOpen}
       >
-        {widgetData?.type == 'image' && <WidgetImage widget={widgetData} />}
-        {widgetData?.type == 'profile' && <WidgetProfile widget={widgetData} />}
-        {widgetData?.type == 'board' && <WidgetBoard widget={widgetData} />}
-        {widgetData?.type == 'timer' && <WidgetTimer widget={widgetData} />}
+        {widget?.type == 'image' && <WidgetImage widget={widget} />}
+        {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
+        {widget?.type == 'board' && <WidgetBoard widget={widget} />}
+        {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
 
         <button
           className='absolute z-[999999] top-1 right-1 bg-muted rounded-full p-1'
-          onClick={(event) => removeCard(event, id)}
+          onClick={(event) => removeWidget(event, widget)}
         >
           <Minus size={16} />
         </button>

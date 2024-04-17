@@ -13,52 +13,38 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
 import { Widget as WidgetType } from '@/types';
 
-export interface Item {
-  id: string;
-  order: number;
-  grid?: {
-    col: number,
-    row: number
-  }
-  widgetData?: WidgetType | undefined;
-}
 
 const HouseMain = () => {
   const { houseBuild, setHouseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
   const supabaseClient = useSupabaseClient();
 
-  const Card = widgetEdit.isEditing ? EditWidget : Widget;
+  const WidgetItem = widgetEdit.isEditing ? EditWidget : Widget;
 
-  const [cards, setCards] = useState<Item[]>([]);
+  const [widgets, setWidgets] = useState<WidgetType[]>([]);
 
   const widget = useMemo(() => {
     if (houseBuild?.widget) {
-      return houseBuild.widget.map((item) => ({
-        id: item.id,
-        order: item.order,
-        grid: item.grid,
-        widgetData: item
-      })).sort((a, b) => a.order - b.order);
+      return houseBuild.widget.sort((a, b) => a.order - b.order);
     } else {
       return [];
     }
   }, [houseBuild?.widget]);
 
   useEffect(() => {
-    setCards(widget);
+    setWidgets(widget);
   }, [widget]);
 
 
-  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-    const newCards = [...cards];
-    const draggedCard = newCards[dragIndex];
-    newCards.splice(dragIndex, 1);
-    newCards.splice(hoverIndex, 0, draggedCard);
-    setCards(newCards);
-  }, [cards]);
+  const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
+    const newWidgets = [...widgets];
+    const draggedWidget = newWidgets[dragIndex];
+    newWidgets.splice(dragIndex, 1);
+    newWidgets.splice(hoverIndex, 0, draggedWidget);
+    setWidgets(newWidgets);
+  }, [widgets]);
 
-  const removeCard = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const removeWidget = async (event: React.MouseEvent<HTMLButtonElement>, widget: WidgetType) => {
     event.stopPropagation();
 
     if (!houseBuild) {
@@ -67,7 +53,7 @@ const HouseMain = () => {
 
     const updatedHouse = {
       ...houseBuild,
-      widget: houseBuild?.widget.filter((item) => item.id != id)
+      widget: houseBuild?.widget.filter((item) => item.id != widget.id)
     };
 
     setHouseBuild(updatedHouse)
@@ -75,7 +61,7 @@ const HouseMain = () => {
 
   const updateWidget = async () => {
     try {
-      cards.map(async (data, i) => {
+      widgets.map(async (data, i) => {
         await supabaseClient
           .from('widget')
           .update({ order: i })
@@ -120,16 +106,14 @@ const HouseMain = () => {
       <main
         className='w-[900px] h-[600px] grid grid-cols-6 grid-rows-4 grid-flow-dense gap-6'
       >
-        {cards.map((widget, i) => (
-          <Card
+        {widgets.map((widget, i) => (
+          <WidgetItem
             key={widget.id}
             index={i}
-            id={widget.id}
-            grid={widget.grid}
-            moveCard={moveCard}
-            removeCard={removeCard}
+            widget={widget}
+            moveWidget={moveWidget}
+            removeWidget={removeWidget}
             updateWidget={updateWidget}
-            widgetData={widget.widgetData}
           />
         ))}
       </main>
