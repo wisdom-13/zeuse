@@ -167,7 +167,7 @@ const BoardContent = ({
       });
 
       setSelectBoard(data);
-      toast.error('변경사항을 저장했습니다.');
+      toast.success('변경사항을 저장했습니다.');
     }
   }
 

@@ -160,10 +160,10 @@ const CreateHouseModal = () => {
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <Label>
+                    <FormLabel>
                       하우스 이름
                       <span className='text-rose-500'>*</span>
-                    </Label>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className='focus-visible:outline-none'
@@ -180,7 +180,7 @@ const CreateHouseModal = () => {
                 name='description'
                 render={({ field }) => (
                   <FormItem>
-                    <Label>하우스 설명</Label>
+                    <FormLabel>하우스 설명</FormLabel>
                     <FormControl>
                       <Textarea
                         disabled={isLoading}
@@ -196,10 +196,10 @@ const CreateHouseModal = () => {
                 name='address'
                 render={({ field }) => (
                   <FormItem>
-                    <Label>
+                    <FormLabel>
                       하우스 주소
                       <span className='text-rose-500'>*</span>
-                    </Label>
+                    </FormLabel>
                     <FormControl>
                       <div className='flex items-center'>
                         <p className='font-semibold'>zeuse.com/</p>
@@ -219,10 +219,10 @@ const CreateHouseModal = () => {
                 name='nick_name'
                 render={({ field }) => (
                   <FormItem>
-                    <Label>
+                    <FormLabel>
                       닉네임
                       <span className='text-rose-500'>*</span>
-                    </Label>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
