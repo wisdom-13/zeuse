@@ -51,6 +51,23 @@ const HouseMain = () => {
       return false;
     }
 
+    if (widget.type == 'image' && widget.image_array) {
+      await supabaseClient
+        .storage
+        .from('widget')
+        .remove(widget.image_array)
+    }
+
+    const { error } = await supabaseClient
+      .from('widget')
+      .delete()
+      .eq('id', widget.id)
+
+    if (error) {
+      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.');
+      return
+    }
+
     const updatedHouse = {
       ...houseBuild,
       widget: houseBuild?.widget.filter((item) => item.id != widget.id)

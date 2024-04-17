@@ -77,7 +77,7 @@ const MemoAdd = ({
       .single()
 
     if (error) {
-      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.' + error.message);
+      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.');
     }
 
     if (data) {
