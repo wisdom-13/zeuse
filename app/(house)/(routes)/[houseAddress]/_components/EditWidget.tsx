@@ -13,6 +13,7 @@ import WidgetProfile from './WidgetProfile';
 import WidgetBoard from './WidgetBoard';
 import { Minus } from 'lucide-react';
 import WidgetTimer from './WidgetTimer';
+import WidgetEmpty from './WidgetEmpty';
 
 export interface EditWidgetProps {
   index: number;
@@ -91,7 +92,8 @@ export const EditWidget = ({
         }}
         className={cn(
           'custom-card aniamte-shake rounded-md text-card-foreground overflow-hidden relative',
-          isDragging ? 'opacity-0' : 'opacity-100'
+          widget?.type == 'empty' && ' bg-primary/5 border-dashed',
+          isDragging ? 'opacity-0' : 'opacity-100',
         )}
         onClick={widgetEdit.onModalOpen}
       >
@@ -99,6 +101,7 @@ export const EditWidget = ({
         {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
         {widget?.type == 'board' && <WidgetBoard widget={widget} />}
         {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
+        {widget?.type == 'empty' && <WidgetEmpty />}
 
         <button
           className='absolute z-[999999] top-1 right-1 bg-muted rounded-full p-1'

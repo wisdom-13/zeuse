@@ -42,7 +42,7 @@ const WidgetImage = ({
 
   if (!widget?.image_array || widget.image_array.length === 0) {
     return (
-      <div className='w-full h-full flex items-center justify-center bg-gray-100 rounded-md'>
+      <div className='w-full h-full flex items-center justify-center rounded-md'>
         <ImageIcon className='text-gray-500' />
       </div>
     );
