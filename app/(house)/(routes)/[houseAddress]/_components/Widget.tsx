@@ -3,7 +3,7 @@
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import { Widget as WidgetType } from '@/types';
+import { WidgetTmp, Widget as WidgetType } from '@/types';
 import WidgetImage from './WidgetImage';
 import WidgetProfile from './WidgetProfile';
 import WidgetBoard from './WidgetBoard';

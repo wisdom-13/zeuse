@@ -1,5 +1,5 @@
 'use client';
-import { Widget } from '@/types';
+import { Widget, WidgetTmp } from '@/types';
 import {
   Carousel,
   CarouselContent,
@@ -14,10 +14,8 @@ import { Button } from '@/components/ui/button';
 import { ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 
-
-
 interface WidgetImageProps {
-  widget: Widget;
+  widget?: Widget | WidgetTmp;
 }
 
 const WidgetImage = ({
@@ -42,10 +40,9 @@ const WidgetImage = ({
     })
   }, [api])
 
-
-  if (!widget.image_array || widget.image_array.length === 0) {
+  if (!widget?.image_array || widget.image_array.length === 0) {
     return (
-      <div className='w-full h-full flex items-center justify-center bg-gray-100'>
+      <div className='w-full h-full flex items-center justify-center bg-gray-100 rounded-md'>
         <ImageIcon className='text-gray-500' />
       </div>
     );

@@ -98,6 +98,13 @@ export interface Widget {
   option: string;
 }
 
+export interface WidgetTmp {
+  type?: string;
+  grid?: { col: number, row: number };
+  image_array?: Array<string>;
+  board_id?: string;
+}
+
 export interface Family {
   id: string;
   user_id: string;

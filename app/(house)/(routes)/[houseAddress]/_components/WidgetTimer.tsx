@@ -1,12 +1,12 @@
 'use client';
 
-import { Widget } from '@/types';
+import { Widget, WidgetTmp } from '@/types';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
 
 interface WidgetTimerProps {
-  widget: Widget;
+  widget?: Widget | WidgetTmp;
 }
 
 const WidgetTimer = ({

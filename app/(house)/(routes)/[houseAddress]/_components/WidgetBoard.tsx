@@ -1,7 +1,6 @@
 import useGetBoardById from '@/hooks/useGetBoardById';
-import useHouseBuild from '@/hooks/useHouseBuild';
-import { PostFamily, Widget } from '@/types';
-import { ArrowRight, List, MoveRight } from 'lucide-react';
+import { PostFamily, Widget, WidgetTmp } from '@/types';
+import { List } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { format, register } from 'timeago.js';
@@ -10,7 +9,7 @@ import koLocale from 'timeago.js/lib/lang/ko';
 register('ko', koLocale)
 
 interface WidgetBoardProps {
-  widget: Widget;
+  widget: Widget | WidgetTmp;
 }
 
 const WidgetBoard = ({
@@ -22,7 +21,7 @@ const WidgetBoard = ({
 
   if (!board) {
     return (
-      <div className='w-full h-full flex flex items-center justify-center bg-gray-100'>
+      <div className='w-full h-full flex items-center justify-center bg-gray-100 rounded-md'>
         <List className='text-gray-500' />
       </div>
     );

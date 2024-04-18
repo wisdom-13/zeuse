@@ -1,13 +1,12 @@
 'use client';
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import useHouseBuild from '@/hooks/useHouseBuild';
 import { cn } from '@/lib/utils';
-import { Widget } from '@/types';
+import { Widget, WidgetTmp } from '@/types';
 
 interface WidgetProfileProps {
-  widget: Widget;
+  widget: Widget | WidgetTmp;
 }
 const WidgetProfile = ({
   widget
@@ -15,7 +14,7 @@ const WidgetProfile = ({
   const { houseBuild } = useHouseBuild();
   const owner = houseBuild?.family.filter((item) => item.is_owner)[0];
 
-  const horizontal = widget.grid.col > widget.grid.row;
+  const horizontal = widget.grid && widget.grid.col > widget.grid.row;
 
   return (
     <div className={cn(
