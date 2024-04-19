@@ -1,38 +1,46 @@
 'use client';
 
+import { useState } from 'react';
 
-import { Button } from '@/components/ui/button'
+import { toast } from 'sonner';
+import { Plus } from 'lucide-react';
+
+import useWidgetEdit from '@/hooks/useWidgetEdit';
+import useHouseBuild from '@/hooks/useHouseBuild';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+
 import {
   Drawer,
   DrawerContent,
-} from '@/components/ui/drawer'
+} from '@/components/ui/drawer';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
-import useWidgetEdit from '@/hooks/useWidgetEdit';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { useParams, useRouter } from 'next/navigation';
-import useHouseBuild from '@/hooks/useHouseBuild';
-import { Widget } from '@/app/(house)/(routes)/[houseAddress]/_components/Widget';
-import WidgetImage from '@/app/(house)/(routes)/[houseAddress]/_components/WidgetImage';
-import { Plus } from 'lucide-react';
-import WidgetBoard from '@/app/(house)/(routes)/[houseAddress]/_components/WidgetBoard';
-import WidgetProfile from '@/app/(house)/(routes)/[houseAddress]/_components/WidgetProfile';
-import WidgetTimer from '@/app/(house)/(routes)/[houseAddress]/_components/WidgetTimer';
-import WidgetEmpty from '@/app/(house)/(routes)/[houseAddress]/_components/WidgetEmpty';
+} from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+
+import WidgetImage from '@/components/widget/WidgetImage';
+import WidgetBoard from '@/components/widget/WidgetBoard';
+import WidgetProfile from '@/components/widget/WidgetProfile';
+import WidgetTimer from '@/components/widget/WidgetTimer';
+import WidgetEmpty from '@/components/widget/WidgetEmpty';
 
 export function WidgetBrawer() {
   const { houseId, houseBuild, setHouseBuild } = useHouseBuild();
   const widgetEdit = useWidgetEdit();
-  const param = useParams();
-  const router = useRouter();
   const supabaseClient = useSupabaseClient();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [imageGrid, setImageGrid] = useState({ col: 4, row: 6 })
+  const [emptyGrid, setEmptyGrid] = useState({ col: 4, row: 6 })
 
   if (!houseBuild) {
     return false;
@@ -44,9 +52,7 @@ export function WidgetBrawer() {
     }
   }
 
-  const handelAddWidget = async (type: string, grid: { col: number, row: number }) => {
-    setIsLoading(true);
-
+  const handelAddWidget = async (type: string, grid: { col: number, row: number }, ...props: any[]) => {
     const {
       data: newWidget,
       error
@@ -55,13 +61,13 @@ export function WidgetBrawer() {
       .insert({
         house_id: houseId,
         type: type,
-        grid: grid
+        grid: grid,
+        ...Object.assign({}, ...props)
       })
       .select()
       .single();
 
     if (error) {
-      setIsLoading(false);
       console.error(error.message)
       return toast.error(`error (${error.message})`);
     }
@@ -75,7 +81,6 @@ export function WidgetBrawer() {
   }
 
   const sampleBoardId = houseBuild.board.filter((item) => item.type == 'post')[0]?.id;
-
 
   return (
     <Drawer open={widgetEdit.isBrawerOpen} onOpenChange={onChange}>
@@ -92,9 +97,12 @@ export function WidgetBrawer() {
               </TabsList>
               <TabsContent value='image' className='w-full'>
                 <div className='grid grid-cols-3'>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('image', { col: 1, row: 1 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[128px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[128px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('image', { col: 2, row: 3 })}
+                      >
                         <WidgetImage />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -103,9 +111,12 @@ export function WidgetBrawer() {
                     </div>
                     <p className='font-bold text-sm mb-2'>이미지형 1x1</p>
                   </div>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('image', { col: 2, row: 1 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('image', { col: 4, row: 3 })}
+                      >
                         <WidgetImage />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -114,24 +125,54 @@ export function WidgetBrawer() {
                     </div>
                     <p className='font-bold text-sm mb-2'>이미지형 2x1</p>
                   </div>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('image', { col: 2, row: 2 })}>
-                    <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'>
-                        <WidgetImage />
-                        <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
-                          <Plus size={16} className='text-white' />
-                        </button>
-                      </div>
+                  <div className='group relative flex flex-col items-center'>
+                    <div className='h-[286px] w-2/3 flex flex-col justify-center items-center text-center gap-y-2'>
+                      <Select
+                        defaultValue={String(imageGrid.col)}
+                        onValueChange={(value) => setEmptyGrid({ ...imageGrid, col: parseInt(value) })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='col' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 6 }, (_, index) => index + 1).map(col => (
+                            <SelectItem key={col} value={String(col * 2)}>Col : {col}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      x
+                      <Select
+                        defaultValue={String(imageGrid.row)}
+                        onValueChange={(value) => setEmptyGrid({ ...imageGrid, row: parseInt(value) })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='row' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 4 }, (_, index) => index + 1).map(row => (
+                            <SelectItem key={row} value={String(row * 3)}>Row : {row}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        className='w-full'
+                        onClick={() => handelAddWidget('image', { col: imageGrid.col, row: imageGrid.row })}
+                      >
+                        추가
+                      </Button>
                     </div>
-                    <p className='font-bold text-sm mb-2'>이미지형 2x2</p>
+                    <p className='font-bold text-sm mb-2'>크기 선택</p>
                   </div>
                 </div>
               </TabsContent>
               <TabsContent value='board' className='w-full'>
                 <div className='grid grid-cols-3'>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('board', { col: 2, row: 2 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('board', { col: 4, row: 6 }, { board_id: sampleBoardId })}
+                      >
                         <WidgetBoard widget={{ board_id: sampleBoardId }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -143,15 +184,13 @@ export function WidgetBrawer() {
                 </div>
               </TabsContent>
               <TabsContent value='profile'>
-                {/* <Button
-                  onClick={() => handelAddWidget('profile', { col: 2, row: 1 })}
-                >
-                  프로필 (2x1)
-                </Button> */}
                 <div className='grid grid-cols-3'>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('profile', { col: 2, row: 1 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('profile', { col: 4, row: 3 })}
+                      >
                         <WidgetProfile widget={{ grid: { col: 2, row: 1 } }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -160,9 +199,12 @@ export function WidgetBrawer() {
                     </div>
                     <p className='font-bold text-sm mb-2'>프로필형 2x1</p>
                   </div>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('profile', { col: 2, row: 2 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[282px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[282px] h-[282px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('profile', { col: 4, row: 6 })}
+                      >
                         <WidgetProfile widget={{ grid: { col: 2, row: 2 } }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -175,9 +217,12 @@ export function WidgetBrawer() {
               </TabsContent>
               <TabsContent value='timer'>
                 <div className='grid grid-cols-3'>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('timer', { col: 2, row: 1 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'>
+                      <div
+                        className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('timer', { col: 4, row: 3 })}
+                      >
                         <WidgetTimer />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -190,9 +235,12 @@ export function WidgetBrawer() {
               </TabsContent>
               <TabsContent value='empty'>
                 <div className='grid grid-cols-3'>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('empty', { col: 1, row: 1 })}>
+                  <div className='group relative flex flex-col items-center'>
                     <div className='h-[286px] flex items-center'>
-                      <div className='w-[128px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'>
+                      <div
+                        className='w-[128px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('empty', { col: 2, row: 3 })}
+                      >
                         <WidgetEmpty />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -201,9 +249,12 @@ export function WidgetBrawer() {
                     </div>
                     <p className='font-bold text-sm mb-2'>공백 1x1</p>
                   </div>
-                  <div className='group relative flex flex-col items-center' onClick={() => handelAddWidget('empty', { col: 2, row: 1 })}>
-                    <div className='h-[286px] flex items-center'>
-                      <div className='w-[282px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'>
+                  <div className='group relative flex flex-col items-center'>
+                    <div className='h-[286px] flex items-center' onClick={() => handelAddWidget('empty', { col: 4, row: 3 })}>
+                      <div
+                        className='w-[282px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'
+                        onClick={() => handelAddWidget('empty', { col: 4, row: 3 })}
+                      >
                         <WidgetEmpty />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
@@ -211,6 +262,44 @@ export function WidgetBrawer() {
                       </div>
                     </div>
                     <p className='font-bold text-sm mb-2'>공백 2x1</p>
+                  </div>
+                  <div className='group relative flex flex-col items-center'>
+                    <div className='h-[286px] w-2/3 flex flex-col justify-center items-center text-center gap-y-2'>
+                      <Select
+                        defaultValue={String(emptyGrid.col)}
+                        onValueChange={(value) => setEmptyGrid({ ...emptyGrid, col: parseInt(value) })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='col' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 6 }, (_, index) => index + 1).map(col => (
+                            <SelectItem key={col} value={String(col * 2)}>Col : {col}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      x
+                      <Select
+                        defaultValue={String(emptyGrid.row)}
+                        onValueChange={(value) => setEmptyGrid({ ...emptyGrid, row: parseInt(value) })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='row' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 4 }, (_, index) => index + 1).map(row => (
+                            <SelectItem key={row} value={String(row * 3)}>Row : {row}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        className='w-full'
+                        onClick={() => handelAddWidget('empty', { col: emptyGrid.col, row: emptyGrid.row })}
+                      >
+                        추가
+                      </Button>
+                    </div>
+                    <p className='font-bold text-sm mb-2'>크기 선택</p>
                   </div>
                 </div>
               </TabsContent>
