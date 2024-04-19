@@ -121,7 +121,7 @@ const HouseMain = () => {
       )}
 
       <main
-        className='w-[900px] h-[600px] grid grid-cols-6 grid-rows-4 grid-flow-dense gap-6'
+        className='w-[900px] h-[600px] grid grid-cols-12 grid-rows-12 grid-flow-dense gap-6'
       >
         {widgets.map((widget, i) => (
           <WidgetItem

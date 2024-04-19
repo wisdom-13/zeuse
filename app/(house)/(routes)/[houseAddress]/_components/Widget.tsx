@@ -4,10 +4,10 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { WidgetTmp, Widget as WidgetType } from '@/types';
-import WidgetImage from './WidgetImage';
-import WidgetProfile from './WidgetProfile';
-import WidgetBoard from './WidgetBoard';
-import WidgetTimer from './WidgetTimer';
+import WidgetImage from '../../../../../components/widget/WidgetImage';
+import WidgetProfile from '../../../../../components/widget/WidgetProfile';
+import WidgetBoard from '../../../../../components/widget/WidgetBoard';
+import WidgetTimer from '../../../../../components/widget/WidgetTimer';
 
 export interface WidgetProps {
   widget: WidgetType;

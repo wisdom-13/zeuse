@@ -8,12 +8,12 @@ import { useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import useWidgetEdit from '@/hooks/useWidgetEdit';
 import { Widget, Widget as WidgetType } from '@/types';
-import WidgetImage from './WidgetImage';
-import WidgetProfile from './WidgetProfile';
-import WidgetBoard from './WidgetBoard';
+import WidgetImage from '../../../../../components/widget/WidgetImage';
+import WidgetProfile from '../../../../../components/widget/WidgetProfile';
+import WidgetBoard from '../../../../../components/widget/WidgetBoard';
 import { Minus } from 'lucide-react';
-import WidgetTimer from './WidgetTimer';
-import WidgetEmpty from './WidgetEmpty';
+import WidgetTimer from '../../../../../components/widget/WidgetTimer';
+import WidgetEmpty from '../../../../../components/widget/WidgetEmpty';
 
 export interface EditWidgetProps {
   index: number;
