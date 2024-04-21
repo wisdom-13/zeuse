@@ -1,12 +1,12 @@
 import { PostFamily } from '@/types';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Image from 'next/image';
 
 import { format, register } from 'timeago.js';
 import koLocale from 'timeago.js/lib/lang/ko';
-import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 import { getPublicUrl } from '@/util/getPublicUrl';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 register('ko', koLocale)
 
@@ -38,7 +38,15 @@ const CardItem = ({
           <h3 className='text-base font-semibold text-primary truncate mb-2'>{post.title}</h3>
           <div className='flex items-center text-muted-foreground gap-x-2 text-sm'>
             <Avatar className='h-6 w-6'>
-              <AvatarImage src={post.family.avatar_url} />
+              {
+                post.family.avatar_path ? (
+                  <AvatarImage asChild src={post.family.avatar_path ? getPublicUrl(`profile/${post.family.avatar_path}`) : post.family.avatar_url}>
+                    <Image src={getPublicUrl(`profile/${post.family.avatar_path}`)} alt='avatar' fill />
+                  </AvatarImage>
+                ) : (
+                  <AvatarImage src={post.family.avatar_url} />
+                )
+              }
               <AvatarFallback className='text-xs'>{post.family.nick_name?.charAt(0)}</AvatarFallback>
             </Avatar>
             <span className='font-semibold'>{post.family.nick_name}</span>

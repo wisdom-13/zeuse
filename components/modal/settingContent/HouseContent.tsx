@@ -60,7 +60,6 @@ const HouseContent = ({
   }, [form, form.reset, house])
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
     const { data, error } = await supabaseClient
       .from('houses')
       .update(values)
@@ -75,7 +74,6 @@ const HouseContent = ({
     if (data) {
       toast.success('변경사항을 저장했습니다.');
     }
-
   }
 
 
@@ -103,10 +101,7 @@ const HouseContent = ({
                       하우스 이름
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        className='focus-visible:outline-none'
-                        {...field}
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

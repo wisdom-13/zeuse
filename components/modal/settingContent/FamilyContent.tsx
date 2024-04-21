@@ -1,6 +1,9 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { HouseBuild } from '@/types';
+
+import Image from 'next/image';
+
+import { getPublicUrl } from '@/util/getPublicUrl';
+
 import {
   Table,
   TableBody,
@@ -11,6 +14,9 @@ import {
 } from '@/components/ui/table'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+
 
 interface FamilyContentProps {
   house: HouseBuild;
@@ -56,7 +62,16 @@ const FamilyContent = ({
             <TableRow key={item.id}>
               <TableCell className='flex items-center gap-x-2'>
                 <Avatar className='h-6 w-6'>
-                  <AvatarImage src={item.avatar_url} />
+                  <AvatarImage src={item.avatar_path ? getPublicUrl(`profile/${item.avatar_path}`) : item.avatar_url} />
+                  {
+                    item.avatar_path ? (
+                      <AvatarImage asChild src={item.avatar_path ? getPublicUrl(`profile/${item.avatar_path}`) : item.avatar_url}>
+                        <Image src={getPublicUrl(`profile/${item.avatar_path}`)} alt='avatar' fill />
+                      </AvatarImage>
+                    ) : (
+                      <AvatarImage src={item.avatar_url} />
+                    )
+                  }
                   <AvatarFallback className='text-xs'>{item.nick_name?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className='font-semibold'>{item.nick_name}</span>

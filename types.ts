@@ -112,6 +112,7 @@ export interface Family {
   nick_name?: string;
   description?: string;
   avatar_url?: string;
+  avatar_path?: string;
   role: string;
   is_owner: boolean;
 }

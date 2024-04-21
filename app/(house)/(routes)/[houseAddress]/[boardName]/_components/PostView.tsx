@@ -3,10 +3,12 @@
 import { Family, PostFamily } from '@/types';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 
 import moment from 'moment';
 import { toast } from 'sonner';
+import { getPublicUrl } from '@/util/getPublicUrl';
 import { isJSONString } from '@/util/isJSONString';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
@@ -24,7 +26,9 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import Editor from '../../_components/Editor';
+
 
 interface BoardPageProps {
   post: PostFamily;
@@ -95,7 +99,15 @@ const PostView = ({
             <div className='w-full flex items-center justify-between text-sm'>
               <div className='flex items-center gap-x-2'>
                 <Avatar className='h-6 w-6'>
-                  <AvatarImage src={post.family.avatar_url} />
+                  {
+                    post.family.avatar_path ? (
+                      <AvatarImage asChild src={post.family.avatar_path ? getPublicUrl(`profile/${post.family.avatar_path}`) : post.family.avatar_url}>
+                        <Image src={getPublicUrl(`profile/${post.family.avatar_path}`)} alt='avatar' fill />
+                      </AvatarImage>
+                    ) : (
+                      <AvatarImage src={post.family.avatar_url} />
+                    )
+                  }
                   <AvatarFallback className='text-xs'>{post.family.nick_name?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className='font-semibold'>{post.family.nick_name}</span>
