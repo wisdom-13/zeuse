@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { ChevronsLeft, Heart, LogIn, LogOut, MenuIcon, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, LogIn, LogOut, Minus, Settings } from 'lucide-react';
 import { useMediaQuery } from 'usehooks-ts';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -43,8 +43,11 @@ const Navigation = ({
   const [isResetting, setIsRestting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isMouseNavOver, setIsMouseNavOver] = useState(false);
 
   const owner = house.family.find((item) => item.is_owner);
+
+  const NavIcon = isMouseNavOver ? ChevronLeft : Minus;
 
   const resetWidth = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -52,10 +55,6 @@ const Navigation = ({
       setIsRestting(true);
 
       sidebarRef.current.style.width = isMobile ? '100%' : '240px';
-      navbarRef.current.style.setProperty(
-        'width',
-        isMobile ? '0' : 'calc(100% - 240px)'
-      );
       navbarRef.current.style.setProperty(
         'left',
         isMobile ? '100%' : '240px'
@@ -71,7 +70,6 @@ const Navigation = ({
       setIsRestting(true);
 
       sidebarRef.current.style.width = '0';
-      navbarRef.current.style.setProperty('width', '100%');
       navbarRef.current.style.setProperty('left', '0');
       setTimeout(() => setIsRestting(false), 300);
     }
@@ -100,14 +98,6 @@ const Navigation = ({
         )}
       >
         <div className='w-60 h-full flex flex-col justify-start'>
-          <div
-            onClick={collapse}
-            role='button'
-            className='h-6 w-6 text-block rounded-sm hover:bg-primary/5 absolute top-2 right-3 opacity-0 group-hover/sidebar:opacity-100'
-          >
-            <ChevronsLeft className='h-6 w-6' />
-          </div>
-
           <div className='flex flex-col justify-center gap-y-2 p-8 min-h-44 mt-6'>
             <Link href={`/${house.address}`} className='relative w-full min-h-20'>
               {house.style.logo_image ? (
@@ -179,12 +169,25 @@ const Navigation = ({
       </aside>
       <div
         ref={navbarRef}
-        className={cn('absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]',
+        onMouseOver={() => setIsMouseNavOver(true)}
+        onMouseLeave={() => setIsMouseNavOver(false)}
+        className={cn('absolute top-1/2 duration-300 left-60 -translate-y-1/2 flex items-center',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'left-0 w-full')}
       >
-        <nav className='bg-transparent px-3 py-2 w-full'>
-          {isCollapsed && <MenuIcon onClick={resetWidth} role='button' className='h-6 w-6' />}
+        <nav className='bg-transparent px-1 py-2 w-full'>
+          {isCollapsed
+            ? <ChevronRight strokeWidth={2.5} onClick={resetWidth} role='button' className='h-6 w-6 text-muted-foreground' />
+            : <NavIcon
+              strokeWidth={isMouseNavOver ? 2.5 : 3}
+              onClick={collapse}
+              role='button'
+              className={cn(
+                'h-6 w-6 text-muted-foreground transition-all',
+                !isMouseNavOver && 'rotate-90'
+              )}
+            />
+          }
         </nav>
       </div>
     </>
