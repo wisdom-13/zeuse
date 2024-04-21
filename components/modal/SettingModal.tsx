@@ -11,7 +11,7 @@ import {
   DialogContent
 } from '@/components/ui/dialog';
 import useSettingModal from '@/hooks/useSettingModal';
-import { Box, Home, Lamp, Notebook, PencilRuler, User, Users } from 'lucide-react';
+import { Box, Home, Lamp, PencilRuler, User, Users } from 'lucide-react';
 
 import SettingItem from '../SettingItem';
 import ProfileContent from './settingContent/ProfileContent';
@@ -32,12 +32,13 @@ export const SettingModal = () => {
     if (!house) return;
 
     const style = `
-      background: ${house?.style.bg_image ? `url(${getPublicUrl(`style/${house.style.bg_image}`)})` : `${house?.style.bg_color}`};
+      background-image: ${house?.style.bg_image ? `url(${getPublicUrl(`style/${house.style.bg_image}`)})` : `${house?.style.bg_color}`};
       --radius:${house?.style.box_style.radius}rem;
       --boxOpacity: ${house?.style.box_style.opacity};
     `;
 
     const className = cn(
+      'bg-cover bg-no-repeat',
       house?.style.mode == 'dark' && 'dark',
       house?.style.color && `color-${house?.style.color}`,
       house?.style.box_style.border !== 'none' && `border-${house?.style.box_style.border}`
@@ -116,7 +117,7 @@ export const SettingModal = () => {
         </div>
 
         <div className='flex flex-col justify-between w-full pt-4 px-2'>
-          {activeMenu == 'profile' && <ProfileContent house={house} setHouseBuild={setHouseBuild} />}
+          {activeMenu == 'profile' && <ProfileContent house={house} />}
           {activeMenu == 'family' && <FamilyContent house={house} setHouseBuild={setHouseBuild} />}
 
           {activeMenu == 'house' && <HouseContent house={house} setHouseBuild={setHouseBuild} />}

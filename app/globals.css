@@ -278,7 +278,7 @@ body,
 }
 
 .border-line .custom-card {
-  @apply border border-primary;
+  @apply border-x border-y border-primary;
 }
 
 .border-shadow .custom-card {

@@ -92,7 +92,7 @@ const Navigation = ({
       <aside
         ref={sidebarRef}
         className={cn(
-          'custom-card group/sidebar h-screen bg-card text-card-foreground border-y border-r overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
+          'custom-card group/sidebar h-screen bg-card text-card-foreground !border-l-0 overflow-y-auto overflow-x-hidden relative w-60 flex flex-col rounded-r-md z-[9999]',
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}
