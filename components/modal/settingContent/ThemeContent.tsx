@@ -108,7 +108,7 @@ const ThemeContent = ({
     }
 
     if (data) {
-      handleUpdateStyle(id, `style/${id == 'logo_image' ? 'logo' : 'background'}/${data.path}`);
+      handleUpdateStyle(id, `${id == 'logo_image' ? 'logo' : 'background'}/${data.path}`);
     }
   }
 
