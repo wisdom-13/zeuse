@@ -2,7 +2,7 @@
 
 import { House, HouseBuild } from '@/types';
 import { ElementRef, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -20,18 +20,18 @@ import { useUser } from '@/hooks/useUser';
 
 import { HouseList } from '@/components/HouseList';
 import MenuItem from './MenuItem';
+import useHouseBuild from '@/hooks/useHouseBuild';
 
 interface HouseMenuProps {
-  house: HouseBuild;
   houses?: House[];
 }
 
 const Navigation = ({
-  house,
   houses
 }: HouseMenuProps) => {
-  const param = useParams();
+  const { houseBuild } = useHouseBuild();
   const { user, isLoading } = useUser();
+  const param = useParams();
   const authModal = useAuthModal();
   const settingModal = useSettingModal();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -45,8 +45,7 @@ const Navigation = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isMouseNavOver, setIsMouseNavOver] = useState(false);
 
-  const owner = house.family.find((item) => item.is_owner);
-
+  const owner = houseBuild?.family.find((item) => item.is_owner);
   const NavIcon = isMouseNavOver ? ChevronLeft : Minus;
 
   const resetWidth = () => {
@@ -99,10 +98,10 @@ const Navigation = ({
       >
         <div className='w-60 h-full flex flex-col justify-start'>
           <div className='flex flex-col justify-center gap-y-2 p-8 min-h-44 mt-6'>
-            <Link href={`/${house.address}`} className='relative w-full min-h-20'>
-              {house.style.logo_image ? (
+            <Link href={`/${houseBuild?.address}`} className='relative w-full min-h-20'>
+              {houseBuild?.style.logo_image ? (
                 <Image
-                  src={getPublicUrl(`/style/${house.style.logo_image}`)}
+                  src={getPublicUrl(`/style/${houseBuild?.style.logo_image}`)}
                   alt='logo'
                   onLoad={() => setImageLoaded(true)}
                   className={cn(
@@ -114,14 +113,14 @@ const Navigation = ({
                 />
               ) : (
                 <h1 className='text-3xl text-center font-bold'>
-                  {house.title}
+                  {houseBuild?.title}
                 </h1>
               )}
             </Link>
           </div>
 
           <div className='flex flex-col gap-y-2 py-2 px-8'>
-            {house.board && house.board.sort((a, b) => a.order - b.order).map((item) => (
+            {houseBuild?.board && houseBuild?.board.sort((a, b) => a.order - b.order).map((item) => (
               <MenuItem
                 key={item.id}
                 label={item.title}

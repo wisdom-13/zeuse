@@ -44,7 +44,7 @@ export default async function HouseLayout({
       )}
       style={style}
     >
-      <Navigation houses={houses} house={house} />
+      <Navigation houses={houses} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>
         <HouseIdProvider houseAddress={houseAddress}>
           {children}
