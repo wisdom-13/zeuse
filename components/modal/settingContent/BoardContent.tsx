@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 
 import { HouseBuild } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
@@ -84,7 +83,10 @@ const BoardContent = ({
       .regex(/^(?:[0-9A-Za-z-]+)?$/, '주소에는 영문, 숫자, 하이픈(-)만 사용할 수 있어요.')
       .optional(),
     view: z.string().optional(),
-    link: z.string().url('유효한 URL을 입력해주세요.').optional(),
+    link: z
+      .string()
+      .regex(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$|^$/, '유효한 URL을 입력해주세요.')
+      .optional(),
   })
     .refine((data) => !((data.type && data.type !== 'link') && !data.name), {
       path: ['name'],
@@ -103,24 +105,29 @@ const BoardContent = ({
       message: 'URL을 입력하세요.'
     });
 
-  const defaultValues = {
-    title: selectBoard.title || '',
-    name: selectBoard.name || '',
-    type: selectBoard.type || '',
-    view: selectBoard.view || '',
-    link: selectBoard.link || ''
-  }
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     shouldFocusError: false,
     mode: 'onBlur',
-    defaultValues: defaultValues,
+    defaultValues: {
+      title: '',
+      name: '',
+      type: '',
+      view: '',
+      link: '',
+    },
   })
 
   useEffect(() => {
-    form.reset(defaultValues)
-  }, [defaultValues, form, form.reset, selectBoard])
+    form.reset({
+      title: selectBoard.title || '',
+      name: selectBoard.name || '',
+      type: selectBoard.type || '',
+      view: selectBoard.view || '',
+      link: selectBoard.link || ''
+    })
+    console.log(selectBoard)
+  }, [form, form.reset, selectBoard])
 
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -287,14 +294,14 @@ const BoardContent = ({
                           </Label>
                           <div className='w-full'>
                             <FormControl>
-                              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!!selectBoard.id}>
+                              <Select onValueChange={field.onChange} value={field.value} disabled={!!selectBoard.id}>
                                 <SelectTrigger>
                                   <SelectValue placeholder='유형을 선택하세요.' />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectGroup>
                                     {Object.values(boardTypes).map((item) => (
-                                      <SelectItem key={item.type} value={item.type}>{item.name}</SelectItem>
+                                      <SelectItem key={item.type} value={item.type.toString()}>{item.name}</SelectItem>
                                     ))}
                                   </SelectGroup>
                                 </SelectContent>
@@ -342,7 +349,7 @@ const BoardContent = ({
                               </Label>
                               <div className='w-full'>
                                 <FormControl>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!!selectBoard.id}>
+                                  <Select onValueChange={field.onChange} value={field.value} disabled={!!selectBoard.id}>
                                     <SelectTrigger>
                                       <SelectValue placeholder='보기 형식을 선택하세요.' />
                                     </SelectTrigger>
