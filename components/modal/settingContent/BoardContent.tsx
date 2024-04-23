@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { HouseBuild } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
 
-import { GripVertical, Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +36,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -103,28 +103,24 @@ const BoardContent = ({
       message: 'URL을 입력하세요.'
     });
 
+  const defaultValues = {
+    title: selectBoard.title || '',
+    name: selectBoard.name || '',
+    type: selectBoard.type || '',
+    view: selectBoard.view || '',
+    link: selectBoard.link || ''
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     shouldFocusError: false,
     mode: 'onBlur',
-    defaultValues: {
-      title: '',
-      name: '',
-      type: '',
-      view: '',
-      link: '',
-    },
+    defaultValues: defaultValues,
   })
 
   useEffect(() => {
-    form.reset({
-      title: selectBoard.title || '',
-      name: selectBoard.name || '',
-      type: selectBoard.type || '',
-      view: selectBoard.view || '',
-      link: selectBoard.link || ''
-    })
-  }, [form, form.reset, selectBoard])
+    form.reset(defaultValues)
+  }, [defaultValues, form, form.reset, selectBoard])
 
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
