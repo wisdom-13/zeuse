@@ -6,6 +6,7 @@ html,
 body,
 :root {
   height: 100%;
+
 }
 
 
@@ -277,8 +278,13 @@ body,
   --ring: 20.5 90.2% 48.2%;
 }
 
+.bn-editor {
+  @apply !bg-transparent !text-primary !text-base;
+}
+
 .border-line .custom-card {
   @apply border-x border-y border-primary;
+
 }
 
 .border-shadow .custom-card {
