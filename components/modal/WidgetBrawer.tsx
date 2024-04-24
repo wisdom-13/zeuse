@@ -172,9 +172,9 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handleAddWidget('board', { col: 4, row: 6 }, { board_id: sampleBoardId })}
+                        onClick={() => handleAddWidget('board', { col: 4, row: 6 }, { option_id: sampleBoardId, option_bool: true })}
                       >
-                        <WidgetBoard widget={{ board_id: sampleBoardId }} />
+                        <WidgetBoard widget={{ option_id: sampleBoardId }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
                         </button>

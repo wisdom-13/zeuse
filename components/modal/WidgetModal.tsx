@@ -157,7 +157,7 @@ const WidgetModal = ({
                   룸 이름 표시
                 </label>
               </div>
-              <Select defaultValue={widget.board_id} onValueChange={(v) => handleUpdateWidget('board_id', v)}>
+              <Select defaultValue={widget.option_id} onValueChange={(v) => handleUpdateWidget('option_id', v)}>
                 <SelectTrigger>
                   <SelectValue placeholder='위젯에 표시할 룸을 선택해주세요.' />
                 </SelectTrigger>

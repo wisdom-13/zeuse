@@ -19,7 +19,7 @@ interface WidgetBoardProps {
 const WidgetBoard = ({
   widget
 }: WidgetBoardProps) => {
-  const { board } = useGetBoardById(widget.board_id);
+  const { board } = useGetBoardById(widget.option_id);
   const widgetEdit = useWidgetEdit();
   const param = useParams();
 
