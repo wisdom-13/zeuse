@@ -29,6 +29,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button';
+import { getPublicUrl } from '@/util/getPublicUrl';
+import { Checkbox } from '../ui/checkbox';
 
 interface WidgetModalProps {
   widget: Widget;
@@ -49,7 +51,7 @@ const WidgetModal = ({
 
   const boardList = houseBuild?.board.filter((item) => item.type == 'post');
 
-  const handleUpdateWidget = async (type: string, value: string | string[]) => {
+  const handleUpdateWidget = async (type: string, value: any) => {
     if (!houseBuild) return;
 
     const { data, error } = await supabaseClient
@@ -80,7 +82,7 @@ const WidgetModal = ({
     const pathArr: string[] = [];
 
     for (const data of files) {
-      const { data: imageData, error } = await supabaseClient
+      const { data: imageData } = await supabaseClient
         .storage
         .from('widget')
         .upload(uuid(), data, {
@@ -113,9 +115,9 @@ const WidgetModal = ({
     onDrop,
     noClick: false,
     disabled: isLoading,
-    maxFiles: 3,
+    maxFiles: widget.image_array ? widget.image_array.length : 3,
     accept: {
-      "image/*": [".jpeg", ".jpg", ".png"],
+      'image/*': ['.jpeg', '.jpg', '.png'],
     },
   });
 
@@ -125,28 +127,44 @@ const WidgetModal = ({
         <DialogHeader>
           <DialogTitle className='text-center'>위젯 설정</DialogTitle>
         </DialogHeader>
-        <div className='flex flex-col gap-y-2'>
+        <div className='flex flex-col gap-y-4'>
           {widget.type == 'board' && (
-            <Select defaultValue={widget.board_id} onValueChange={(v) => handleUpdateWidget('board_id', v)}>
-              <SelectTrigger>
-                <SelectValue placeholder='위젯에 표시할 룸을 선택하세요.' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {boardList?.map((item) => {
-                    if (!item.id) return
-                    return (
-                      <SelectItem key={item.id} value={item.id}>
-                        {item.title}
-                      </SelectItem>
-                    )
-                  })}
-                  <SelectItem key='none' value='none'>
-                    선택안함
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <>
+              <div className='flex items-center space-x-2'>
+                <Checkbox
+                  id='isRoomTitleShow'
+                  checked={widget.option_bool}
+                  onCheckedChange={() => handleUpdateWidget('option_bool', !widget.option_bool)}
+                />
+                <label
+                  htmlFor='isRoomTitleShow'
+                  className='text-sm font-medium leading-none'
+                >
+                  룸 이름 표시
+                </label>
+              </div>
+              <Select defaultValue={widget.board_id} onValueChange={(v) => handleUpdateWidget('board_id', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder='위젯에 표시할 룸을 선택하세요.' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {boardList?.map((item) => {
+                      if (!item.id) return
+                      return (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.title}
+                        </SelectItem>
+                      )
+                    })}
+                    <SelectItem key='none' value='none'>
+                      선택안함
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+            </>
           )}
 
           {widget.type == 'image' && (
@@ -165,7 +183,7 @@ const WidgetModal = ({
                     {file.preview && (
                       <Image
                         src={file.preview}
-                        alt="Preview"
+                        alt='Preview'
                         fill
                         className='object-cover'
                       />

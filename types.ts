@@ -96,6 +96,7 @@ export interface Widget {
   board_id: string;
   date: string;
   option: string;
+  option_bool: boolean;
 }
 
 export interface WidgetTmp {
@@ -103,6 +104,8 @@ export interface WidgetTmp {
   grid?: { col: number, row: number };
   image_array?: Array<string>;
   board_id?: string;
+  option?: string;
+  option_bool?: boolean;
 }
 
 export interface Family {
