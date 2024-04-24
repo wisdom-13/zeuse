@@ -8,6 +8,7 @@ import WidgetImage from '@/components/widget/WidgetImage';
 import WidgetProfile from '@/components/widget/WidgetProfile';
 import WidgetBoard from '@/components/widget/WidgetBoard';
 import WidgetTimer from '@/components/widget/WidgetTimer';
+import WidgetPost from '@/components/widget/WidgetPost';
 
 export interface WidgetProps {
   widget: WidgetType;
@@ -35,6 +36,7 @@ export const Widget = ({
         {widget?.type == 'image' && <WidgetImage widget={widget} />}
         {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
         {widget?.type == 'board' && <WidgetBoard widget={widget} />}
+        {widget?.type == 'post' && <WidgetPost widget={widget} />}
         {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
       </div>
     </>

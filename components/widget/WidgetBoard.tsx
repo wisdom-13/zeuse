@@ -1,3 +1,5 @@
+'use client';
+
 import { PostFamily, Widget, WidgetTmp } from '@/types';
 
 import Link from 'next/link';
@@ -35,7 +37,7 @@ const WidgetBoard = ({
     <div className='p-6'>
       {
         widget.option_bool && (
-          <h3 className='text-3xl font-semibold mb-5'>{board?.title}</h3>
+          <h3 className='text-3xl font-semibold mb-4'>{board?.title}</h3>
         )
       }
       <ul>

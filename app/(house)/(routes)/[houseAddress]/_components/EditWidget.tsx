@@ -14,6 +14,7 @@ import WidgetProfile from '@/components/widget/WidgetProfile';
 import WidgetBoard from '@/components/widget/WidgetBoard';
 import WidgetTimer from '@/components/widget/WidgetTimer';
 import WidgetEmpty from '@/components/widget/WidgetEmpty';
+import WidgetPost from '@/components/widget/WidgetPost';
 import WidgetModal from '@/components/modal/WidgetModal';
 
 export interface EditWidgetProps {
@@ -108,6 +109,7 @@ export const EditWidget = ({
         {widget?.type == 'image' && <WidgetImage widget={widget} />}
         {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
         {widget?.type == 'board' && <WidgetBoard widget={widget} />}
+        {widget?.type == 'post' && <WidgetPost widget={widget} />}
         {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
         {widget?.type == 'empty' && <WidgetEmpty />}
 
