@@ -64,7 +64,7 @@ const PostView = ({
     }
   }
 
-  const handelDelete = async () => {
+  const handleDelete = async () => {
     if (post.thumbnail_path) {
       await supabaseClient
         .storage
@@ -164,7 +164,7 @@ const PostView = ({
                           variant='destructive'
                           size='sm'
                           className='w-full'
-                          onClick={handelDelete}
+                          onClick={handleDelete}
                         >
                           삭제
                         </Button>

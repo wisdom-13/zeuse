@@ -174,7 +174,7 @@ const BoardContent = ({
     }
   }
 
-  const handelDelete = async () => {
+  const handleDelete = async () => {
     const { error } = await supabaseClient
       .from('board')
       .delete()
@@ -426,7 +426,7 @@ const BoardContent = ({
                             variant='destructive'
                             size='sm'
                             className='w-full'
-                            onClick={handelDelete}
+                            onClick={handleDelete}
                           >
                             삭제
                           </Button>

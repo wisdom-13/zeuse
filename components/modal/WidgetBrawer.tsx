@@ -52,7 +52,7 @@ export function WidgetBrawer() {
     }
   }
 
-  const handelAddWidget = async (type: string, grid: { col: number, row: number }, ...props: any[]) => {
+  const handleAddWidget = async (type: string, grid: { col: number, row: number }, ...props: any[]) => {
     const {
       data: newWidget,
       error
@@ -101,7 +101,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[128px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('image', { col: 2, row: 3 })}
+                        onClick={() => handleAddWidget('image', { col: 2, row: 3 })}
                       >
                         <WidgetImage />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -115,7 +115,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('image', { col: 4, row: 3 })}
+                        onClick={() => handleAddWidget('image', { col: 4, row: 3 })}
                       >
                         <WidgetImage />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -156,7 +156,7 @@ export function WidgetBrawer() {
                       </Select>
                       <Button
                         className='w-full'
-                        onClick={() => handelAddWidget('image', { col: imageGrid.col, row: imageGrid.row })}
+                        onClick={() => handleAddWidget('image', { col: imageGrid.col, row: imageGrid.row })}
                       >
                         추가
                       </Button>
@@ -171,7 +171,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('board', { col: 4, row: 6 }, { board_id: sampleBoardId })}
+                        onClick={() => handleAddWidget('board', { col: 4, row: 6 }, { board_id: sampleBoardId })}
                       >
                         <WidgetBoard widget={{ board_id: sampleBoardId }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -189,7 +189,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('profile', { col: 4, row: 3 })}
+                        onClick={() => handleAddWidget('profile', { col: 4, row: 3 })}
                       >
                         <WidgetProfile widget={{ grid: { col: 2, row: 1 } }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -203,7 +203,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[282px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('profile', { col: 4, row: 6 })}
+                        onClick={() => handleAddWidget('profile', { col: 4, row: 6 })}
                       >
                         <WidgetProfile widget={{ grid: { col: 2, row: 2 } }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -221,7 +221,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[282px] h-[130px] scale-75 custom-card rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('timer', { col: 4, row: 3 })}
+                        onClick={() => handleAddWidget('timer', { col: 4, row: 3 })}
                       >
                         <WidgetTimer />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -239,7 +239,7 @@ export function WidgetBrawer() {
                     <div className='h-[286px] flex items-center'>
                       <div
                         className='w-[128px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('empty', { col: 2, row: 3 })}
+                        onClick={() => handleAddWidget('empty', { col: 2, row: 3 })}
                       >
                         <WidgetEmpty />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -250,10 +250,10 @@ export function WidgetBrawer() {
                     <p className='font-bold text-sm mb-2'>공백 1x1</p>
                   </div>
                   <div className='group relative flex flex-col items-center'>
-                    <div className='h-[286px] flex items-center' onClick={() => handelAddWidget('empty', { col: 4, row: 3 })}>
+                    <div className='h-[286px] flex items-center' onClick={() => handleAddWidget('empty', { col: 4, row: 3 })}>
                       <div
                         className='w-[282px] h-[130px] scale-75 custom-card border-dashed bg-primary/5 rounded-md text-card-foreground'
-                        onClick={() => handelAddWidget('empty', { col: 4, row: 3 })}
+                        onClick={() => handleAddWidget('empty', { col: 4, row: 3 })}
                       >
                         <WidgetEmpty />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
@@ -294,7 +294,7 @@ export function WidgetBrawer() {
                       </Select>
                       <Button
                         className='w-full'
-                        onClick={() => handelAddWidget('empty', { col: emptyGrid.col, row: emptyGrid.row })}
+                        onClick={() => handleAddWidget('empty', { col: emptyGrid.col, row: emptyGrid.row })}
                       >
                         추가
                       </Button>

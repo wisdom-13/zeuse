@@ -1,19 +1,20 @@
 
 'use client';
-import type { Identifier, XYCoord } from 'dnd-core'
+import { Widget, Widget as WidgetType } from '@/types';
+import type { Identifier } from 'dnd-core'
 
 import { cn } from '@/lib/utils';
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { useDrag, useDrop } from 'react-dnd';
-import useWidgetEdit from '@/hooks/useWidgetEdit';
-import { Widget, Widget as WidgetType } from '@/types';
-import WidgetImage from '../../../../../components/widget/WidgetImage';
-import WidgetProfile from '../../../../../components/widget/WidgetProfile';
-import WidgetBoard from '../../../../../components/widget/WidgetBoard';
 import { Minus } from 'lucide-react';
-import WidgetTimer from '../../../../../components/widget/WidgetTimer';
-import WidgetEmpty from '../../../../../components/widget/WidgetEmpty';
+
+import WidgetImage from '@/components/widget/WidgetImage';
+import WidgetProfile from '@/components/widget/WidgetProfile';
+import WidgetBoard from '@/components/widget/WidgetBoard';
+import WidgetTimer from '@/components/widget/WidgetTimer';
+import WidgetEmpty from '@/components/widget/WidgetEmpty';
+import WidgetModal from '@/components/modal/WidgetModal';
 
 export interface EditWidgetProps {
   index: number;
@@ -36,9 +37,16 @@ export const EditWidget = ({
   removeWidget,
   updateWidget,
 }: EditWidgetProps) => {
-  const widgetEdit = useWidgetEdit();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // TODO : 드래그 개선
 
+  const handleModalOpen = () => {
+    const settingType = ['image', 'board'];
+    if (settingType.includes(widget.type)) {
+      setIsModalOpen(true)
+    }
+  }
 
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<
@@ -52,7 +60,7 @@ export const EditWidget = ({
         handlerId: monitor.getHandlerId(),
       }
     },
-    hover(item: DragItem, monitor) {
+    hover(item: DragItem) {
       if (!ref.current) {
         return
       }
@@ -95,7 +103,7 @@ export const EditWidget = ({
           widget?.type == 'empty' && ' bg-primary/5 border-dashed',
           isDragging ? 'opacity-0' : 'opacity-100',
         )}
-        onClick={widgetEdit.onModalOpen}
+        onClick={handleModalOpen}
       >
         {widget?.type == 'image' && <WidgetImage widget={widget} />}
         {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
@@ -110,7 +118,7 @@ export const EditWidget = ({
           <Minus size={16} />
         </button>
       </div>
-
+      <WidgetModal widget={widget} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </>
   );
 }

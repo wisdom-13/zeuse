@@ -1,10 +1,13 @@
-import useGetBoardById from '@/hooks/useGetBoardById';
 import { PostFamily, Widget, WidgetTmp } from '@/types';
-import { List } from 'lucide-react';
+
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+
 import { format, register } from 'timeago.js';
 import koLocale from 'timeago.js/lib/lang/ko';
+import { List } from 'lucide-react';
+
+import useGetBoardById from '@/hooks/useGetBoardById';
 
 register('ko', koLocale)
 
@@ -17,7 +20,6 @@ const WidgetBoard = ({
 }: WidgetBoardProps) => {
   const { board } = useGetBoardById(widget.board_id);
   const param = useParams();
-
 
   if (!board) {
     return (

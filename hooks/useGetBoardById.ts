@@ -1,7 +1,9 @@
 import { BoardList as BoardListType } from '@/types';
-import { useSessionContext } from '@supabase/auth-helpers-react';
+
 import { useEffect, useMemo, useState } from 'react'
+
 import { toast } from 'sonner';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 const useGetBoardById = (board_id?: string) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +11,7 @@ const useGetBoardById = (board_id?: string) => {
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
-    if (!board_id) {
+    if (!board_id || board_id == 'none') {
       return;
     }
 

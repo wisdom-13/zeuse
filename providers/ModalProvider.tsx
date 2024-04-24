@@ -23,7 +23,6 @@ const ModalProvider = () => {
       <AuthModal />
       <CreateHouseModal />
       <SettingModal />
-      <WidgetModal />
       <WidgetBrawer />
     </>
   );

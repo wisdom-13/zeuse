@@ -47,7 +47,7 @@ const MemoItem = ({
     }
   }
 
-  const handelDelete = async () => {
+  const handleDelete = async () => {
     const { error } = await supabaseClient
       .from('memos')
       .delete()
@@ -102,7 +102,7 @@ const MemoItem = ({
                     variant='destructive'
                     size='sm'
                     className='w-full'
-                    onClick={handelDelete}
+                    onClick={handleDelete}
                   >
                     삭제
                   </Button>

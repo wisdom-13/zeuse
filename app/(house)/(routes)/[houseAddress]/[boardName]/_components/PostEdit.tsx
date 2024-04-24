@@ -85,7 +85,7 @@ const PostEdit = ({
     setThumbnailPath('');
   }
 
-  const handelSubmit = async () => {
+  const handleSubmit = async () => {
     if (role == 9 && password == '') {
       toast.info('암호를 입력하세요.');
       return;
@@ -247,7 +247,7 @@ const PostEdit = ({
               <Button
                 size='lg'
                 className='w-full'
-                onClick={handelSubmit}
+                onClick={handleSubmit}
               >
                 발행하기
               </Button>
