@@ -62,6 +62,7 @@ export function WidgetBrawer() {
         house_id: houseId,
         type: type,
         grid: grid,
+        order: houseBuild.widget.length,
         ...Object.assign({}, ...props)
       })
       .select()
