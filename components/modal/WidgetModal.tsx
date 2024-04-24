@@ -78,8 +78,8 @@ const WidgetModal = ({
     }
   }
 
-  const handleImageUpload = async (e: any) => {
-    const pathArr: string[] = [];
+  const handleImageUpload = async () => {
+    const pathArr = widget.image_array ? widget.image_array : [];
 
     for (const data of files) {
       const { data: imageData } = await supabaseClient
@@ -94,10 +94,25 @@ const WidgetModal = ({
       console.log(pathArr)
     }
 
+    setFiles([]);
     await handleUpdateWidget('image_array', pathArr)
   }
 
+  const handleImageRemove = async (path: string) => {
+    await supabaseClient
+      .storage
+      .from('widget')
+      .remove([path])
+
+    const newImageArray = widget.image_array?.filter((item) => item != path);
+    handleUpdateWidget('image_array', newImageArray);
+  }
+
   const onDrop = (acceptedFiles: FileWithPreview[]) => {
+    if ((acceptedFiles.length + (widget.image_array ? widget.image_array.length : 0)) > 3) {
+      return toast.error('이미지는 3개까지 등록할 수 있어요.')
+    }
+
     const newFiles = acceptedFiles.map(file => Object.assign(file, {
       preview: URL.createObjectURL(file)
     }));
@@ -110,12 +125,11 @@ const WidgetModal = ({
     setFiles(newFiles);
   };
 
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     noClick: false,
     disabled: isLoading,
-    maxFiles: widget.image_array ? widget.image_array.length : 3,
+    maxFiles: 3,
     accept: {
       'image/*': ['.jpeg', '.jpg', '.png'],
     },
@@ -145,7 +159,7 @@ const WidgetModal = ({
               </div>
               <Select defaultValue={widget.board_id} onValueChange={(v) => handleUpdateWidget('board_id', v)}>
                 <SelectTrigger>
-                  <SelectValue placeholder='위젯에 표시할 룸을 선택하세요.' />
+                  <SelectValue placeholder='위젯에 표시할 룸을 선택해주세요.' />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -169,8 +183,25 @@ const WidgetModal = ({
 
           {widget.type == 'image' && (
             <>
-              <p className='text-sm text-left text-muted-foreground'>이미지는 3개까지 등록할 수 있습니다.</p>
+              <p className='text-sm text-left text-muted-foreground'>이미지는 3개까지 등록할 수 있어요.</p>
               <div className='grid grid-cols-3 grid-rows-1 gap-2'>
+                {widget.image_array?.map((item) => (
+                  <div key={item} className='group rounded-md border w-full h-40 relative overflow-hidden'>
+                    <button
+                      className='hidden group-hover:block absolute z-[999999] top-1 right-1 bg-background rounded-full p-1'
+                      onClick={() => handleImageRemove(item)}
+                      disabled={isLoading}
+                    >
+                      <Minus size={16} />
+                    </button>
+                    <Image
+                      src={getPublicUrl(`widget/${item}`)}
+                      alt='Preview'
+                      fill
+                      className='object-cover'
+                    />
+                  </div>
+                ))}
                 {files.map((file, index) => (
                   <div key={`${file.name}-${index}`} className='group rounded-md border w-full h-40 relative overflow-hidden'>
                     <button
@@ -190,7 +221,7 @@ const WidgetModal = ({
                     )}
                   </div>
                 ))}
-                {files.length < 3 && (
+                {(files.length + (widget.image_array ? widget.image_array.length : 0)) < 3 && (
                   <div
                     className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-full h-40 relative overflow-hidden cursor-pointer'
                     {...getRootProps()}
