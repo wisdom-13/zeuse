@@ -42,6 +42,7 @@ export interface Post {
   id: string;
   board_id: string;
   family_id: string;
+  house_id: string;
   title: string;
   content: string;
   tag: string;
@@ -67,8 +68,6 @@ export interface Memo {
   password: string;
   created_at: Date;
 }
-
-
 
 export interface Style {
   house_id: string;

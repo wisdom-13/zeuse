@@ -25,7 +25,7 @@ const PostPage = async ({
 
   const house = await getHouseBuildByAddress(houseAddress);
   const board = await getBoardByName(houseAddress, boardName);
-  const post = await getPostById(postId);
+  const post = await getPostById(postId, house?.id);
 
   const family = house?.family.filter((item) => item.user_id == session?.user.id)?.[0];
 

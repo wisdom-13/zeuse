@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
 
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import useHouseBuild from '@/hooks/useHouseBuild';
 import useGetBoardByName from '@/hooks/useGetBoardByName';
 import useGetPostById from '@/hooks/useGetPostById';
 
@@ -34,6 +35,7 @@ const PostEdit = ({
   const router = useRouter();
 
   const supabaseClient = useSupabaseClient();
+  const { houseId } = useHouseBuild();
   const { board } = useGetBoardByName(param.houseAddress, param.boardName);
   const [isSetting, setIsSetting] = useState(false);
   const [title, setTitle] = useState('');
@@ -44,7 +46,7 @@ const PostEdit = ({
   const [password, setPassword] = useState('');
 
   const postId = useSearchParams().get('id');
-  const { post } = useGetPostById(postId);
+  const { post } = useGetPostById(postId, houseId);
 
   useEffect(() => {
     if (!post) return;
@@ -94,6 +96,7 @@ const PostEdit = ({
     const postData = {
       family_id: familyId,
       board_id: board.id,
+      house_id: houseId,
       title: title,
       content: content,
       thumbnail_path: thumbnailPath,

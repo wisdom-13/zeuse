@@ -11,6 +11,8 @@ import { List, StickyNote } from 'lucide-react';
 import useGetPostById from '@/hooks/useGetPostById';
 import Editor from '@/app/(house)/(routes)/[houseAddress]/_components/Editor';
 import { ScrollArea } from '../ui/scroll-area';
+import { cn } from '@/lib/utils';
+import useHouseBuild from '@/hooks/useHouseBuild';
 
 register('ko', koLocale)
 
@@ -21,9 +23,8 @@ interface WidgetPostProps {
 const WidgetPost = ({
   widget
 }: WidgetPostProps) => {
-  console.log(widget.option_id)
-  const { post } = useGetPostById(widget.option_id);
-  const param = useParams();
+  const { houseId } = useHouseBuild();
+  const { post } = useGetPostById(widget.option_id, houseId);
 
   if (!post) {
     return (

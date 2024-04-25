@@ -126,7 +126,6 @@ const BoardContent = ({
       view: selectBoard.view || '',
       link: selectBoard.link || ''
     })
-    console.log(selectBoard)
   }, [form, form.reset, selectBoard])
 
 

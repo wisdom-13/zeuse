@@ -2,7 +2,7 @@ import { PostFamily } from '@/types';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-const getPostById = async (post_id: string): Promise<PostFamily | null> => {
+const getPostById = async (post_id: string, house_id?: string): Promise<PostFamily | null> => {
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
@@ -13,6 +13,7 @@ const getPostById = async (post_id: string): Promise<PostFamily | null> => {
       family:family!inner(*)
     `)
     .eq('id', post_id)
+    .eq('house_id', house_id)
     .single();
 
   if (error) {
