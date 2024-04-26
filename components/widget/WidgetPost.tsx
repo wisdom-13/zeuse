@@ -36,8 +36,12 @@ const WidgetPost = ({
 
   return (
     <div className='w-full h-full'>
-      <ScrollArea className='w-full h-full'>
-        <h3 className='text-3xl font-semibold mb-4 p-6 pb-0'>{post.title}</h3>
+      <ScrollArea className={cn('w-full h-full', !widget.option_bool && 'pt-4')}>
+        {
+          widget.option_bool && (
+            <h3 className='text-3xl font-semibold mb-4 p-6 pb-0'>{post.title}</h3>
+          )
+        }
         <Editor
           editable={false}
           initialContent={post.content}

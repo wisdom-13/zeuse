@@ -28,9 +28,8 @@ const useGetPostById = (post_id?: string | null, house_id?: string | null) => {
 
       if (error) {
         setIsLoading(false);
-        console.log(post_id)
         console.log(error)
-        return toast.error(error.message);
+        return toast.error('유효하지 않은 포스트 ID입니다.');
       }
 
       setPost(data as PostFamily);

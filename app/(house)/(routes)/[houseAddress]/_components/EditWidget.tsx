@@ -43,7 +43,7 @@ export const EditWidget = ({
   // TODO : 드래그 개선
 
   const handleModalOpen = () => {
-    const settingType = ['image', 'board'];
+    const settingType = ['image', 'board', 'post'];
     if (settingType.includes(widget.type)) {
       setIsModalOpen(true)
     }

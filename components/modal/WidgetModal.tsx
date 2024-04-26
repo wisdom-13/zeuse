@@ -2,7 +2,7 @@
 
 import { FileWithPreview, Widget } from '@/types';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { Minus, Plus } from 'lucide-react';
@@ -10,6 +10,7 @@ import { useDropzone } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 import { toast } from 'sonner';
 
+import { getPublicUrl } from '@/util/getPublicUrl';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useHouseBuild from '@/hooks/useHouseBuild';
 
@@ -29,8 +30,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button';
-import { getPublicUrl } from '@/util/getPublicUrl';
-import { Checkbox } from '../ui/checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import useGetPostById from '@/hooks/useGetPostById';
 
 interface WidgetModalProps {
   widget: Widget;
@@ -43,9 +45,12 @@ const WidgetModal = ({
   isModalOpen,
   setIsModalOpen
 }: WidgetModalProps) => {
-  const { houseBuild, setHouseBuild } = useHouseBuild();
+  const { houseId, houseBuild, setHouseBuild } = useHouseBuild();
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [postId, setPostId] = useState(widget.type == 'post' ? widget.option_id : '');
+  const [searchPostId, setSearchPostId] = useState(widget.type == 'post' ? widget.option_id : '');
+  const { post, isLoading: isPostLoading } = useGetPostById(searchPostId, houseId);
 
   const supabaseClient = useSupabaseClient();
 
@@ -91,7 +96,6 @@ const WidgetModal = ({
         });
       if (!imageData) { return false; }
       pathArr.push(imageData.path);
-      console.log(pathArr)
     }
 
     setFiles([]);
@@ -177,7 +181,41 @@ const WidgetModal = ({
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </>
+          )}
 
+          {widget.type == 'post' && (
+            <>
+              <div className='flex items-center space-x-2'>
+                <Checkbox
+                  id='isRoomTitleShow'
+                  checked={widget.option_bool}
+                  onCheckedChange={() => handleUpdateWidget('option_bool', !widget.option_bool)}
+                />
+                <label
+                  htmlFor='isRoomTitleShow'
+                  className='text-sm font-medium leading-none'
+                >
+                  포스트 이름 표시
+                </label>
+              </div>
+              <div className='flex gap-x-2'>
+                <Input value={postId} onChange={(e) => setPostId(e.target.value)} placeholder='위젯에 표시할 룸 ID를 입력하세요.' />
+                <Button variant='outline' onClick={() => setSearchPostId(postId)}>조회</Button>
+              </div>
+              <div>
+                <div className='text-left font-bold'>{post && post.title}</div>
+                <div className='text-left text-sm text-red-400'>{post && post.role != 0 && '전체 공개로 설정된 포스트만 위젯으로 사용할 수 있어요.'}</div>
+              </div>
+              <DialogFooter>
+                <Button
+                  className='w-full'
+                  onClick={() => handleUpdateWidget('option_id', postId)}
+                  disabled={!(post && post.role == 0)}
+                >
+                  저장하기
+                </Button>
+              </DialogFooter>
             </>
           )}
 
