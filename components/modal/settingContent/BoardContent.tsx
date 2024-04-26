@@ -68,7 +68,7 @@ const BoardContent = ({
     view: '',
     link: '',
     role: 0,
-    order: 0,
+    order: house.board.length,
     house_id: house.id
   }
 
@@ -191,6 +191,7 @@ const BoardContent = ({
       board: updatedBoard,
     });
 
+    setBoardList(updatedBoard);
     setDeleteDialogOpen(false);
     toast.info('룸을 삭제했습니다.');
   }

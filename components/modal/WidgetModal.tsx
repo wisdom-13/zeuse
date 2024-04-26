@@ -203,11 +203,20 @@ const WidgetModal = ({
                 <Input value={postId} onChange={(e) => setPostId(e.target.value)} placeholder='위젯에 표시할 룸 ID를 입력하세요.' />
                 <Button variant='outline' onClick={() => setSearchPostId(postId)}>조회</Button>
               </div>
-              <div>
-                <div className='text-left font-bold'>{post && post.title}</div>
-                <div className='text-left text-sm text-red-400'>{post && post.role != 0 && '전체 공개로 설정된 포스트만 위젯으로 사용할 수 있어요.'}</div>
+              <div className='flex items-start justify-between gap-x-2'>
+                <div>
+                  {/* <div className='text-left font-bold'>{post && post.title}</div> */}
+                  <Input value={post && post.title} disabled />
+                  <div className='text-left text-sm text-red-400'>{post && post.role != 0 && '전체 공개로 설정된 포스트만 위젯으로 사용할 수 있어요.'}</div>
+                </div>
+                <Button
+                  onClick={() => handleUpdateWidget('option_id', postId)}
+                  disabled={!(post && post.role == 0)}
+                >
+                  저장
+                </Button>
               </div>
-              <DialogFooter>
+              {/* <DialogFooter>
                 <Button
                   className='w-full'
                   onClick={() => handleUpdateWidget('option_id', postId)}
@@ -215,7 +224,7 @@ const WidgetModal = ({
                 >
                   저장하기
                 </Button>
-              </DialogFooter>
+              </DialogFooter> */}
             </>
           )}
 

@@ -27,6 +27,7 @@ const BoardPage = () => {
     <>
       <div className='flex flex-col h-full gap-y-4 p-6'>
         {board?.type == 'post' && <PostList board={board} />}
+        {board?.type == 'trpg' && <PostList board={board} />}
         {board?.type == 'memo' && <MemoList board={board} />}
       </div>
     </>

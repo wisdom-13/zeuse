@@ -31,6 +31,10 @@ export const boardTypes = {
     type: 'link',
     name: '외부링크',
   },
+  trpg: {
+    type: 'trpg',
+    name: 'TRPG',
+  },
 };
 
 export const viewTypes = {
