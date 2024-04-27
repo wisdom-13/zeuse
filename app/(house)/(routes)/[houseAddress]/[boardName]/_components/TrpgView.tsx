@@ -180,9 +180,19 @@ const TrpgView = ({
             </div>
           </div>
           <div className='flex flex-col text-base'>
+
             <div className='px-6 py-2 whitespace-pre-line text-black overflow-hidden'>
               <HtmlRenderer htmlContent={post.content} />
+              {/* {isJSONString(post.content) ? (
+                <Editor
+                  editable={false}
+                  initialContent={post.content}
+                />
+              ) : (
+                { post?.content }
+              )} */}
             </div>
+
           </div>
         </ScrollArea>
       ) : (

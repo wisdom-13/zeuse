@@ -22,6 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Label } from '@/components/ui/label';
+import CodeEditor from '../../_components/CodeEditor';
 
 interface PostEditProps {
   familyId: string;
@@ -161,13 +162,14 @@ const PostEdit = ({
             />
           </div>
           <div className='flex flex-col'>
-            <Editor
+            {/* <Editor
               editable={true}
               initialContent={post?.content}
               onChange={setContent}
               setThumbnailPath={setThumbnailPath}
               thumbnailPath={thumbnailPath}
-            />
+            /> */}
+            <CodeEditor content={post?.content} />
           </div>
         </div>
       </ScrollArea>

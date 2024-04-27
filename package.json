@@ -39,6 +39,7 @@
     "next": "13.5.4",
     "next-themes": "^0.3.0",
     "react": "^18",
+    "react-ace": "^11.0.1",
     "react-beautiful-dnd": "^13.1.1",
     "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
