@@ -3,7 +3,8 @@ const nextConfig = {
   reactStrictMode: false,
   images: {
     domains: [
-      'phpgongcvqculnamdqry.supabase.co'
+      'phpgongcvqculnamdqry.supabase.co',
+      'imgsrv.roll20.net'
     ]
   }
 }

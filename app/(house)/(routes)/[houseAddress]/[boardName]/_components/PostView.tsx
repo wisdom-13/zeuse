@@ -1,5 +1,9 @@
 'use client';
 
+import '@/css/roll20_app.css';
+import '@/css/roll20_style.css';
+import '@/css/roll20_custom.css';
+
 import { Family, PostFamily } from '@/types';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -7,6 +11,7 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 
 import moment from 'moment';
+import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { getPublicUrl } from '@/util/getPublicUrl';
 import { isJSONString } from '@/util/isJSONString';
@@ -28,16 +33,18 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import Editor from '../../_components/Editor';
-
+import HtmlRenderer from '@/components/HtmlRenderer';
 
 interface BoardPageProps {
   post: PostFamily;
   family?: Family;
+  boardType?: string;
 }
 
 const PostView = ({
   post,
-  family
+  family,
+  boardType
 }: BoardPageProps) => {
   const editAuth = family?.is_owner || post.family_id == family?.id;
   const param = useParams();
@@ -176,16 +183,26 @@ const PostView = ({
             </div>
           </div>
           <div className='flex flex-col text-base'>
-            {isJSONString(post.content) ? (
-              <Editor
-                editable={false}
-                initialContent={post.content}
-              />
-            ) : (
-              <div>
+            {boardType == 'post' && (
+              isJSONString(post.content) ? (
+                <Editor
+                  editable={false}
+                  initialContent={post.content}
+                />
+              ) : (
                 <p className='px-6 py-2 whitespace-pre-line'>
                   {post.content}
                 </p>
+              )
+            )}
+            {boardType == 'trpg' && (
+              <div className='px-6 py-2 whitespace-pre-line overflow-hidden'>
+                <div className={cn(
+                  post.option?.theme ? `${post.option.theme}_theme` : 'house_theme',
+                  post.option?.me && 'me',
+                )}>
+                  <HtmlRenderer htmlContent={post.content} />
+                </div>
               </div>
             )}
           </div>

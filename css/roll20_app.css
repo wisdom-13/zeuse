@@ -5596,11 +5596,14 @@ body.sidebarhidden #sidebarcontrol {
   padding-bottom: 7px;
   background-color: #f1f1f1;
   position: relative;
+  color: #333;
+  min-height: 35px;
+
 }
 
 .textchatcontainer .message a {
-  margin-top: -7px !important;
-  margin-bottom: -7px !important;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
 }
 
 .textchatcontainer .message img {

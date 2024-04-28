@@ -7,6 +7,7 @@ const useGetPostById = (post_id?: string | null, house_id?: string | null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState<PostFamily | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
+  console.log('usegetpostbyid')
 
   useEffect(() => {
     if (!post_id || !house_id) {
@@ -37,7 +38,7 @@ const useGetPostById = (post_id?: string | null, house_id?: string | null) => {
     }
 
     fetchPost();
-  }, [post_id, supabaseClient]);
+  }, [house_id, post_id, supabaseClient]);
 
   return useMemo(() => ({
     isLoading,

@@ -4,7 +4,7 @@ interface HtmlRendererProps {
 
 const HtmlRenderer = ({ htmlContent }: HtmlRendererProps) => {
   return (
-    <div className='overflow-hidden' dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    <div className='overflow-hidden w-full' dangerouslySetInnerHTML={{ __html: htmlContent }} />
   );
 };
 

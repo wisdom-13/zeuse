@@ -6,7 +6,6 @@ import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
 import getBoardByName from '@/action/getBoardByName';
 import PostView from '../_components/PostView';
 import BoardBack from '../_components/BoardBack';
-import TrpgView from '../_components/TrpgView';
 
 interface BoardPageProps {
   params: {
@@ -41,8 +40,7 @@ const PostPage = async ({
   return (
     <>
       <BoardBack url={`/${houseAddress}/${boardName}`} title={board?.title} />
-      {board?.type == 'post' && <PostView post={post} family={family} />}
-      {board?.type == 'trpg' && <TrpgView post={post} family={family} />}
+      <PostView post={post} family={family} boardType={board?.type} />
     </>
   );
 }

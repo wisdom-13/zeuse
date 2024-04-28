@@ -1,0 +1,58 @@
+.textchatcontainer .message,
+.textchatcontainer .message.you {
+  @apply text-base;
+  background-color: #f1f1f1;
+}
+
+.me .textchatcontainer .message.you {
+  background-color: #d3e5f5;
+}
+
+.textchatcontainer .message .spacer,
+.textchatcontainer .message.you .spacer {
+  background-color: #e1e1e1;
+}
+
+.me .textchatcontainer .message.you .spacer {
+  background-color: #b1d9fa;
+}
+
+
+
+/* 하우스 테마 */
+.house_theme .textchatcontainer .message,
+.house_theme .textchatcontainer .message.you {
+  @apply bg-card text-primary text-base
+}
+
+.house_theme.me .textchatcontainer .message.you {
+  @apply bg-muted
+}
+
+.house_theme .textchatcontainer .message .spacer, .house_theme .textchatcontainer .message.you .spacer {
+  @apply bg-muted-foreground/5
+}
+
+.house_theme.me .textchatcontainer .message.you .spacer {
+  @apply bg-muted-foreground/10
+}
+
+
+/* 화이트 테마 */
+.white_theme .textchatcontainer .message, .white_theme .textchatcontainer .message.you {
+  @apply bg-white text-gray-900 text-base
+}
+
+.white_theme.me .textchatcontainer .message.you {
+  background-color: #d3e5f5;
+}
+
+
+
+/* .white_theme .textchatcontainer .message .spacer {
+  @apply bg-gray-100
+} */
+
+/* .white_theme .textchatcontainer .message.you .spacer {
+  @apply bg-muted-foreground/10
+} */

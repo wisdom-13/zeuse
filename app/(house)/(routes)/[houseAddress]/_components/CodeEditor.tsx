@@ -5,22 +5,27 @@ import "ace-builds/src-noconflict/theme-tomorrow";
 
 interface CodeEditorProps {
   content?: string;
+  onChange?: (value: string) => void;
 }
 
-const CodeEditor = ({ content }: CodeEditorProps) => {
+const CodeEditor = ({
+  content,
+  onChange
+}: CodeEditorProps) => {
   return (
     <AceEditor
       placeholder='Placeholder Text'
       mode='html'
       theme='tomorrow'
       name='blah2'
-      // onLoad={this.onLoad}
-      // onChange={this.onChange}
-      fontSize={14}
-      lineHeight={24}
+      width='100%'
+      onChange={onChange}
+      fontSize={12}
+      lineHeight={16}
       showPrintMargin={false}
       showGutter={false}
       highlightActiveLine={false}
+      wrapEnabled={true}
       value={content}
       setOptions={{
         enableBasicAutocompletion: false,

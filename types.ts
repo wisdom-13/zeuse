@@ -50,6 +50,7 @@ export interface Post {
   role: number;
   password: string;
   created_at: Date;
+  option?: any;
 }
 
 export interface PostFamily extends Post {

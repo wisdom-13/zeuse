@@ -1,10 +1,15 @@
 'use client'
 
+import '@/css/roll20_app.css';
+import '@/css/roll20_style.css';
+import '@/css/roll20_custom.css';
+
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
+import { cn } from '@/lib/utils';
 import { ImageIcon, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
@@ -17,18 +22,32 @@ import useGetPostById from '@/hooks/useGetPostById';
 import { postRole } from '@/data/common';
 import { getPublicUrl } from '@/util/getPublicUrl';
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+
+import BoardBack from './BoardBack';
+import HtmlRenderer from '@/components/HtmlRenderer';
 import CodeEditor from '../../_components/CodeEditor';
 
 interface PostEditProps {
+  boardType: string;
   familyId: string;
 }
 
 const PostEdit = ({
+  boardType,
   familyId
 }: PostEditProps) => {
   const Editor = useMemo(() => dynamic(() => import('../../_components/Editor'), { ssr: false }), []);
@@ -36,8 +55,11 @@ const PostEdit = ({
   const router = useRouter();
 
   const supabaseClient = useSupabaseClient();
-  const { houseId } = useHouseBuild();
   const { board } = useGetBoardByName(param.houseAddress, param.boardName);
+  const { houseId } = useHouseBuild();
+  const postId = useSearchParams().get('id');
+  const { post, isLoading } = useGetPostById(postId, houseId);
+
   const [isSetting, setIsSetting] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -45,19 +67,19 @@ const PostEdit = ({
   const [thumbnailPath, setThumbnailPath] = useState('');
   const [role, setRole] = useState(0);
   const [password, setPassword] = useState('');
-
-  const postId = useSearchParams().get('id');
-  const { post } = useGetPostById(postId, houseId);
+  const [themeOption, setThemeOption] = useState({ theme: '', me: false });
 
   useEffect(() => {
-    if (!post) return;
+    if (isLoading || !post) return;
     setTitle(post.title);
     setThumbnailPath(post.thumbnail_path);
     setRole(post.role);
     setContent(post.content);
-  }, [post]);
+    setThemeOption(post.option);
+  }, [post, isLoading]);
 
-  if (!board) {
+  if (!board || !post) {
+    console.log('b')
     return;
   }
 
@@ -103,6 +125,7 @@ const PostEdit = ({
       thumbnail_path: thumbnailPath,
       role: role,
       password: password,
+      option: themeOption,
       created_at: new Date(),
     }
 
@@ -151,7 +174,11 @@ const PostEdit = ({
 
   return (
     <>
-      <ScrollArea className='w-full h-full pt-6'>
+      <BoardBack
+        url={postId ? `/${param.houseAddress}/${param.boardName}/${postId}` : `/${param.houseAddress}/${param.boardName}`}
+        title={postId ? post?.title : board.title}
+      />
+      <ScrollArea className='w-full h-full pt-6 shrink'>
         <div className='flex flex-col gap-y-4'>
           <div className='flex items-center px-6 mt-2'>
             <Input
@@ -161,15 +188,63 @@ const PostEdit = ({
               placeholder='제목을 입력하세요'
             />
           </div>
-          <div className='flex flex-col'>
-            {/* <Editor
-              editable={true}
-              initialContent={post?.content}
-              onChange={setContent}
-              setThumbnailPath={setThumbnailPath}
-              thumbnailPath={thumbnailPath}
-            /> */}
-            <CodeEditor content={post?.content} />
+          <div className='flex flex-col h-full shrink'>
+            {boardType == 'post' && (
+              <Editor
+                editable={true}
+                initialContent={content}
+                onChange={setContent}
+                setThumbnailPath={setThumbnailPath}
+                thumbnailPath={thumbnailPath}
+              />
+            )}
+            {boardType == 'trpg' && (
+              <>
+                <div className='flex gap-x-4 px-6 max-h-[500px] text-base'>
+                  <div className='w-1/2 rounded-md overflow-hidden border border-muted-foreground/10'>
+                    <CodeEditor content={content} onChange={setContent} />
+                  </div>
+                  <div className={cn(
+                    'flex flex-col gap-y-2 w-1/2 ',
+                    themeOption?.theme ? `${themeOption.theme}_theme` : 'house_theme',
+                    themeOption?.me && 'me',
+                  )}>
+                    <div className='flex items-center space-x-2'>
+                      <Checkbox
+                        id='themeOptionMe'
+                        checked={themeOption?.me}
+                        onCheckedChange={(v) => setThemeOption((prev) => ({ ...prev, me: !!v }))}
+                      />
+                      <label
+                        htmlFor='themeOptionMe'
+                        className='text-sm font-medium leading-none'
+                      >
+                        내가 보낸 메세지 구분
+                      </label>
+                    </div>
+                    <Select
+                      defaultValue={themeOption?.theme}
+                      value={themeOption?.theme}
+                      onValueChange={(v) => setThemeOption((prev) => ({ ...prev, theme: v }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='스타일 테마를 선택하세요.' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem key='house' value='house'>하우스 테마</SelectItem>
+                          <SelectItem key='roll20' value='roll20'>roll20 테마</SelectItem>
+                          <SelectItem key='white' value='white'>화이트 테마</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <ScrollArea className='w-full h-full border border-muted-foreground/10 rounded-md overflow-hidden'>
+                      <HtmlRenderer htmlContent={content} />
+                    </ScrollArea>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </ScrollArea>

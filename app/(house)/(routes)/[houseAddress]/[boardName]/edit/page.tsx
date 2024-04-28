@@ -5,7 +5,6 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import getBoardByName from '@/action/getBoardByName';
 import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
 import PostEdit from '../_components/PostEdit';
-import BoardBack from '../_components/BoardBack';
 
 interface EditPageProps {
   params: {
@@ -33,8 +32,7 @@ const EditPage = async ({
 
   return (
     <>
-      <BoardBack url={`/${houseAddress}/${boardName}`} title={board?.title} />
-      {board?.type == 'post' && <PostEdit familyId={family.id} />}
+      {(board?.type == 'post' || board?.type == 'trpg') && <PostEdit boardType={board?.type} familyId={family.id} />}
     </>
   );
 }

@@ -101,15 +101,15 @@ const Navigation = ({
             <Link href={`/${houseBuild?.address}`} className='relative w-full min-h-20'>
               {houseBuild?.style.logo_image ? (
                 <Image
-                  src={getPublicUrl(`/style/${houseBuild?.style.logo_image}`)}
+                  src={getPublicUrl(`style/${houseBuild?.style.logo_image}`)}
                   alt='logo'
+                  fill
                   onLoad={() => setImageLoaded(true)}
                   className={cn(
                     imageLoaded ? 'opacity-100' : 'opacity-0',
                     'pointer-events-none',
                     'object-contain'
                   )}
-                  fill
                 />
               ) : (
                 <h1 className='text-3xl text-center font-bold'>
