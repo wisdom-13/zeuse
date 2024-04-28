@@ -126,7 +126,7 @@ const PostEdit = ({
       role: role,
       password: password,
       option: themeOption,
-      created_at: new Date(),
+      created_at: post ? post.created_at : new Date(),
     }
 
     if (thumbnail) {
