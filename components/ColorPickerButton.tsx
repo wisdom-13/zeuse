@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 
 interface ColorPickerButtonProps {
   color: string;
-  handleChange?: () => void;
+  handleChange?: (color: string) => void;
 }
 
 const ColorPickerButton = ({
@@ -16,7 +16,7 @@ const ColorPickerButton = ({
 
   const onChange = (color: any) => {
     setBgColor(color.hex);
-    handleChange && handleChange();
+    handleChange && handleChange(bgColor);
   }
 
   return (

@@ -234,7 +234,7 @@ export function WidgetBrawer() {
                         className='w-[282px] h-[286px] scale-75 custom-card rounded-md text-card-foreground'
                         onClick={() => handleAddWidget('post', { col: 4, row: 6 })}
                       >
-                        <WidgetPost widget={{ option_id: sampleBoardId, option_bool: true }} />
+                        <WidgetPost widget={{ option_bool: true }} />
                         <button className='hidden group-hover:block absolute z-[999999] -left-1.5 -top-1.5 bg-green-400 rounded-full p-1'>
                           <Plus size={16} className='text-white' />
                         </button>

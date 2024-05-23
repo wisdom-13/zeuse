@@ -28,7 +28,8 @@ export default async function HouseLayout({
   }
 
   const style = {
-    backgroundImage: house.style.bg_image ? `url(${getPublicUrl(`style/${house.style.bg_image}`)})` : house.style.bg_color,
+    backgroundImage: house.style.bg_image ? `url(${getPublicUrl(`style/${house.style.bg_image}`)})` : '',
+    backgroundColor: !house.style.bg_image ? house.style.bg_color : '',
     '--radius': `${house.style.box_style.radius}rem`,
     '--boxOpacity': `${house.style.box_style.opacity}`
   } as const;

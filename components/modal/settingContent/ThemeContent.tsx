@@ -189,7 +189,7 @@ const ThemeContent = ({
             <p className='text-sm text-muted-foreground'>배경 이미지가 등록되어 있을 경우 적용되지 않습니다.</p>
           </div>
           <div className='relative text-right'>
-            <ColorPickerButton color={style.bg_color} />
+            <ColorPickerButton color={style.bg_color} handleChange={(v) => handleUpdateStyle('bg_color', v)} />
           </div>
         </div>
         <Separator className="my-2" />

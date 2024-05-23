@@ -279,7 +279,12 @@ body,
 }
 
 .bn-editor {
-  @apply !bg-transparent !text-primary !text-base;
+  @apply !bg-transparent !text-black !text-base;
+}
+
+
+.dark .bn-editor {
+  @apply !text-white
 }
 
 .border-line .custom-card {
