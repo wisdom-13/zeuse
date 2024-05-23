@@ -19,6 +19,7 @@ const CodeEditor = ({
       theme='tomorrow'
       name='blah2'
       width='100%'
+      height='230px'
       onChange={onChange}
       fontSize={12}
       lineHeight={16}

@@ -30,9 +30,13 @@ const EditPage = async ({
     return notFound();
   }
 
+  if (!board) {
+    return notFound();
+  }
+
   return (
     <>
-      {(board?.type == 'post' || board?.type == 'trpg') && <PostEdit boardType={board?.type} familyId={family.id} />}
+      {(board.type == 'post' || board?.type == 'trpg') && <PostEdit boardType={board.type} familyId={family.id} />}
     </>
   );
 }

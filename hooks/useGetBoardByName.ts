@@ -33,6 +33,7 @@ const useGetBoardByName = (house_address?: string | string[], board_name?: strin
 
       setBoard(data as Board);
       setIsLoading(false);
+
     }
 
     fetchBoard();

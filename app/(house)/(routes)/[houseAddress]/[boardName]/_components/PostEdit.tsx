@@ -78,11 +78,6 @@ const PostEdit = ({
     setThemeOption(post.option);
   }, [post, isLoading]);
 
-  if (!board || !post) {
-    console.log('b')
-    return;
-  }
-
   const validation = () => {
     if (title.trim() == '') {
       toast.info('제목을 입력하세요.');
@@ -118,7 +113,7 @@ const PostEdit = ({
 
     const postData = {
       family_id: familyId,
-      board_id: board.id,
+      board_id: board?.id,
       house_id: houseId,
       title: title,
       content: content,
@@ -176,7 +171,7 @@ const PostEdit = ({
     <>
       <BoardBack
         url={postId ? `/${param.houseAddress}/${param.boardName}/${postId}` : `/${param.houseAddress}/${param.boardName}`}
-        title={postId ? post?.title : board.title}
+        title={postId ? post?.title : board?.title}
       />
       <ScrollArea className='w-full h-full pt-6 shrink'>
         <div className='flex flex-col gap-y-4'>
@@ -184,7 +179,7 @@ const PostEdit = ({
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className='text-4xl font-bold border-none px-0'
+              className='text-4xl font-bold border-none px-0 text-primary'
               placeholder='제목을 입력하세요'
             />
           </div>
@@ -200,16 +195,17 @@ const PostEdit = ({
             )}
             {boardType == 'trpg' && (
               <>
-                <div className='flex gap-x-4 px-6 max-h-[500px] text-base'>
-                  <div className='w-1/2 rounded-md overflow-hidden border border-muted-foreground/10'>
+                <div className='flex flex-col h-full gap-y-4 px-6 text-base'>
+                  <h3 className='font-bold text-lg'>HTML</h3>
+                  <div className=' max-h-[230px] rounded-md border border-muted-foreground/10'>
                     <CodeEditor content={content} onChange={setContent} />
                   </div>
                   <div className={cn(
-                    'flex flex-col gap-y-2 w-1/2 ',
+                    'flex flex-col gap-y-2',
                     themeOption?.theme ? `${themeOption.theme}_theme` : 'house_theme',
                     themeOption?.me && 'me',
                   )}>
-                    <div className='flex items-center space-x-2'>
+                    {/* <div className='flex items-center space-x-2'>
                       <Checkbox
                         id='themeOptionMe'
                         checked={themeOption?.me}
@@ -237,8 +233,9 @@ const PostEdit = ({
                           <SelectItem key='white' value='white'>화이트 테마</SelectItem>
                         </SelectGroup>
                       </SelectContent>
-                    </Select>
-                    <ScrollArea className='w-full h-full border border-muted-foreground/10 rounded-md overflow-hidden'>
+                    </Select> */}
+                    <h3 className='font-bold text-lg'>미리보기</h3>
+                    <ScrollArea className='w-full border border-muted-foreground/10 rounded-md overflow-hidden h-[230px]'>
                       <HtmlRenderer htmlContent={content} />
                     </ScrollArea>
                   </div>
