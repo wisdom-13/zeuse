@@ -132,7 +132,7 @@ const Navigation = ({
           </div>
 
           <div className='flex flex-col gap-y-2 p-2 mt-auto'>
-            {!isLoading && owner?.user_id === user?.id && (
+            {!isLoading && user && owner?.user_id === user?.id && (
               <MenuItem
                 label='설정'
                 icon={Settings}
