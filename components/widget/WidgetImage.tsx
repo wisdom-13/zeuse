@@ -56,6 +56,7 @@ const WidgetImage = ({
         <Image
           src={slides[0]}
           alt='widget'
+          objectFit='cover'
           fill
         />
         {slides[0]}
