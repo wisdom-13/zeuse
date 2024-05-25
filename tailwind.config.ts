@@ -26,6 +26,9 @@ const config = {
       '3xl': '1.75rem',
       '4xl': '2.25rem',
       '5xl': '2.875rem',
+      '6xl': '3.75rem',
+      '7xl': '4.5rem',
+      '8xl': '6rem',
     },
     extend: {
       colors: {
