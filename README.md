@@ -68,7 +68,6 @@
 **1-3. 위젯 옵션 설정하기**
 
 <img src="https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/4e8b138c-5aad-4334-8863-017e95250e9f" width="650" style="border-radius: 0.5rem; border: 1px solid #eee" />
-<img src="https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/0d0dedfa-b889-4b0f-a23b-aef85e93182b" width="650" style="border-radius: 0.5rem; border: 1px solid #eee" />
 
 *   위젯을 클릭하여 세부 옵션을 설정합니다.
 *   위젯의 이미지를 등록하거나 게시판, 포스트를 연결 할 수 있습니다.<br><br>
