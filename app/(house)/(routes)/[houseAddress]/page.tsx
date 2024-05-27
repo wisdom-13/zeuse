@@ -1,3 +1,4 @@
+'use client';
 
 import HouseMain from './_components/HouseMain';
 

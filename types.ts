@@ -23,14 +23,15 @@ export interface HouseBuild extends House {
 }
 
 export interface Board {
-  id: string;
+  id?: string;
   house_id: string;
   title: string;
   name: string;
   type: string;
+  view: string;
   link: string;
   role: number;
-  sort_order: number;
+  order: number;
 }
 
 export interface BoardList extends Board {
@@ -39,8 +40,9 @@ export interface BoardList extends Board {
 
 export interface Post {
   id: string;
-  house_id: string;
+  board_id: string;
   family_id: string;
+  house_id: string;
   title: string;
   content: string;
   tag: string;
@@ -48,12 +50,25 @@ export interface Post {
   role: number;
   password: string;
   created_at: Date;
+  option?: any;
 }
 
 export interface PostFamily extends Post {
   family: Family;
 }
 
+export interface Memo {
+  id: string;
+  board_id: string;
+  title: string;
+  content: string;
+  name: string;
+  parent_id: string;
+  family_id: string;
+  is_secret: boolean;
+  password: string;
+  created_at: Date;
+}
 
 export interface Style {
   house_id: string;
@@ -64,6 +79,11 @@ export interface Style {
   color: string;
   radius: string;
   mode: string;
+  box_style: {
+    opacity: string,
+    border: string,
+    radius: string
+  }
 }
 
 export interface Widget {
@@ -73,17 +93,28 @@ export interface Widget {
   grid: { col: number, row: number };
   order: number;
   image_array: Array<string>;
-  board_id: string;
-  date: string;
-  option: string;
+  option_id: string;
+  option_text: string;
+  option_bool: boolean;
+}
+
+export interface WidgetTmp {
+  type?: string;
+  grid?: { col: number, row: number };
+  image_array?: Array<string>;
+  option_id?: string;
+  option_text?: string;
+  option_bool?: boolean;
 }
 
 export interface Family {
+  id: string;
   user_id: string;
   house_id: string;
   nick_name?: string;
   description?: string;
   avatar_url?: string;
+  avatar_path?: string;
   role: string;
   is_owner: boolean;
 }

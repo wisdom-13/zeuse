@@ -4,48 +4,40 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Widget as WidgetType } from '@/types';
-import WidgetImage from './WidgetImage';
-import WidgetProfile from './WidgetProfile';
-import WidgetBoard from './WidgetBoard';
-import WidgetTimer from './WidgetTimer';
+import WidgetImage from '@/components/widget/WidgetImage';
+import WidgetProfile from '@/components/widget/WidgetProfile';
+import WidgetBoard from '@/components/widget/WidgetBoard';
+import WidgetTimer from '@/components/widget/WidgetTimer';
+import WidgetPost from '@/components/widget/WidgetPost';
 
 export interface WidgetProps {
-  id?: any
-  text?: string
-  index: number
-  grid?: {
-    col: number,
-    row: number
-  }
+  widget: WidgetType;
   editing?: boolean;
-  moveCard: (dragIndex: number, hoverIndex: number) => void;
-  widgetData?: WidgetType;
 }
 
 export const Widget = ({
-  id,
-  text,
-  grid: { col, row } = { col: 2, row: 3 },
+  widget,
   editing = false,
-  widgetData
 }: WidgetProps) => {
 
   return (
     <>
       <div
         style={{
-          gridColumn: `auto / span ${col}`,
-          gridRow: `auto / span ${row}`
+          gridColumn: `auto / span ${widget.grid.col}`,
+          gridRow: `auto / span ${widget.grid.row}`
         }}
         className={cn(
           editing && 'aniamte-shake',
-          'border border-black rounded-md bg-card text-card-foreground overflow-hidden w-full h-full'
+          'custom-card rounded-md text-card-foreground overflow-hidden w-full h-full',
+          widget?.type == 'empty' && 'opacity-0'
         )}
       >
-        {widgetData?.type == 'image' && <WidgetImage widget={widgetData} />}
-        {widgetData?.type == 'profile' && <WidgetProfile widget={widgetData} />}
-        {widgetData?.type == 'board' && <WidgetBoard widget={widgetData} />}
-        {widgetData?.type == 'timer' && <WidgetTimer widget={widgetData} />}
+        {widget?.type == 'image' && <WidgetImage widget={widget} />}
+        {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
+        {widget?.type == 'board' && <WidgetBoard widget={widget} />}
+        {widget?.type == 'post' && <WidgetPost widget={widget} />}
+        {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
       </div>
     </>
   );

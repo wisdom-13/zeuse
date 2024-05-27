@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -16,6 +16,19 @@ const config = {
       screens: {
         "2xl": "1400px",
       },
+    },
+    fontSize: {
+      xs: '0.7rem',
+      sm: '0.8rem',
+      base: '0.9rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.75rem',
+      '4xl': '2.25rem',
+      '5xl': '2.875rem',
+      '6xl': '3.75rem',
+      '7xl': '4.5rem',
+      '8xl': '6rem',
     },
     extend: {
       colors: {

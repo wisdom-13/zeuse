@@ -1,15 +1,15 @@
-import { BoardList as BoardListType } from '@/types';
+import { Board } from '@/types';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
-const useGetBoardByName = (board_id?: string) => {
+const useGetBoardByName = (house_address?: string | string[], board_name?: string | string[]) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [board, setBoard] = useState<BoardListType | undefined>(undefined);
+  const [board, setBoard] = useState<Board | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
-    if (!board_id) {
+    if (!house_address || !board_name) {
       return;
     }
 
@@ -19,10 +19,11 @@ const useGetBoardByName = (board_id?: string) => {
       const { data, error } = await supabaseClient
         .from('board')
         .select(`
-        *,
-        posts:posts!left(*, family:family_id (*))
-      `)
-        .eq('id', board_id)
+          *,
+          houses:houses!inner(*)
+        `)
+        .eq('name', board_name)
+        .eq('houses.address', house_address)
         .single();
 
       if (error) {
@@ -30,12 +31,13 @@ const useGetBoardByName = (board_id?: string) => {
         return toast.error(error.message);
       }
 
-      setBoard(data as BoardListType);
+      setBoard(data as Board);
       setIsLoading(false);
+
     }
 
     fetchBoard();
-  }, [board_id, supabaseClient]);
+  }, [house_address, board_name, supabaseClient]);
 
   return useMemo(() => ({
     isLoading,

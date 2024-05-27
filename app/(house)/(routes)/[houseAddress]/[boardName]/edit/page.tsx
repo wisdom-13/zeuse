@@ -1,22 +1,43 @@
-'use client'
+import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
-import Editor from '../_components/Editor';
-import { Input } from '@/components/ui/input';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import getBoardByName from '@/action/getBoardByName';
+import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
+import PostEdit from '../_components/PostEdit';
 
-const EditPage = () => {
+interface EditPageProps {
+  params: {
+    houseAddress: string;
+    boardName: string;
+  }
+}
+
+const EditPage = async ({
+  params: { houseAddress, boardName }
+}: EditPageProps) => {
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+
+  const { data: { session } } = await supabase.auth.getSession();
+
+  const house = await getHouseBuildByAddress(houseAddress);
+  const board = await getBoardByName(houseAddress, boardName);
+
+  const family = house?.family.filter((item) => item.user_id == session?.user.id)?.[0];
+
+  if (!family) {
+    return notFound();
+  }
+
+  if (!board) {
+    return notFound();
+  }
+
   return (
-    <ScrollArea className='w-full h-full py-6'>
-      <div className='flex flex-col gap-y-4'>
-        <div className='flex items-center gap-x-4 px-6  mt-4'>
-          <Input className='text-3xl font-semibold border-none' placeholder='제목없음' />
-        </div>
-        <div className='flex flex-col'>
-          <Editor />
-        </div>
-      </div>
-    </ScrollArea>
-
+    <>
+      {(board.type == 'post' || board?.type == 'trpg') && <PostEdit boardType={board.type} familyId={family.id} />}
+    </>
   );
 }
 

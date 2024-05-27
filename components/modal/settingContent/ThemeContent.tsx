@@ -1,60 +1,47 @@
+import { FileWithPreview, HouseBuild } from '@/types';
+
+import { useState } from 'react';
+import Image from 'next/image';
+
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator';
-import { HouseBuild } from '@/types';
-import { useSessionContext } from '@supabase/auth-helpers-react';
-import { Dispatch, SetStateAction } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { v4 as uuid } from 'uuid';
 
-const themeArr = [
-  {
-    name: 'zinc',
-    color: '#18181B'
-  },
-  {
-    name: 'slate',
-    color: '#677489'
-  },
-  {
-    name: 'rose',
-    color: '#CF364C'
-  },
-  {
-    name: 'blue',
-    color: '#3662E3'
-  },
-  {
-    name: 'green',
-    color: '#4CA154'
-  },
-  {
-    name: 'orange',
-    color: '#E87B35'
-  },
-];
-
-const radius = [0, 0.3, 0.5, 0.75, 1.0];
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import ColorPickerButton from '@/components/ColorPickerButton';
+import { colorArr, opacityArr, radiusArr } from '@/data/theme';
+import { getPublicUrl } from '@/util/getPublicUrl';
+import useLodingModal from '@/hooks/useLodingModal';
 
 interface ThemeContentProps {
   house: HouseBuild;
-  updateHouse: (updatedHouse: HouseBuild) => void;
+  setHouseBuild: (updatedHouse: HouseBuild) => void;
 }
 
 const ThemeContent = ({
   house,
-  updateHouse
+  setHouseBuild
 }: ThemeContentProps) => {
-  const { supabaseClient } = useSessionContext();
+  const supabaseClient = useSupabaseClient();
   const { style } = house;
 
-  const handleTheme = async (type: string, value: string) => {
+  const [logoImage, setLogoImage] = useState<FileWithPreview>();
+  const [bgImage, setBgImage] = useState<FileWithPreview>();
+
+  const lodingModal = useLodingModal();
+
+  const handleUpdateStyle = async (type: string, value: string) => {
     const { error } = await supabaseClient
       .from('style')
       .update({ [type]: value })
@@ -62,54 +49,169 @@ const ThemeContent = ({
 
     if (error) {
       toast.error(error.message);
-    } else {
-      if (type == 'mode') {
-        if (value == 'light') {
-          document.body.classList.remove('dark');
-          document.getElementById('theme-wrap')?.classList.remove('dark');
-        } else if (value == 'dark') {
-          document.body.classList.add('dark');
-          document.getElementById('theme-wrap')?.classList.add('dark');
-        }
-      } else if (type == 'color') {
-        document.body.classList.replace(`color-${style.color}`, `color-${value}`);
-        document.getElementById('theme-wrap')?.classList.replace(`color-${style.color}`, `color-${value}`);
+      return;
+    }
 
-      } else if (type == 'radius') {
-        document.body.classList.replace(`radius-${style.radius}`, `radius-${value}`);
-        document.getElementById('theme-wrap')?.classList.replace(`radius-${style.radius}`, `radius-${value}`);
+    setHouseBuild({
+      ...house,
+      style: {
+        ...house.style,
+        [type]: value
       }
+    });
+  }
 
-      updateHouse({
-        ...house,
-        style: {
-          ...house.style,
+  const handleUpdateBoxStyle = async (type: string, value: string) => {
+    const { error } = await supabaseClient
+      .from('style')
+      .update({
+        box_style: {
+          ...style.box_style,
           [type]: value
         }
+      })
+      .eq('house_id', house.id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    setHouseBuild({
+      ...house,
+      style: {
+        ...house.style,
+        box_style: {
+          ...style.box_style,
+          [type]: value
+        }
+      }
+    });
+  }
+
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.id || !event.target.files) return
+
+    lodingModal.onOpen()
+
+    const id = event.target.id;
+    const image = event.target.files[0];
+    const setImage = id == 'logo_image' ? setLogoImage : setBgImage;
+    setImage(image);
+
+    const { data, error } = await supabaseClient
+      .storage
+      .from(`style/${id == 'logo_image' ? 'logo' : 'background'}`)
+      .upload(`${id}-${uuid()}`, image, {
+        cacheControl: '3600',
+        upsert: false
       });
+
+    if (error) {
+      toast.error('이미지를 업로드하는 중 오류가 발생했습니다.');
+    }
+
+    if (data) {
+      lodingModal.onClose()
+      handleUpdateStyle(id, `${id == 'logo_image' ? 'logo' : 'background'}/${data.path}`);
     }
   }
 
   return (
-    <div className='py-4 px-2 w-full'>
+    <ScrollArea className='h-full pb-4'>
       <h2 className='text-xl font-medium'>
-        테마
+        외관
       </h2>
       <Separator className="my-4" />
       <div className='flex flex-col gap-y-4'>
         <div className='flex items-center justify-between'>
           <div>
-            <h3>메인 색상</h3>
+            <h3 className='text-base'>로고</h3>
+            <p className='text-sm text-muted-foreground'>하우스를 대표하는 이미지를 등록하세요.</p>
+          </div>
+          <label
+            htmlFor='logo_image'
+            className='flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
+          >
+            <input
+              id='logo_image'
+              accept='image/*,.jpeg,.jpg,.png'
+              type='file'
+              onChange={handleImageUpload}
+              className='hidden'
+            />
+            {style.logo_image ? (
+              <Image
+                src={getPublicUrl(`style/${style.logo_image}`)}
+                alt="logo_image"
+                fill
+                className='object-contain'
+              />
+            ) : (
+              <p className='flex gap-x-2 justify-center items-center text-sm'>
+                <Plus size={16} />
+                업로드
+              </p>
+            )}
+          </label>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>배경 이미지</h3>
+            <p className='text-sm text-muted-foreground'>하우스 배경 이미지를 등록하세요.</p>
+          </div>
+          <div className='relative text-right'>
+            <label
+              htmlFor='bg_image'
+              className='dropzone flex items-center justify-center rounded-md border text-muted-foreground w-32 h-16 relative overflow-hidden mt-2'
+            >
+              <input
+                id='bg_image'
+                accept='image/*,.jpeg,.jpg,.png'
+                type='file'
+                onChange={handleImageUpload}
+                className='hidden'
+              />
+              {style.bg_image ? (
+                <Image
+                  src={getPublicUrl(`style/${style.bg_image}`)}
+                  alt="bg_image"
+                  fill
+                  className='object-cover'
+                />
+              ) : (
+                <p className='flex gap-x-2 justify-center items-center text-sm'>
+                  <Plus size={16} />
+                  업로드
+                </p>
+              )}
+            </label>
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>배경색</h3>
+            <p className='text-sm text-muted-foreground'>배경 이미지가 등록되어 있을 경우 적용되지 않습니다.</p>
+          </div>
+          <div className='relative text-right'>
+            <ColorPickerButton color={style.bg_color} handleChange={(v) => handleUpdateStyle('bg_color', v)} />
+          </div>
+        </div>
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>메인 색상</h3>
             <p className='text-sm text-muted-foreground'>하우스의 메인 색상을 변경해보세요.</p>
           </div>
           <div>
-            <Select defaultValue={style.color} onValueChange={(v) => handleTheme('color', v)}>
+            <Select defaultValue={style.color} onValueChange={(v) => handleUpdateStyle('color', v)}>
               <SelectTrigger className='w-40'>
-                <SelectValue placeholder="색상을 선택하세요." />
+                <SelectValue placeholder='색상을 선택하세요.' />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {themeArr.map((item) => (
+                  {colorArr.map((item) => (
                     <SelectItem key={item.name} value={item.name}>
                       <div className='flex items-center'>
                         <span className='inline-block mr-2 h-5 w-5 shrink-0 rounded-full' style={{ background: item.color }}></span>
@@ -124,36 +226,13 @@ const ThemeContent = ({
         </div>
         <div className='flex items-center justify-between'>
           <div>
-            <h3>테두리 둥글게</h3>
-            <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요.</p>
-          </div>
-          <div>
-            <Select defaultValue={style.radius} onValueChange={(v) => handleTheme('radius', v)}>
-              <SelectTrigger className='w-40'>
-                <SelectValue placeholder="수치를 선택하세요." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {radius.map((item) => (
-                    <SelectItem key={item} value={String(item * 100)}>
-                      {String(item * 100)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className='flex items-center justify-between'>
-          <div>
-            <h3>모드</h3>
+            <h3 className='text-base'>모드</h3>
             <p className='text-sm text-muted-foreground'>하우스 모드를 변경해보세요.</p>
           </div>
           <div>
-            <Select defaultValue={style.mode} onValueChange={(v) => handleTheme('mode', v)}>
+            <Select defaultValue={style.mode} onValueChange={(v) => handleUpdateStyle('mode', v)}>
               <SelectTrigger className='w-40'>
-                <SelectValue placeholder="모드를 선택하세요." />
+                <SelectValue placeholder='모드를 선택하세요.' />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -164,8 +243,73 @@ const ThemeContent = ({
             </Select>
           </div>
         </div>
+        <Separator className="my-2" />
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>박스 테두리</h3>
+            <p className='text-sm text-muted-foreground'>박스 테두리 스타일을 설정하세요.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.border} onValueChange={(v) => handleUpdateBoxStyle('border', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem key='line' value='line'>선</SelectItem>
+                  <SelectItem key='shadow' value='shadow'>그림자</SelectItem>
+                  <SelectItem key='none' value='none'>테두리 없음</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>박스 배경</h3>
+            <p className='text-sm text-muted-foreground'>박스 배경의 투명도를 설정하세요.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.opacity} onValueChange={(v) => handleUpdateBoxStyle('opacity', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {opacityArr.map((item) => (
+                    <SelectItem key={item} value={String(item)}>
+                      {item * 100}%
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h3 className='text-base'>테두리 둥글게</h3>
+            <p className='text-sm text-muted-foreground'>박스 테두리를 둥글게 변경해보세요. 숫자가 클수록 둥글고 작을수록 각집니다.</p>
+          </div>
+          <div>
+            <Select defaultValue={style.box_style.radius} onValueChange={(v) => handleUpdateBoxStyle('radius', v)}>
+              <SelectTrigger className='w-40'>
+                <SelectValue placeholder="수치를 선택하세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {radiusArr.map((item) => (
+                    <SelectItem key={item} value={String(item)}>
+                      {String(item)}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 }
 

@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 import SupabaseProvider from '@/providers/SupabaseProvider'
 import ModalProvider from '@/providers/ModalProvider'
 import UserProvider from '@/providers/UserProvider'
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const openSans = Open_Sans({ subsets: ['latin'] })
 
@@ -30,14 +31,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={openSans.className}>
-        <SupabaseProvider>
-          <UserProvider>
-            <Toaster position="bottom-right" />
-            <ModalProvider />
-            {children}
-          </UserProvider>
-        </SupabaseProvider>
+      <body>
+        <div className={openSans.className}>
+          <SupabaseProvider>
+            <UserProvider>
+              <TooltipProvider>
+                <Toaster position="bottom-right" />
+                <ModalProvider />
+                {children}
+              </TooltipProvider>
+            </UserProvider>
+          </SupabaseProvider>
+        </div>
       </body>
     </html>
   )

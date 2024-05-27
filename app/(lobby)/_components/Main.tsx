@@ -19,13 +19,13 @@ export const Main = () => {
       <div className='bg-card text-card-foreground px-6 py-2'>
         <>
           {!isLoading && !user && (
-            // <Button
-            //   onClick={authModal.onOpen}
-            // >
-            //   ZEUSE 시작하기
-            //   <ArrowRight className='h-4 w-4 ml-2' />
-            // </Button>
-            <p>! 지금은 회원가입이 불가능합니다.</p>
+            <Button
+              onClick={authModal.onOpen}
+            >
+              ZEUSE 시작하기
+              <ArrowRight className='h-4 w-4 ml-2' />
+            </Button>
+            // <p>! 지금은 회원가입이 불가능합니다.</p>
           )}
         </>
       </div>

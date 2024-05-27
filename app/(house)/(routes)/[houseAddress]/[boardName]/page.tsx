@@ -1,29 +1,36 @@
-import getBoardByName from '@/action/getBoardByName';
-import getHouseByAddress from '@/action/getHouseByAddress';
+'use client';
 
-import BoardList from './_components/BoardList';
+import { useParams } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface BoardPageProps {
-  params: {
-    houseAddress: string,
-    boardName: string
+import useGetBoardByName from '@/hooks/useGetBoardByName';
+
+import PostList from './_components/PostList';
+import MemoList from './_components/MemoList';
+
+const BoardPage = () => {
+  const param = useParams();
+  const { board, isLoading } = useGetBoardByName(param.houseAddress, param.boardName);
+
+  if (isLoading) {
+    return (
+      <div className='flex flex-col h-full gap-y-4 p-6 mt-10'>
+        <Skeleton className='w-44 h-10' />
+        <Skeleton className='w-full h-10' />
+        <Skeleton className='w-full h-10' />
+        <Skeleton className='w-full h-10' />
+      </div>
+    )
   }
-}
-
-const BoardPage = async ({
-  params: { houseAddress, boardName }
-}: BoardPageProps) => {
-
-  const house = await getHouseByAddress(houseAddress);
-  if (!house) { return false; }
-
-  const board = await getBoardByName(house.id, boardName);
-  if (!board) { return false; }
 
   return (
-    <div className='flex flex-col h-full gap-y-4 p-6'>
-      <BoardList board={board} />
-    </div>
+    <>
+      <div className='flex flex-col h-full gap-y-4 p-6'>
+        {board?.type == 'post' && <PostList board={board} />}
+        {board?.type == 'trpg' && <PostList board={board} />}
+        {board?.type == 'memo' && <MemoList board={board} />}
+      </div>
+    </>
   );
 }
 

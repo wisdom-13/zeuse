@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
-import getHouseByAddress from '@/action/getHouseByAddress'
-import Navigation from './_components/Navigation'
-import HouseIdProvider from '@/providers/HouseIdProvider'
-import getHousesByUserId from '@/action/getHousesByUserId'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import getHouseBuildByAddress from '@/action/getHouseBuildByAddress'
-import { cn } from '@/lib/utils'
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { getPublicUrl } from '@/util/getPublicUrl';
+
+import HouseIdProvider from '@/providers/HouseIdProvider';
+import getHouseByAddress from '@/action/getHouseByAddress';
+import getHousesByUserId from '@/action/getHousesByUserId';
+import getHouseBuildByAddress from '@/action/getHouseBuildByAddress';
+import Navigation from './_components/Navigation';
 
 interface HouseLayoutProps {
   params: {
@@ -19,29 +20,32 @@ export default async function HouseLayout({
   params: { houseAddress },
   children,
 }: HouseLayoutProps) {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
-
-  const { data: { session } } = await supabase.auth.getSession();
   const houses = await getHousesByUserId();
   const house = await getHouseBuildByAddress(houseAddress);
 
   if (!house) {
-    return false;
+    notFound();
   }
+
+  const style = {
+    backgroundImage: house.style.bg_image ? `url(${getPublicUrl(`style/${house.style.bg_image}`)})` : '',
+    backgroundColor: !house.style.bg_image ? house.style.bg_color : '',
+    '--radius': `${house.style.box_style.radius}rem`,
+    '--boxOpacity': `${house.style.box_style.opacity}`
+  } as const;
 
   return (
     <div
       id='theme-wrap'
       className={cn(
-        'h-screen flex',
+        'h-screen flex bg-cover bg-no-repeat',
         house.style.mode == 'dark' && 'dark',
         house.style.color && `color-${house.style.color}`,
-        house.style.radius && `radius-${house.style.radius}`
+        house.style.box_style.border !== 'none' && `border-${house.style.box_style.border}`
       )}
-      style={{ background: house.style.bg_image ? `url(${house.style.bg_image})` : `${house.style.bg_color}` }}
+      style={style}
     >
-      <Navigation houses={houses} house={house} />
+      <Navigation houses={houses} />
       <main className='flex flex-1 flex-col items-center justify-center overflow-y-auto h-full p-6'>
         <HouseIdProvider houseAddress={houseAddress}>
           {children}

@@ -1,19 +1,27 @@
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { notFound } from 'next/navigation';
+import getBoardByName from '@/action/getBoardByName';
 
 interface BoardLayoutProps {
   params: {
-    houseAddress: string
+    houseAddress: string;
+    boardName: string;
   }
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-export default function BoardLayout({
+export default async function BoardLayout({
+  params: { houseAddress, boardName },
   children,
 }: BoardLayoutProps) {
+  const chkBoard = await getBoardByName(houseAddress, boardName);
+
+  if (!chkBoard) {
+    notFound();
+  }
 
   return (
     <div
-      className='h-full w-full bg-card text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
+      className='custom-card flex flex-col h-full w-full text-card-foreground md:max-w-[768px] rounded-md overflow-hidden'
     >
       {children}
     </div>

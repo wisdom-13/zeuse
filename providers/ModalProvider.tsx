@@ -6,6 +6,7 @@ import { AuthModal } from '@/components/modal/AuthModal';
 import CreateHouseModal from '@/components/modal/CreatHouseModal';
 import { SettingModal } from '@/components/modal/SettingModal';
 import WidgetModal from '@/components/modal/WidgetModal';
+import LodingModal from '@/components/modal/LodingModal';
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,8 +24,8 @@ const ModalProvider = () => {
       <AuthModal />
       <CreateHouseModal />
       <SettingModal />
-      <WidgetModal />
       <WidgetBrawer />
+      <LodingModal />
     </>
   );
 }

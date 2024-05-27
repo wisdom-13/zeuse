@@ -4,6 +4,7 @@ import { ArrowRight, ChevronsLeftRight, LogOut, PlusCircle } from 'lucide-react'
 
 import {
   Avatar,
+  AvatarFallback,
   AvatarImage
 } from '@/components/ui/avatar';
 import {
@@ -64,9 +65,10 @@ export const HouseList = ({
             {userDetails?.avatar_url && (
               <Avatar className='h-5 w-5'>
                 <AvatarImage src={userDetails?.avatar_url} />
+                <AvatarFallback className='text-xs'>{userDetails.name?.charAt(0)}</AvatarFallback>
               </Avatar>
             )}
-            <span className='font-medium line-clamp-1'>
+            <span className='font-medium line-clamp-1 text-muted-foreground'>
               {userDetails?.name ? userDetails?.name : user?.email?.split('@')[0]}의 하우스
             </span>
           </div>

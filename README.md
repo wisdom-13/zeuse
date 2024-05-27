@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 🏠 ZEUSE
+**ZEUSE**는 개인 블로그(하우스)를 만들고 관리할 수 있는 서비스입니다.<br>
+자신의 개성을 담아 멋진 하우스를 만들어보세요!<br>
 
-## Getting Started
+### 1.메인 화면 위젯 설정하기
+'설정 → 위젯' 메뉴에서 '위젯 편집하기' 버튼을 클릭하여 위젯 편집 모드로 접근 할 수 있습니다.<br><br>
+**1-1. 위젯 편집하기**
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/b5698087-5e10-4743-9644-dff6a6cc3fac)
+*   위젯 편집 모드에서는 위젯을 드래그하여 위치를 변경하거나 삭제할 수 있습니다.
 
-First, run the development server:
+**1-2. 위젯 추가하기**
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/b6d967fe-da69-47b0-9c73-678494ac3cf2)
+*   '위젯 추가' 버튼을 클릭하여 위젯을 추가할 수 있습니다.
+*   이미지, 게시판, 프로필 등 다양한 종류와 크기의 위젯을 활용하여 하우스를 꾸밀 수 있습니다.
+  
+**1-3. 위젯 옵션 설정하기**
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/4e8b138c-5aad-4334-8863-017e95250e9f)
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/0d0dedfa-b889-4b0f-a23b-aef85e93182b)
+*   위젯을 클릭하여 세부 옵션을 설정합니다.
+*   위젯의 이미지를 등록하거나 게시판, 포스트를 연결 할 수 있습니다.<br><br>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 2. 룸(게시판) 생성하기
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/a1a49924-4575-4c95-9f33-163e20a72f89)
+*   리스트형, 카드형, html형, 메모형, 링크 형태의 게시판을 추가할 수 있습니다.<br><br>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. 테마 변경하기
+![](https://phpgongcvqculnamdqry.supabase.co/storage/v1/object/public/post/1d14a6e1-d880-4640-a068-72c5ac2a465b)
+*   로고, 배경, 색상 등 다양한 테마 옵션을 변경할 수 있습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**데모** 
