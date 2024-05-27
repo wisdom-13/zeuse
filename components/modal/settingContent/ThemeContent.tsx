@@ -22,6 +22,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import ColorPickerButton from '@/components/ColorPickerButton';
 import { colorArr, opacityArr, radiusArr } from '@/data/theme';
 import { getPublicUrl } from '@/util/getPublicUrl';
+import useLodingModal from '@/hooks/useLodingModal';
 
 interface ThemeContentProps {
   house: HouseBuild;
@@ -37,6 +38,8 @@ const ThemeContent = ({
 
   const [logoImage, setLogoImage] = useState<FileWithPreview>();
   const [bgImage, setBgImage] = useState<FileWithPreview>();
+
+  const lodingModal = useLodingModal();
 
   const handleUpdateStyle = async (type: string, value: string) => {
     const { error } = await supabaseClient
@@ -90,6 +93,8 @@ const ThemeContent = ({
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.id || !event.target.files) return
 
+    lodingModal.onOpen()
+
     const id = event.target.id;
     const image = event.target.files[0];
     const setImage = id == 'logo_image' ? setLogoImage : setBgImage;
@@ -108,6 +113,7 @@ const ThemeContent = ({
     }
 
     if (data) {
+      lodingModal.onClose()
       handleUpdateStyle(id, `${id == 'logo_image' ? 'logo' : 'background'}/${data.path}`);
     }
   }

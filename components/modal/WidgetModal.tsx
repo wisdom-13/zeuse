@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import useGetPostById from '@/hooks/useGetPostById';
+import useLodingModal from '@/hooks/useLodingModal';
 
 interface WidgetModalProps {
   widget: Widget;
@@ -51,6 +52,7 @@ const WidgetModal = ({
   const [postId, setPostId] = useState(widget.type == 'post' ? widget.option_id : '');
   const [searchPostId, setSearchPostId] = useState(widget.type == 'post' ? widget.option_id : '');
   const { post, isLoading: isPostLoading } = useGetPostById(searchPostId, houseId);
+  const lodingModal = useLodingModal();
 
   const supabaseClient = useSupabaseClient();
 
@@ -79,11 +81,15 @@ const WidgetModal = ({
         widget: updatedWidget,
       });
 
+      lodingModal.onClose()
       toast.success('변경사항을 저장했습니다.')
     }
   }
 
+
+
   const handleImageUpload = async () => {
+    lodingModal.onOpen()
     const pathArr = widget.image_array ? widget.image_array : [];
 
     for (const data of files) {
@@ -97,9 +103,8 @@ const WidgetModal = ({
       if (!imageData) { return false; }
       pathArr.push(imageData.path);
     }
-
-    setFiles([]);
     await handleUpdateWidget('image_array', pathArr)
+    setFiles([]);
   }
 
   const handleImageRemove = async (path: string) => {
@@ -233,9 +238,9 @@ const WidgetModal = ({
               <p className='text-sm text-left text-muted-foreground'>이미지는 3개까지 등록할 수 있어요.</p>
               <div className='grid grid-cols-3 grid-rows-1 gap-2'>
                 {widget.image_array?.map((item) => (
-                  <div key={item} className='group rounded-md border w-full h-40 relative overflow-hidden'>
+                  <div key={item} className='group rounded-md border w-full h-40 relative'>
                     <button
-                      className='hidden group-hover:block absolute z-[999999] top-1 right-1 bg-background rounded-full p-1'
+                      className='hidden group-hover:block absolute z-[999999] scale-75 -left-1.5 -top-1.5 bg-red-400 text-white rounded-full p-1'
                       onClick={() => handleImageRemove(item)}
                       disabled={isLoading}
                     >
@@ -245,14 +250,14 @@ const WidgetModal = ({
                       src={getPublicUrl(`widget/${item}`)}
                       alt='Preview'
                       fill
-                      className='object-cover'
+                      className='object-cover rounded-md'
                     />
                   </div>
                 ))}
                 {files.map((file, index) => (
-                  <div key={`${file.name}-${index}`} className='group rounded-md border w-full h-40 relative overflow-hidden'>
+                  <div key={`${file.name}-${index}`} className='group rounded-md border w-full h-40 relative'>
                     <button
-                      className='hidden group-hover:block absolute z-[999999] top-1 right-1 bg-background rounded-full p-1'
+                      className='hidden group-hover:block absolute z-[999999] scale-75 -left-1.5 -top-1.5 bg-red-400 text-white rounded-full p-1'
                       onClick={() => removeFile(index)}
                       disabled={isLoading}
                     >
@@ -263,7 +268,7 @@ const WidgetModal = ({
                         src={file.preview}
                         alt='Preview'
                         fill
-                        className='object-cover'
+                        className='object-cover rounded-md'
                       />
                     )}
                   </div>
@@ -276,7 +281,7 @@ const WidgetModal = ({
                     <input {...getInputProps()} />
                     <p className='flex flex-col gap-y-2 justify-center items-center text-sm'>
                       <Plus size={20} />
-                      드래그해서<br />이미지 추가
+                      클릭 또는 드래그해서<br />이미지 추가
                     </p>
                   </div>
                 )}
@@ -294,7 +299,7 @@ const WidgetModal = ({
           )}
         </div>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 }
 
