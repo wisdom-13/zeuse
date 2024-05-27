@@ -100,21 +100,23 @@ export const EditWidget = ({
           gridRow: `auto / span ${widget.grid.row}`
         }}
         className={cn(
-          'custom-card aniamte-shake rounded-md text-card-foreground overflow-hidden relative',
+          'group custom-card aniamte-shake rounded-md text-card-foreground relative',
           widget?.type == 'empty' && ' bg-primary/5 border-dashed',
           isDragging ? 'opacity-0' : 'opacity-100',
         )}
         onClick={handleModalOpen}
       >
-        {widget?.type == 'image' && <WidgetImage widget={widget} />}
-        {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
-        {widget?.type == 'board' && <WidgetBoard widget={widget} />}
-        {widget?.type == 'post' && <WidgetPost widget={widget} />}
-        {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
-        {widget?.type == 'empty' && <WidgetEmpty />}
+        <div className='rounded-md overflow-hidden w-full h-full'>
+          {widget?.type == 'image' && <WidgetImage widget={widget} />}
+          {widget?.type == 'profile' && <WidgetProfile widget={widget} />}
+          {widget?.type == 'board' && <WidgetBoard widget={widget} />}
+          {widget?.type == 'post' && <WidgetPost widget={widget} />}
+          {widget?.type == 'timer' && <WidgetTimer widget={widget} />}
+          {widget?.type == 'empty' && <WidgetEmpty />}
+        </div>
 
         <button
-          className='absolute z-[999999] top-1 right-1 bg-muted rounded-full p-1'
+          className='hidden group-hover:block absolute z-[999999] scale-75 -left-1.5 -top-1.5 bg-red-400 text-white rounded-full p-1'
           onClick={(event) => removeWidget(event, widget)}
         >
           <Minus size={16} />
