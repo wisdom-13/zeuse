@@ -12,7 +12,7 @@ const BoardBack = ({
 }: BoardBackPorps) => {
   return (
     <Link href={url}>
-      <div className='flex items-center gap-x-2 text-base font-bold p-6 pb-0 pl-5 text-muted-foreground'>
+      <div className='flex items-center gap-x-2 text-base font-bold p-6 pb-2 pl-5 text-muted-foreground'>
         <ChevronLeft size={18} />
         {title}
       </div>

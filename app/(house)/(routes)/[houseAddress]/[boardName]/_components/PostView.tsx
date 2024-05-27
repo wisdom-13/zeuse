@@ -97,7 +97,7 @@ const PostView = ({
     <div className='flex flex-col gap-y-2 h-full'>
       {showPost ? (
         <ScrollArea className='w-full h-full'>
-          <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pb-2'>
+          <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pt-4 pb-2'>
             <div className='flex items-center gap-x-4'>
               <h1 className='text-4xl font-bold text-primary'>
                 {post.title}
@@ -182,7 +182,7 @@ const PostView = ({
               )}
             </div>
           </div>
-          <div className='flex flex-col text-base'>
+          <div className='flex flex-col text-base pb-10'>
             {boardType == 'post' && (
               isJSONString(post.content) ? (
                 <Editor
