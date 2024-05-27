@@ -3,7 +3,7 @@ import {
   DialogContent,
 } from '@/components/ui/dialog';
 import useLodingModal from '@/hooks/useLodingModal';
-import { Spinner } from '../Spinner';
+import { Spinner } from '@/components/Spinner';
 
 const LodingModal = () => {
   const { onClose, isOpen } = useLodingModal();

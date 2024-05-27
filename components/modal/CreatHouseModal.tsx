@@ -26,11 +26,11 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import useCreateHouseModal from '@/hooks/useCreateHouseModal';
 
 import { useUser } from '@/hooks/useUser';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { ScrollArea } from '../ui/scroll-area';
 
 const formSchema = z.object({
   title: z
