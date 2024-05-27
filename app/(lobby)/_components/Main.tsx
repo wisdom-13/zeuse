@@ -16,6 +16,7 @@ export const Main = () => {
       <h1 className='text-6xl font-bold'>
         <span className='underline'>ZEUSE</span>
       </h1>
+      <p>ZEUSE는 현재 <span className='font-bold'>BETA</span> 버전입니다.</p>
       <div className='bg-card text-card-foreground px-6 py-2'>
         <>
           {!isLoading && !user && (
@@ -25,7 +26,6 @@ export const Main = () => {
               ZEUSE 시작하기
               <ArrowRight className='h-4 w-4 ml-2' />
             </Button>
-            // <p>! 지금은 회원가입이 불가능합니다.</p>
           )}
         </>
       </div>

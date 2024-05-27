@@ -38,6 +38,7 @@ const Navigation = ({
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
 
+
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
   const navbarRef = useRef<ElementRef<'div'>>(null);
   const [isResetting, setIsRestting] = useState(false);
@@ -85,6 +86,7 @@ const Navigation = ({
       toast.success('Logged out!')
     }
   }
+
 
   return (
     <>
@@ -148,9 +150,16 @@ const Navigation = ({
                 onClick={headleLogout}
               />
             )}
-
             {!isLoading && user && houses && (
               <HouseList position='start' houses={houses} />
+            )}
+            {!isLoading && !user && (
+              <MenuItem
+                label='로그인'
+                icon={LogIn}
+                isButton={true}
+                onClick={authModal.onOpen}
+              />
             )}
           </div>
 
