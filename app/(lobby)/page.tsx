@@ -16,7 +16,7 @@ const MarketingPage = async () => {
 
   return (
     <div className='flex flex-col h-[calc(100vh+88px)] items-center'>
-      <div className='flex flex-col h-screen items-center justify-center text-center gap-t-8 flex-1 px-6 pb-10'>
+      <div className='flex flex-col h-screen items-center justify-center text-center gap-t-6 flex-1 px-6 pb-10'>
         <Main />
         {session?.user && <HouseList houses={houses} />}
       </div>
