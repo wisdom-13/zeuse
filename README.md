@@ -4,7 +4,7 @@
 
 <img src="https://github.com/wisdom-13/zeuse/assets/77341912/588117a5-0a4c-4072-a0cc-b8b32fe7d7ff" width="650" style="border-radius: 0.5rem; border: 1px solid #eee" />
 
-**서비스 URL** : https://zeuse.vercel.app<br>
+**서비스 URL** : https://zeuse.vercel.app (id:user@test.com / pw:test1234)<br>
 **모델 하우스** : https://zeuse.vercel.app/zeuse<br><br>
 
 
