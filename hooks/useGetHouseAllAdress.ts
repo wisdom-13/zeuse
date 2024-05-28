@@ -1,43 +1,36 @@
-import { House } from '@/types';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner';
 
-const useGetHouseByAdress = (address?: string) => {
+const useGetHouseAllAdress = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [house, setHouse] = useState<House | undefined>(undefined);
+  const [addressList, setAddressList] = useState<[string] | undefined>(undefined);
   const { supabaseClient } = useSessionContext();
 
   useEffect(() => {
-    if (!address) {
-      return;
-    }
-
     setIsLoading(true);
 
     const fetchHouse = async () => {
       const { data, error } = await supabaseClient
         .from('houses')
-        .select('*')
-        .eq('address', address)
-        .single();
+        .select('address');
 
       if (error) {
         setIsLoading(false);
         return toast.error(error.message);
       }
 
-      setHouse(data as House);
+      setAddressList(data?.map(item => item.address) as any);
       setIsLoading(false);
     }
 
     fetchHouse();
-  }, [address, supabaseClient]);
+  }, [supabaseClient]);
 
   return useMemo(() => ({
     isLoading,
-    house
-  }), [isLoading, house]);
+    addressList
+  }), [isLoading, addressList]);
 }
 
-export default useGetHouseByAdress;
+export default useGetHouseAllAdress;

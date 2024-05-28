@@ -81,7 +81,7 @@ const HouseContent = ({
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-          <ScrollArea>
+          <ScrollArea className='h-[calc(100%-160px)] pb-4'>
             <h2 className='text-xl font-medium'>
               하우스
             </h2>
