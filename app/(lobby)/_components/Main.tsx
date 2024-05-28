@@ -1,15 +1,23 @@
 'use client';
 
+import { House } from '@/types'
+import { Logo } from './Logo';
+
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 import useAuthModal from '@/hooks/useAuthModal';
 import { useUser } from '@/hooks/useUser';
 
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { Logo } from './Logo';
+import { HouseList } from '@/components/HouseList';
+;
 
-export const Main = () => {
+interface MainProps {
+  houses: House[]
+}
+
+export const Main = ({ houses }: MainProps) => {
   const { user, isLoading } = useUser();
   const authModal = useAuthModal();
 
@@ -27,6 +35,9 @@ export const Main = () => {
               ZEUSE 시작하기
               <ArrowRight className='h-4 w-4 ml-2' />
             </Button>
+          )}
+          {!isLoading && user && (
+            <HouseList houses={houses} />
           )}
         </>
       </div>
