@@ -50,7 +50,7 @@ const PostEdit = ({
   boardType,
   familyId
 }: PostEditProps) => {
-  const Editor = useMemo(() => dynamic(() => import('../../_components/Editor'), { ssr: false }), []);
+
   const param = useParams();
   const router = useRouter();
 
@@ -68,6 +68,8 @@ const PostEdit = ({
   const [role, setRole] = useState(0);
   const [password, setPassword] = useState('');
   const [themeOption, setThemeOption] = useState({ theme: '', me: false });
+
+  const Editor = useMemo(() => dynamic(() => import('../../_components/Editor'), { ssr: false }), [post]);
 
   useEffect(() => {
     if (isLoading || !post) return;
