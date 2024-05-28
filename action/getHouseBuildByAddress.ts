@@ -10,8 +10,8 @@ const getHouseBuildByAddress = async (address: string): Promise<HouseBuild | nul
     .from('houses')
     .select(`
         *, 
-        board:board!inner(*),
-        widget:widget!inner(*),
+        board(*),
+        widget(*),
         style:style!inner(*),
         family:family!inner(*)
     `)
