@@ -217,7 +217,7 @@ export function WidgetBrawer() {
                       </Select>
                       <Button
                         className='w-full'
-                        onClick={() => handleAddWidget('board', { col: postGrid.col, row: postGrid.row })}
+                        onClick={() => handleAddWidget('board', { col: boardGrid.col, row: boardGrid.row })}
                       >
                         추가
                       </Button>
