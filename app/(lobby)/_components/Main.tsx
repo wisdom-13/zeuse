@@ -31,7 +31,7 @@ export const Main = () => {
         </>
       </div>
       <br />
-      <Link href='/zeuse' className='flex items-center justify-center gap-x-2'>
+      <Link href='/house' className='flex items-center justify-center gap-x-2'>
         🏠 <span className='font-semibold'>모델 하우스</span>
       </Link>
     </div>
