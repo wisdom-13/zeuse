@@ -33,7 +33,7 @@ export const boardTypes = {
   },
   trpg: {
     type: 'trpg',
-    name: 'TRPG',
+    name: 'HTML',
   },
 };
 
