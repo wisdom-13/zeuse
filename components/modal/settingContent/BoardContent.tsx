@@ -133,7 +133,7 @@ const BoardContent = ({
     const boardData = {
       ...values,
       role: 0,
-      order: house.board.length,
+      order: selectBoard ? selectBoard.order : house.board.length,
       house_id: house.id
     }
     const { data, error } = selectBoard.id ? (
