@@ -326,7 +326,10 @@ const BoardContent = ({
                               </Label>
                               <div className='w-full'>
                                 <FormControl>
-                                  <Input {...field} disabled={!!selectBoard.id} />
+                                  <div className='flex items-center gap-x-1'>
+                                    <p className='font-semibold'>zeuse.com/{house.address}/</p>
+                                    <Input {...field} disabled={!!selectBoard.id} />
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </div>
