@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import Editor from '../../_components/Editor';
 import HtmlRenderer from '@/components/HtmlRenderer';
+import RippleList from './RippleList';
 
 interface BoardPageProps {
   post: PostFamily;
@@ -96,7 +97,7 @@ const PostView = ({
   return (
     <div className='flex flex-col gap-y-2 h-full'>
       {showPost ? (
-        <ScrollArea className='w-full h-full'>
+        <ScrollArea className='w-full h-[calc(100%-54px)]'>
           <div className='flex flex-wrap items-center justify-between gap-y-4 p-6 pt-4 pb-2'>
             <div className='flex items-center gap-x-4'>
               <h1 className='text-4xl font-bold text-primary'>
@@ -206,6 +207,7 @@ const PostView = ({
               </div>
             )}
           </div>
+          <RippleList />
         </ScrollArea>
       ) : (
         <div className='flex flex-col items-center justify-center gap-y-4 h-full'>

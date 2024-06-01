@@ -40,6 +40,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import BoardBack from './BoardBack';
 import HtmlRenderer from '@/components/HtmlRenderer';
 import CodeEditor from '../../_components/CodeEditor';
+import useLodingModal from '@/hooks/useLodingModal';
 
 interface PostEditProps {
   boardType: string;
@@ -59,6 +60,7 @@ const PostEdit = ({
   const { houseId } = useHouseBuild();
   const postId = useSearchParams().get('id');
   const { post, isLoading } = useGetPostById(postId, houseId);
+  const lodingModal = useLodingModal();
 
   const [isSetting, setIsSetting] = useState(false);
   const [title, setTitle] = useState('');
@@ -76,6 +78,7 @@ const PostEdit = ({
     setTitle(post.title);
     setThumbnailPath(post.thumbnail_path);
     setRole(post.role);
+    setPassword(post.password);
     setContent(post.content);
     setThemeOption(post.option);
   }, [post, isLoading]);
@@ -108,8 +111,11 @@ const PostEdit = ({
   }
 
   const handleSubmit = async () => {
+    lodingModal.onOpen();
+
     if (role == 9 && password == '') {
       toast.info('암호를 입력하세요.');
+      lodingModal.onClose();
       return;
     }
 
@@ -165,8 +171,9 @@ const PostEdit = ({
       return;
     }
 
+    lodingModal.onClose();
     toast.info(post ? '포스트를 수정하였습니다.' : '포스트가 등록되었습니다.');
-    router.push(`/${param.houseAddress}/${param.boardName}/${data.id}`)
+    router.push(`/${param.houseAddress}/${param.boardName}/${data.id}`);
   }
 
   return (
