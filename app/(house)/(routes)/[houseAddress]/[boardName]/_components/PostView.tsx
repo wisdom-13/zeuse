@@ -207,7 +207,7 @@ const PostView = ({
               </div>
             )}
           </div>
-          <RippleList />
+          <RippleList postId={post.id} />
         </ScrollArea>
       ) : (
         <div className='flex flex-col items-center justify-center gap-y-4 h-full'>

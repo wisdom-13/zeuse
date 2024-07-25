@@ -1,6 +1,6 @@
 'use client';
 
-import { Family, Memo } from '@/types';
+import { Family, Memo, UserDetails } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,7 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -29,9 +29,30 @@ import { cn } from '@/lib/utils';
 import { ChevronsLeftRight, UsersRound } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const RippleAdd = () => {
-  const { user } = useUser();
+interface RippleAddProps {
+  postId: string;
+  user?: UserDetails;
+  family?: Family;
+}
+
+const RippleAdd = ({
+  postId,
+  user,
+  family
+}: RippleAddProps) => {
   const supabaseClient = useSupabaseClient();
+
+
+  console.log(user)
+  console.log(family)
+
+  const profileList = {}
+
+  if (user) {
+    profileList['user'] = {
+
+    }
+  }
 
   const formSchema = z.object({
     content: z.string().min(1),
@@ -86,6 +107,7 @@ const RippleAdd = () => {
     //   })
     // }
   }
+
 
   return (
     <>
