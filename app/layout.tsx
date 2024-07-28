@@ -2,12 +2,16 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google';
 
-import { Toaster } from '@/components/ui/sonner'
 
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import SupabaseProvider from '@/providers/SupabaseProvider'
 import ModalProvider from '@/providers/ModalProvider'
 import UserProvider from '@/providers/UserProvider'
+
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner'
+
+
 
 const openSans = Open_Sans({ subsets: ['latin'] })
 
@@ -33,15 +37,17 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className={openSans.className}>
-          <SupabaseProvider>
-            <UserProvider>
-              <TooltipProvider>
-                <Toaster position="bottom-right" />
-                <ModalProvider />
-                {children}
-              </TooltipProvider>
-            </UserProvider>
-          </SupabaseProvider>
+          <ReactQueryProvider>
+            <SupabaseProvider>
+              <UserProvider>
+                <TooltipProvider>
+                  <Toaster position="bottom-right" />
+                  <ModalProvider />
+                  {children}
+                </TooltipProvider>
+              </UserProvider>
+            </SupabaseProvider>
+          </ReactQueryProvider>
         </div>
       </body>
     </html>
