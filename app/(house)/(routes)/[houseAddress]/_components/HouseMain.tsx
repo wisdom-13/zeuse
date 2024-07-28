@@ -8,16 +8,21 @@ import { Button } from '@/components/ui/button';
 import { PlusSquare, SquareCheck } from 'lucide-react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import useHouseBuild from '@/hooks/useHouseBuild';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
 import { Widget as WidgetType } from '@/types';
+import { useHouseBuildByAddress } from '@/hooks/useHouseBuilder';
+import { useParams } from 'next/navigation';
+import { useWidget } from '@/hooks/useWidget';
 
 
 const HouseMain = () => {
-  const { houseBuild, setHouseBuild } = useHouseBuild();
+  const { houseAddress } = useParams<{ houseAddress: string; }>();
+  const { data: houseBuild, isLoading, error } = useHouseBuildByAddress(houseAddress);
+
+  const { removeWidget, updateWidget } = useWidget(houseAddress);
+
   const widgetEdit = useWidgetEdit();
-  const supabaseClient = useSupabaseClient();
 
   const WidgetItem = widgetEdit.isEditing ? EditWidget : Widget;
 
@@ -35,7 +40,6 @@ const HouseMain = () => {
     setWidgets(widget);
   }, [widget]);
 
-
   const moveWidget = useCallback((dragIndex: number, hoverIndex: number) => {
     const newWidgets = [...widgets];
     const draggedWidget = newWidgets[dragIndex];
@@ -44,63 +48,20 @@ const HouseMain = () => {
     setWidgets(newWidgets);
   }, [widgets]);
 
-  const removeWidget = async (event: React.MouseEvent<HTMLButtonElement>, widget: WidgetType) => {
+  const handleRemoveWidget = async (event: React.MouseEvent<HTMLButtonElement>, widget: WidgetType) => {
     event.stopPropagation();
+    if (!houseBuild) return;
+    removeWidget.mutate({ widget });
+  };
 
-    if (!houseBuild) {
-      return false;
-    }
-
-    if (widget.type == 'image' && widget.image_array) {
-      await supabaseClient
-        .storage
-        .from('widget')
-        .remove(widget.image_array)
-    }
-
-    const { error } = await supabaseClient
-      .from('widget')
-      .delete()
-      .eq('id', widget.id)
-
-    if (error) {
-      toast.error('변경사항을 저장하는 중 오류가 발생했습니다.');
-      return
-    }
-
-    const updatedHouse = {
-      ...houseBuild,
-      widget: houseBuild?.widget.filter((item) => item.id != widget.id)
-    };
-
-    setHouseBuild(updatedHouse)
-  }
-
-  const updateWidget = async () => {
-    try {
-      widgets.map(async (data, i) => {
-        await supabaseClient
-          .from('widget')
-          .update({ order: i })
-          .eq('id', data.id);
-      })
-    } catch (error) {
-      toast.error('위젯 정보를 업데이트 하는 도중 오류가 발생했습니다.');
-    }
-  }
-
-  if (houseBuild === undefined) {
-    return (
-      <div className='w-[900px] h-[600px] grid grid-cols-6 grid-rows-4 grid-flow-dense gap-6'>
-        <Widget.Skeleton />
-      </div>
-    )
-  }
+  const handleUpdateWidget = async () => {
+    updateWidget.mutate(widgets);
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>
       {widgetEdit.isEditing && (
-        <div className='absolute top-6 left-1/2 transform -translate-x-1/2 bg-background p-2 rounded-md flex gap-x-2'>
+        <div className='top-6 left-1/2 absolute flex gap-x-2 bg-background p-2 rounded-md transform -translate-x-1/2'>
           <Button
             className='flex gap-x-2'
             variant='ghost'
@@ -121,7 +82,7 @@ const HouseMain = () => {
       )}
 
       <main
-        className='w-[900px] h-[600px] grid grid-cols-12 grid-rows-12 grid-flow-dense gap-6'
+        className='gap-6 grid grid-cols-12 grid-rows-12 grid-flow-dense w-[900px] h-[600px]'
       >
         {widgets.map((widget, i) => (
           <WidgetItem
@@ -129,8 +90,8 @@ const HouseMain = () => {
             index={i}
             widget={widget}
             moveWidget={moveWidget}
-            removeWidget={removeWidget}
-            updateWidget={updateWidget}
+            removeWidget={handleRemoveWidget}
+            updateWidget={handleUpdateWidget}
           />
         ))}
       </main>
