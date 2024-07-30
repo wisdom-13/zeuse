@@ -5,6 +5,7 @@ import { HouseBuild, Widget as WidgetType } from '@/types';
 export const useHouseBuildByAddress = (address?: string) => {
   return useQuery<HouseBuild | null, Error>({
     queryKey: ['house', address],
-    queryFn: () => fetchHouseByAddress(address)
+    queryFn: () => fetchHouseByAddress(address),
+    staleTime: 10000,
   });
 };
