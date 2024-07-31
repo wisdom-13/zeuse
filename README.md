@@ -5,7 +5,7 @@
 <img src="https://github.com/wisdom-13/zeuse/assets/77341912/588117a5-0a4c-4072-a0cc-b8b32fe7d7ff" width="650" style="border-radius: 0.5rem; border: 1px solid #eee" />
 
 **서비스 URL** : https://zeuse.vercel.app (id:user@test.com / pw:test1234)<br>
-**모델 하우스** : https://zeuse.vercel.app/zeuse<br><br>
+**모델 하우스** : https://zeuse.vercel.app/house<br><br>
 
 
 ## 프로젝트 소개
@@ -19,10 +19,13 @@
 * **개발 기간** : 2024.03 ~ (진행중) 
   * 1차 배포 : 2024.05.27
 * **사용 기술**
-  * **Front** : React.js, Next.js, Typescript
-  * **Back** : Supabase
-  * **Style** : Tailwindcss, shadcn/ui
+  * **코어 스택** : React.js, Next.js, Typescript
+  * **상태 관리** : Zustand, React Query
+  * **스타일링** : Tailwindcss, shadcn/ui
+  * **폼 검증** : react-hook-form, zod
+  * **백엔드 서비스** : Supabase
   * **배포** : vercel<br><br>
+
 
 ## 채택한 개발 기술
 
