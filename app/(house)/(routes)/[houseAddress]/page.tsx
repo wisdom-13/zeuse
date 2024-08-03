@@ -1,11 +1,9 @@
-'use client';
-
 import HouseMain from './_components/HouseMain';
 
 const HousePage = () => {
   return (
     <div
-      className='flex h-full items-center justify-center gap-x-4 relative'
+      className='relative flex justify-center items-center gap-x-4 h-full'
     >
       <HouseMain />
     </div>
