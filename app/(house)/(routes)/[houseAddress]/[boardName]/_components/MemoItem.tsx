@@ -1,5 +1,5 @@
 
-import { Family, Memo } from '@/types';
+import { Family, Memo, UserDetails } from '@/types';
 import { Dispatch, useState } from 'react';
 
 import { toast } from 'sonner';
@@ -24,17 +24,19 @@ register('ko', koLocale)
 
 interface MemoItemProps {
   memo: Memo;
-  family?: Family;
+  isOwner: boolean;
+  familyId?: string;
   setMemos?: Dispatch<React.SetStateAction<Memo[]>>;
 }
 
 const MemoItem = ({
   memo,
-  family,
+  isOwner,
+  familyId,
   setMemos
 }: MemoItemProps) => {
   const supabaseClient = useSupabaseClient();
-  const editAuth = family?.is_owner || (family && memo.family_id == family.id);
+  const editAuth = isOwner || (familyId && memo.family_id == familyId);
   const [password, setPassword] = useState('');
   const [showMemo, setShowMemo] = useState(editAuth);
 
@@ -67,7 +69,7 @@ const MemoItem = ({
   }
 
   return (
-    <div className='flex flex-col gap-y-2 border rounded-md p-3 text-base'>
+    <div className='flex flex-col gap-y-2 p-3 border rounded-md text-base'>
       <div className='flex justify-between text-sm'>
         <div className='flex items-center gap-x-2'>
           <span className='font-semibold'>{memo.name}</span>
@@ -80,7 +82,7 @@ const MemoItem = ({
           showMemo && (
             <Dialog>
               <DialogTrigger>삭제</DialogTrigger>
-              <DialogContent className='text-center sm:max-w-80'>
+              <DialogContent className='sm:max-w-80 text-center'>
                 <DialogHeader>
                   <DialogTitle className='text-center'>메모 삭제</DialogTitle>
                 </DialogHeader>
@@ -117,8 +119,6 @@ const MemoItem = ({
         {
           (!memo.is_secret || showMemo) ? (
             memo.content
-          ) : memo.family_id ? (
-            <div className='text-muted-foreground'>비공개 메모 {memo.family_id}</div>
           ) : (
             <div className='flex items-center gap-x-2 text-sm'>
               <Input

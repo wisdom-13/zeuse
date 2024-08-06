@@ -1,6 +1,6 @@
 'use client';
 
-import { Family, Memo } from '@/types';
+import { Family, Memo, UserDetails } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,10 +18,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dispatch, useEffect } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
+import { useParams } from 'next/navigation';
+import { useUserHouseRole } from '@/hooks/useUserHouseRole';
 
 interface MemoAddProps {
   boardId?: string;
-  family?: Family;
+  family?: UserDetails;
   setMemos?: Dispatch<React.SetStateAction<Memo[]>>;
 }
 
@@ -30,6 +32,9 @@ const MemoAdd = ({
   family,
   setMemos,
 }: MemoAddProps) => {
+  const { houseAddress } = useParams<{ houseAddress: string }>();
+  const { isFamily, profiles } = useUserHouseRole(houseAddress);
+
   const supabaseClient = useSupabaseClient();
 
   const formSchema = z.object({
@@ -58,7 +63,7 @@ const MemoAdd = ({
 
   useEffect(() => {
     form.reset({
-      name: family?.nick_name
+      name: family?.name
     })
   }, [form, form.reset, family])
 
@@ -88,7 +93,7 @@ const MemoAdd = ({
 
       form.reset({
         content: '',
-        name: family?.nick_name,
+        name: family?.name,
         password: '',
         is_secret: false
       })
@@ -102,7 +107,7 @@ const MemoAdd = ({
           control={form.control}
           name='content'
           render={({ field }) => (
-            <FormItem className='flex items-center justify-between w-full'>
+            <FormItem className='flex justify-between items-center w-full'>
               <FormControl>
                 <Textarea
                   {...field}
@@ -113,7 +118,7 @@ const MemoAdd = ({
             </FormItem>
           )}
         />
-        <div className='flex items-center justify-end gap-x-2 mt-2'>
+        <div className='flex justify-end items-center gap-x-2 mt-2'>
           <div className='flex items-center space-x-2 mr-3'>
             <FormField
               control={form.control}
@@ -127,7 +132,7 @@ const MemoAdd = ({
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel className='text-sm font-medium leading-none text-muted-foreground '>
+                    <FormLabel className='font-medium text-muted-foreground text-sm leading-none'>
                       비밀글
                     </FormLabel>
                   </div>
@@ -141,7 +146,7 @@ const MemoAdd = ({
                 control={form.control}
                 name='name'
                 render={({ field }) => (
-                  <FormItem className='flex items-center justify-between w-36'>
+                  <FormItem className='flex justify-between items-center w-36'>
                     <FormControl>
                       <Input
                         {...field}
@@ -156,7 +161,7 @@ const MemoAdd = ({
                 control={form.control}
                 name='password'
                 render={({ field }) => (
-                  <FormItem className='flex items-center justify-between w-36'>
+                  <FormItem className='flex justify-between items-center w-36'>
                     <FormControl>
                       <Input
                         {...field}

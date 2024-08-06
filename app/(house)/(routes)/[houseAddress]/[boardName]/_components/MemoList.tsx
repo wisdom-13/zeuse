@@ -12,6 +12,8 @@ import SearchBar from './SearchBar';
 import MemoAdd from './MemoAdd';
 import { useUser } from '@/hooks/useUser';
 import useHouseBuild from '@/hooks/useHouseBuild';
+import { useParams } from 'next/navigation';
+import { useUserHouseRole } from '@/hooks/useUserHouseRole';
 
 interface MemoListProps {
   board: Board;
@@ -20,9 +22,8 @@ interface MemoListProps {
 const MemoList = ({
   board,
 }: MemoListProps) => {
-  const { user } = useUser();
-  const { houseBuild } = useHouseBuild();
-  const family = houseBuild?.family.filter((item) => item.user_id == user?.id)?.[0];
+  const { houseAddress } = useParams<{ houseAddress: string }>();
+  const { isOwner, profiles } = useUserHouseRole(houseAddress);
 
   const { memos, setMemos } = useGetMemoListById(board.id);
   const [value, setValue] = useState('');
@@ -38,22 +39,22 @@ const MemoList = ({
 
   return (
     <>
-      <div className='flex items-center justify-start gap-x-2 mt-8'>
-        <h1 className='text-3xl font-semibold w-full'>
+      <div className='flex justify-start items-center gap-x-2 mt-8'>
+        <h1 className='w-full font-semibold text-3xl'>
           {board.title}
         </h1>
         <SearchBar className='w-96' value={value} handleChange={setValue} />
       </div>
-      <MemoAdd boardId={board.id} family={family} setMemos={setMemos} />
+      <MemoAdd boardId={board.id} family={profiles?.family} setMemos={setMemos} />
       {filterMemos && filterMemos.length === 0 ? (
         <div className='mt-4'>
-          <p className='text-muted-foreground text-base'>작성된 메모가 없습니다.</p>
+          <p className='text-base text-muted-foreground'>작성된 메모가 없습니다.</p>
         </div>
       ) : (
         <ScrollArea className='w-full h-full'>
           <div className='flex flex-col gap-y-4'>
             {filterMemos && filterMemos.map((item) => (
-              <MemoItem key={item.id} memo={item} family={family} setMemos={setMemos} />
+              <MemoItem key={item.id} memo={item} isOwner={isOwner} familyId={profiles?.family.id} setMemos={setMemos} />
             ))}
           </div>
         </ScrollArea>
