@@ -1,11 +1,13 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Widget as WidgetType } from '@/types';
-import { useUserHouseRole } from './useUserHouseRole';
-import { useWidget } from './useWidget';
-import { useHouseBuildByAddress } from './useHouseBuilder';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useHouseBuildByAddress } from '@/api/useHouseBuilder';
+import { useUserHouseRole } from '@/hooks/useUserHouseRole';
+import { useWidget } from '@/hooks/useWidget';
 
 const useEditableWidgets = (address: string) => {
   const { data: houseBuild, isLoading, isError } = useHouseBuildByAddress(address);
+  const { isEditer } = useUserHouseRole(address);
+  const { removeWidget, updateWidget } = useWidget(address);
 
   const sortedWidgets = useMemo(() => {
     if (houseBuild?.widget) {
@@ -14,9 +16,6 @@ const useEditableWidgets = (address: string) => {
       return [];
     }
   }, [houseBuild?.widget]);
-
-  const { isEditer } = useUserHouseRole(address);
-  const { removeWidget, updateWidget } = useWidget(address);
   const [editableWidgets, setEditableWidgets] = useState<WidgetType[]>(sortedWidgets);
 
   useEffect(() => {

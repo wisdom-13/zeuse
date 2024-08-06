@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Family, UserDetails } from '@/types';
 import { useUser } from './useUser';
-import { useHouseBuildByAddress } from './useHouseBuilder';
+import { useHouseBuildByAddress } from '../api/useHouseBuilder';
 
 interface UserHouseRole {
   role?: string;
   isFamily: boolean;
   isEditer: boolean;
   isOwner: boolean;
-  profiles?: UserDetails[];
+  profiles?: {
+    user: UserDetails;
+    family: UserDetails;
+  };
 }
 
 export const useUserHouseRole = (address: string): UserHouseRole => {
@@ -33,7 +36,7 @@ export const useUserHouseRole = (address: string): UserHouseRole => {
           isFamily: true,
           isEditer: true,
           isOwner: familyUser.is_owner,
-          profiles: [userDetails, familyProfile]
+          profiles: { user: userDetails, family: familyProfile }
         });
       } else {
         setRole({ isFamily: false, isEditer: false, isOwner: false });
