@@ -8,7 +8,7 @@ export interface House {
   id: string;
   title: string;
   description?: string;
-  address?: string;
+  address: string;
   type: string;
   is_published: boolean;
   created_at: string;

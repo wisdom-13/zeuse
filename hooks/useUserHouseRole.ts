@@ -5,6 +5,7 @@ import { useHouseBuildByAddress } from '../api/useHouseBuilder';
 
 interface UserHouseRole {
   role?: string;
+  isUser: boolean;
   isFamily: boolean;
   isEditer: boolean;
   isOwner: boolean;
@@ -17,7 +18,7 @@ interface UserHouseRole {
 export const useUserHouseRole = (address: string): UserHouseRole => {
   const { user, userDetails } = useUser();
   const { data } = useHouseBuildByAddress(address);
-  const [role, setRole] = useState<UserHouseRole>({ isFamily: false, isEditer: false, isOwner: false });
+  const [role, setRole] = useState<UserHouseRole>({ isUser: false, isFamily: false, isEditer: false, isOwner: false });
 
   useEffect(() => {
     if (user && userDetails && data) {
@@ -33,13 +34,14 @@ export const useUserHouseRole = (address: string): UserHouseRole => {
 
         setRole({
           role: familyUser.role,
+          isUser: true,
           isFamily: true,
           isEditer: true,
           isOwner: familyUser.is_owner,
           profiles: { user: userDetails, family: familyProfile }
         });
       } else {
-        setRole({ isFamily: false, isEditer: false, isOwner: false });
+        setRole({ isUser: true, isFamily: false, isEditer: false, isOwner: false });
       }
     }
   }, [user, userDetails, data]);

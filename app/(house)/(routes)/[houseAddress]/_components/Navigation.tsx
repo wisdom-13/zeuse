@@ -1,26 +1,17 @@
 'use client';
 
-import { House, HouseBuild } from '@/types';
-import { ElementRef, useRef, useState } from 'react';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-
-import { ChevronLeft, ChevronRight, Heart, LogIn, LogOut, Minus, Settings } from 'lucide-react';
+import { House } from '@/types';
+import { ElementRef, useRef } from 'react';
+import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
 import { useMediaQuery } from 'usehooks-ts';
-import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { getPublicUrl } from '@/util/getPublicUrl';
+import { useParams } from 'next/navigation';
 
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useSidebarState } from '@/hooks/useSidebarState';
+import { useHouseBuildByAddress } from '@/api/useHouseBuilder';
 
-import useAuthModal from '@/hooks/useAuthModal';
-import useSettingModal from '@/hooks/useSettingModal';
-import { useUser } from '@/hooks/useUser';
-
-import { HouseList } from '@/components/HouseList';
-import MenuItem from './MenuItem';
-import useHouseBuild from '@/hooks/useHouseBuild';
+import Logo from './Logo';
+import Menu from './Menu';
 
 interface HouseMenuProps {
   houses?: House[];
@@ -29,64 +20,22 @@ interface HouseMenuProps {
 const Navigation = ({
   houses
 }: HouseMenuProps) => {
-  const { houseBuild } = useHouseBuild();
-  const { user, isLoading } = useUser();
-  const param = useParams();
-  const authModal = useAuthModal();
-  const settingModal = useSettingModal();
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const router = useRouter();
-  const supabaseClient = useSupabaseClient();
-
-
+  const { houseAddress } = useParams<{ houseAddress: string }>();
+  const { data: houseBuild, isLoading, isError } = useHouseBuildByAddress(houseAddress);
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
   const navbarRef = useRef<ElementRef<'div'>>(null);
-  const [isResetting, setIsRestting] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isMouseNavOver, setIsMouseNavOver] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const owner = houseBuild?.family.find((item) => item.is_owner);
+  const { isResetting, isCollapsed, isMouseNavOver, setIsMouseNavOver, resetWidth, collapse } = useSidebarState(isMobile);
   const NavIcon = isMouseNavOver ? ChevronLeft : Minus;
 
-  const resetWidth = () => {
-    if (sidebarRef.current && navbarRef.current) {
-      setIsCollapsed(false);
-      setIsRestting(true);
-
-      sidebarRef.current.style.width = isMobile ? '100%' : '240px';
-      navbarRef.current.style.setProperty(
-        'left',
-        isMobile ? '100%' : '240px'
-      );
-
-      setTimeout(() => setIsRestting(false), 300);
-    }
+  if (isLoading || !houseBuild) {
+    return 'loading'
   }
 
-  const collapse = () => {
-    if (sidebarRef.current && navbarRef.current) {
-      setIsCollapsed(true);
-      setIsRestting(true);
-
-      sidebarRef.current.style.width = '0';
-      navbarRef.current.style.setProperty('left', '0');
-      setTimeout(() => setIsRestting(false), 300);
-    }
+  if (isError) {
+    return 'error'
   }
-
-  const headleLogout = async () => {
-    const { error } = await supabaseClient.auth.signOut();
-
-    router.refresh();
-
-    if (error) {
-      toast.error(error?.message)
-    } else {
-      toast.success('Logged out!')
-    }
-  }
-
 
   return (
     <>
@@ -98,71 +47,9 @@ const Navigation = ({
           isMobile && 'w-0'
         )}
       >
-        <div className='w-60 h-full flex flex-col justify-start'>
-          <div className='flex flex-col justify-center gap-y-2 p-8 min-h-44 mt-6'>
-            <Link href={`/${houseBuild?.address}`} className='relative w-full min-h-20'>
-              {houseBuild?.style.logo_image ? (
-                <Image
-                  src={getPublicUrl(`style/${houseBuild?.style.logo_image}`)}
-                  alt='logo'
-                  fill
-                  onLoad={() => setImageLoaded(true)}
-                  className={cn(
-                    imageLoaded ? 'opacity-100' : 'opacity-0',
-                    'pointer-events-none',
-                    'object-contain'
-                  )}
-                />
-              ) : (
-                <h1 className='text-3xl text-center font-bold'>
-                  {houseBuild?.title}
-                </h1>
-              )}
-            </Link>
-          </div>
-
-          <div className='flex flex-col gap-y-2 py-2 px-8'>
-            {houseBuild?.board && houseBuild?.board.sort((a, b) => a.order - b.order).map((item) => (
-              <MenuItem
-                key={item.id}
-                label={item.title}
-                type={item.type}
-                icon={Heart}
-                href={(item.type == 'link' ? item.link : `/${param.houseAddress}/${item.name}`)}
-              />
-            ))}
-          </div>
-
-          <div className='flex flex-col gap-y-2 p-2 mt-auto'>
-            {!isLoading && user && owner?.user_id === user?.id && (
-              <MenuItem
-                label='설정'
-                icon={Settings}
-                isButton={true}
-                onClick={settingModal.onOpen}
-              />
-            )}
-            {!isLoading && user && (
-              <MenuItem
-                label='로그아웃'
-                icon={LogOut}
-                isButton={true}
-                onClick={headleLogout}
-              />
-            )}
-            {!isLoading && user && houses && (
-              <HouseList position='start' houses={houses} />
-            )}
-            {!isLoading && !user && (
-              <MenuItem
-                label='로그인'
-                icon={LogIn}
-                isButton={true}
-                onClick={authModal.onOpen}
-              />
-            )}
-          </div>
-
+        <div className='flex flex-col justify-start w-60 h-full'>
+          <Logo houseBuild={houseBuild} />
+          <Menu houseBuild={houseBuild} houses={houses} />
         </div>
       </aside>
       <div
@@ -175,10 +62,10 @@ const Navigation = ({
       >
         <nav className='bg-transparent px-1 py-2 w-full'>
           {isCollapsed
-            ? <ChevronRight strokeWidth={2.5} onClick={resetWidth} role='button' className='h-6 w-6 text-muted-foreground' />
+            ? <ChevronRight strokeWidth={2.5} onClick={() => resetWidth(sidebarRef, navbarRef)} role='button' className='w-6 h-6 text-muted-foreground' />
             : <NavIcon
               strokeWidth={isMouseNavOver ? 2.5 : 3}
-              onClick={collapse}
+              onClick={(I) => collapse(sidebarRef, navbarRef)}
               role='button'
               className={cn(
                 'h-6 w-6 text-muted-foreground transition-all',
