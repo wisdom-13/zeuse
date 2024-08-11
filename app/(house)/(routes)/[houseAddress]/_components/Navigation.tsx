@@ -12,6 +12,7 @@ import { useHouseBuildByAddress } from '@/api/useHouseBuilder';
 
 import Logo from './Logo';
 import Menu from './Menu';
+import { FullScreenSpinner } from '@/components/ui/spinner';
 
 interface HouseMenuProps {
   houses?: House[];
@@ -29,12 +30,8 @@ const Navigation = ({
   const { isResetting, isCollapsed, isMouseNavOver, setIsMouseNavOver, resetWidth, collapse } = useSidebarState(isMobile);
   const NavIcon = isMouseNavOver ? ChevronLeft : Minus;
 
-  if (isLoading || !houseBuild) {
-    return 'loading'
-  }
-
-  if (isError) {
-    return 'error'
+  if (isLoading || !houseBuild || isError) {
+    return <FullScreenSpinner />
   }
 
   return (
