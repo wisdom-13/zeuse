@@ -14,7 +14,6 @@ export interface House {
   created_at: string;
 }
 
-
 export interface HouseBuild extends House {
   family: Family[];
   board: Board[];
@@ -80,17 +79,22 @@ export interface Style {
   radius: string;
   mode: string;
   box_style: {
-    opacity: string,
-    border: string,
-    radius: string
-  }
+    opacity: string;
+    border: string;
+    radius: string;
+  };
 }
 
 export interface Widget {
   id: string;
   house_id: string;
   type: string;
-  grid: { col: number, row: number };
+  grid: {
+    y: number;
+    x: number;
+    col: number;
+    row: number;
+  };
   order: number;
   image_array: Array<string>;
   option_id: string;
@@ -100,7 +104,7 @@ export interface Widget {
 
 export interface WidgetTmp {
   type?: string;
-  grid?: { col: number, row: number };
+  grid?: { col: number; row: number };
   image_array?: Array<string>;
   option_id?: string;
   option_text?: string;
@@ -121,4 +125,11 @@ export interface Family {
 
 export interface FileWithPreview extends File {
   preview?: string;
+}
+
+export interface Grid {
+  col: number;
+  row: number;
+  x?: number;
+  y?: number;
 }
