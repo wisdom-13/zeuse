@@ -43,8 +43,6 @@ const HouseMain = () => {
       y: widget.grid.y,
       w: widget.grid.col ?? 3,
       h: widget.grid.row ?? 2,
-      minW: 2,
-      minH: 2,
     }));
   };
 
@@ -113,7 +111,7 @@ const HouseMain = () => {
         className="layout"
         layouts={{ lg: initialLayout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 9, sm: 6, xs: 4, xxs: 4 }}
+        cols={{ lg: 12, md: 12, sm: 6, xs: 1, xxs: 1 }}
         rowHeight={60}
         onLayoutChange={onLayoutChange}
         isDraggable={isEditing}
