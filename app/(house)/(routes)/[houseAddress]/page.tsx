@@ -1,13 +1,11 @@
-import HouseMain from './_components/HouseMain';
+import HouseMain from "./_components/HouseMain";
 
 const HousePage = () => {
   return (
-    <div
-      className='relative flex justify-center items-center gap-x-4 h-full'
-    >
+    <div className="relative flex justify-center items-center gap-x-4 w-full h-full">
       <HouseMain />
     </div>
   );
-}
+};
 
 export default HousePage;

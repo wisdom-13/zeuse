@@ -273,14 +273,12 @@
   @apply !bg-transparent !text-black !text-base;
 }
 
-
 .dark .bn-editor {
-  @apply !text-white
+  @apply !text-white;
 }
 
 .border-line .custom-card {
   @apply border-x border-y border-primary;
-
 }
 
 .border-shadow .custom-card {
@@ -327,4 +325,39 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* react-grid-layout */
+
+/* 드래그 중일 때 배경색 */
+.react-grid-item.react-grid-placeholder {
+  background-color: hsl(var(--primary)) !important;
+  border-radius: var(--radius) !important;
+  opacity: 1;
+}
+
+/* 리사이즈 핸들 스타일 */
+.react-resizable-handle {
+  position: absolute;
+  bottom: 5px !important;
+  right: 5px !important;
+  width: 10px !important;
+  height: 10px !important;
+  background: none;
+  border-radius: 0 0 var(--radius) 0;
+  background-image: none !important;
+  border-right: 3px solid hsl(var(--primary)) !important;
+  border-bottom: 3px solid hsl(var(--primary)) !important;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  display: none;
+}
+
+/* 리사이즈 핸들 호버 시 */
+.react-resizable-handle:hover {
+  opacity: 0.8;
+  transform: scale(1.2);
 }
